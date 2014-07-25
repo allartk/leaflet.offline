@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Example offline layer</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script src="https://raw.githubusercontent.com/allartk/snippets/master/js/LazyStorage.js"></script>
+        <script src="../src/leaflet.functionaltilelayer.js" type="text/javascript"></script>
+        <script src="../src/TileLayer.Offline.js" type="text/javascript"></script>                
+        <script type="text/javascript">
+            $(function() {
+                var map = L.map('map').setView([51.505, 5], 13);
+                
+                L.tileLayer.offline('http://branta.sovon.nl/tiles/tiles.py/mq_proxy/{z}/{x}/{y}.jpg',
+                        {
+                            attribution:
+                                    'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; ' +
+                                    'Map data {attribution.OpenStreetMap}',
+                            subdomains: '1234'
+                        }
+                ).addTo(map);
+            });
+        </script>
+    </head>
+    <body>
+        <div id="map" style="height: 500px"></div>
+    </body>
+</html>
