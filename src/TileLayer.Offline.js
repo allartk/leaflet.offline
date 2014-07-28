@@ -12,8 +12,8 @@ L.TileLayer.Offline = L.TileLayer.Functional.extend({
                     .replace('{y}', view.tile.row)
                     .replace('{x}', view.tile.column)
                     .replace('{s}', view.subdomain);
-            lzTiles.get(ObjectUrl, 'TileLayer', function(data) {
-                if (data && typeof data.image === "blob") {                        
+            lzTiles.get(ObjectUrl, 'TileLayer', function(data) {                
+                if (data && typeof data.image === "object") {                        
                     ObjectUrl = URL.createObjectURL(data.image);                    
                 }
                 else if(data && typeof data.image === "string") {
