@@ -51,18 +51,19 @@ L.Control.SaveTiles = L.Control.extend({
                 bounds.max.divideBy(tileSize).floor());
                 
         //tiles to save
-        var tiles = [];
+        this._tilesforSave = [];
 	for (j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
             for (i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
                 var tilePoint = new L.Point(i, j);
                 tilePoint.z = zoom;
-                tiles.push(L.TileLayer.prototype.getTileUrl.call(this._baseLayer,tilePoint));                
+                this._tilesforSave.push(L.TileLayer.prototype.getTileUrl.call(this._baseLayer,tilePoint));                
             }
         }
-        this._loadTile(tiles.shift());
+        this._loadTile(this._tilesforSave.shift());
     },
     //return blob in callback
     _loadTile: function(tileUrl) {
+        var $this = this;
         var xhr = new XMLHttpRequest();
         xhr.open('GET', tileUrl);
         xhr.responseType = 'blob';
@@ -71,12 +72,34 @@ L.Control.SaveTiles = L.Control.extend({
         xhr.onreadystatechange = function(){
             if (this.readyState === 4 && this.status === 200){                
                 $this._saveTile(tileUrl,this.response);
+                if($this._tilesforSave.length > 0) {
+                    $this._loadTile($this._tilesforSave.shift());
+                    $this._baseLayer.fire('savetileend');
+                }
+                //fire some event?
+                else {
+                    $this._baseLayer.fire('saveend');
+                }
             }
         };
     },
     _saveTile: function(tileUrl,blob) {        
         lzTiles.delete('TileLayer',{'guid':tileUrl},function(data){ 
-            lzTiles.save('TileLayer',{'guid':tileUrl,'image': blob},function(data){ console.log(data) })
+            //convert blobs for webdb!
+            if(lzTiles.type == 'webDB') {
+                if(!window.FileReader) {
+                    alert('Not supported browser');
+                    return;
+                }
+                var fr = new FileReader();
+                fr.onloadend = function () {                    
+                    lzTiles.save('TileLayer',{'guid':tileUrl,'image': fr.result},function(data){ console.log(data) });
+                };
+                fr.readAsDataURL(blob);                
+            }
+            else {
+                lzTiles.save('TileLayer',{'guid':tileUrl,'image': blob},function(data){ console.log(data) });
+            }
         });
     },
     onRemove: function() {

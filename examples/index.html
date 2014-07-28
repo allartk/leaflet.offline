@@ -28,7 +28,10 @@ and open the template in the editor.
                             subdomains: '1234'
                         }
                 ).addTo(map);
-                L.control.savetiles(baseLayer,{}).addTo(map);
+                L.control.savetiles(baseLayer,{}).addTo(map);                
+                baseLayer.on('saveend',function(e) {
+                    alert("Saved all tiles");
+                });
             });
             
         </script>
