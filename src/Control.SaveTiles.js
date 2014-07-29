@@ -74,6 +74,7 @@ L.Control.SaveTiles = L.Control.extend({
             this._saveTiles();
             return;
         }
+        this._baseLayer.fire('savestart',this._tilesforSave);        
         this._loadTile(this._tilesforSave.shift());
     },
     //return blob in callback
