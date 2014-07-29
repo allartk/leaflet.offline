@@ -42,14 +42,21 @@ L.Control.SaveTiles = L.Control.extend({
         return link;
     },
     _saveTiles: function() {
-        var bounds = this._map.getPixelBounds(),
-                zoom = this._map.getZoom(),
-                tileSize = this._baseLayer._getTileSize();
+        var zoom;
+        var tileSize = this._baseLayer._getTileSize();
+        if(!this.options.zoomlevels) {
+            var bounds = this._map.getPixelBounds(),
+                    zoom = this._map.getZoom();
+        }
+        //todo other zoomlevels
+        else {
+            zoom = this.options.zoomlevels.slice(0,1);                        
+            var latlngBounds = this._map.getBounds();                        
+            var bounds = L.bounds(this._map.project(latlngBounds.getNorthWest(),zoom),this._map.project(latlngBounds.getSouthEast(),zoom));            
+        }
         var tileBounds = L.bounds(
-                bounds.min.divideBy(tileSize).floor(),
-                bounds.max.divideBy(tileSize).floor());
-                
-        //tiles to save
+            bounds.min.divideBy(tileSize).floor(),
+            bounds.max.divideBy(tileSize).floor());                
         this._tilesforSave = [];
 	for (j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
             for (i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
@@ -58,6 +65,7 @@ L.Control.SaveTiles = L.Control.extend({
                 this._tilesforSave.push(L.TileLayer.prototype.getTileUrl.call(this._baseLayer,tilePoint));                
             }
         }
+        //TODO doorloop bovenstaande nog eens voor opvolgende zoomlevels.        
         this._loadTile(this._tilesforSave.shift());
     },
     //return blob in callback
