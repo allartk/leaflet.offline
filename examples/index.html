@@ -26,10 +26,14 @@ and open the template in the editor.
                             attribution:
                                     'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; ' +
                                     'Map data {attribution.OpenStreetMap}',
-                            subdomains: '1234'
+                            subdomains: '1234',
+                            minZoom: 13
                         }
                 ).addTo(map);
-                L.control.savetiles(baseLayer,{'zoomlevels':[14]}).addTo(map);                
+                L.control.savetiles(baseLayer,{
+                        'zoomlevels':[13,17] //optional zoomlevels to save, default current zoomlevel
+                    }
+                ).addTo(map);                
                 baseLayer.on('saveend',function(e) {
                     alert("Saved all tiles");
                 });

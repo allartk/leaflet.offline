@@ -43,14 +43,18 @@ L.Control.SaveTiles = L.Control.extend({
     },
     _saveTiles: function() {
         var zoom;
+        //zoom levels we are going to save
+        if(!this._zoomsforSave) {
+            this._zoomsforSave = [];
+        }
         var tileSize = this._baseLayer._getTileSize();
         if(!this.options.zoomlevels) {
             var bounds = this._map.getPixelBounds(),
                     zoom = this._map.getZoom();
         }
         //todo other zoomlevels
-        else {
-            zoom = this.options.zoomlevels.slice(0,1);                        
+        else {            
+            zoom = this.options.zoomlevels[this._zoomsforSave.length];                        
             var latlngBounds = this._map.getBounds();                        
             var bounds = L.bounds(this._map.project(latlngBounds.getNorthWest(),zoom),this._map.project(latlngBounds.getSouthEast(),zoom));            
         }
@@ -58,14 +62,18 @@ L.Control.SaveTiles = L.Control.extend({
             bounds.min.divideBy(tileSize).floor(),
             bounds.max.divideBy(tileSize).floor());                
         this._tilesforSave = [];
+        this._zoomsforSave.push(zoom);       
 	for (j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
             for (i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
                 var tilePoint = new L.Point(i, j);
                 tilePoint.z = zoom;
                 this._tilesforSave.push(L.TileLayer.prototype.getTileUrl.call(this._baseLayer,tilePoint));                
             }
+        }        
+        if(this.options.zoomlevels && (this._zoomsforSave.length < this.options.zoomlevels.length)) {
+            this._saveTiles();
+            return;
         }
-        //TODO doorloop bovenstaande nog eens voor opvolgende zoomlevels.        
         this._loadTile(this._tilesforSave.shift());
     },
     //return blob in callback
