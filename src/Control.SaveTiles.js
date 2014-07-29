@@ -90,11 +90,12 @@ L.Control.SaveTiles = L.Control.extend({
                 $this._saveTile(tileUrl,this.response);
                 if($this._tilesforSave.length > 0) {
                     $this._loadTile($this._tilesforSave.shift());
-                    $this._baseLayer.fire('savetileend');
+                    $this._baseLayer.fire('loadtileend');
                 }
                 //fire some event?
                 else {
-                    $this._baseLayer.fire('saveend');
+                    $this._baseLayer.fire('loadtileend');
+                    $this._baseLayer.fire('loadend');
                 }
             }
         };

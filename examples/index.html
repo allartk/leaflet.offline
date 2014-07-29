@@ -34,10 +34,15 @@ and open the template in the editor.
                         'zoomlevels':[13,16] //optional zoomlevels to save, default current zoomlevel
                     }
                 ).addTo(map);   
+                var progress = 0;
                 baseLayer.on('savestart',function(e) {
-                    console.log(e._tilesforSave.length);
+                    $("#total").html(e._tilesforSave.length);
                 });        
-                baseLayer.on('saveend',function(e) {
+                baseLayer.on('loadtileend',function(e) {
+                    progress++;
+                    $("#progress").html(progress);
+                });
+                baseLayer.on('loadend',function(e) {
                     alert("Saved all tiles");
                 });
             });
@@ -46,5 +51,7 @@ and open the template in the editor.
     </head>
     <body>
         <div id="map" style="height: 500px"></div>
+        <div id="total"></div>
+        <p>Progress: <span id="progress"></span></p>
     </body>
 </html>
