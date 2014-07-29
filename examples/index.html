@@ -35,7 +35,7 @@ and open the template in the editor.
                     }
                 ).addTo(map);   
                 baseLayer.on('savestart',function(e) {
-                    console.log(e.length);
+                    console.log(e._tilesforSave.length);
                 });        
                 baseLayer.on('saveend',function(e) {
                     alert("Saved all tiles");

@@ -46,6 +46,7 @@ L.Control.SaveTiles = L.Control.extend({
         //zoom levels we are going to save
         if(!this._zoomsforSave) {
             this._zoomsforSave = [];
+            this._tilesforSave = [];
         }
         var tileSize = this._baseLayer._getTileSize();
         if(!this.options.zoomlevels) {
@@ -60,8 +61,7 @@ L.Control.SaveTiles = L.Control.extend({
         }
         var tileBounds = L.bounds(
             bounds.min.divideBy(tileSize).floor(),
-            bounds.max.divideBy(tileSize).floor());                
-        this._tilesforSave = [];
+            bounds.max.divideBy(tileSize).floor());                        
         this._zoomsforSave.push(zoom);       
 	for (j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
             for (i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
@@ -74,7 +74,7 @@ L.Control.SaveTiles = L.Control.extend({
             this._saveTiles();
             return;
         }
-        this._baseLayer.fire('savestart',this._tilesforSave);        
+        this._baseLayer.fire('savestart',this);        
         this._loadTile(this._tilesforSave.shift());
     },
     //return blob in callback
