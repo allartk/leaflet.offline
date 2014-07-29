@@ -2,8 +2,7 @@
 var lzTiles = new LazyStorage('Leaflet',1,
     {'TileLayer':
         {
-            'name': 'TileLayer',
-            'indexes': [{'name': 'image'}]
+            'name': 'TileLayer'          
         }
     }
 );
@@ -15,7 +14,7 @@ L.Control.SaveTiles = L.Control.extend({
     //TODO add zoom level to save
     options: {
         position: 'topleft',
-        saveText: 'Save',
+        saveText: '',
     },
     initialize: function(baseLayer, options) {
         this._baseLayer = baseLayer;
