@@ -45,6 +45,9 @@ and open the template in the editor.
                 baseLayer.on('loadend',function(e) {
                     alert("Saved all tiles");
                 });
+                baseLayer.on('tilesremoved',function(e) {
+                    alert("Removed all tiles");
+                });
             });
             
         </script>

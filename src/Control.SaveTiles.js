@@ -23,7 +23,8 @@ L.Control.SaveTiles = L.Control.extend({
     onAdd: function(map) {
         var container = L.DomUtil.create('div', 'savetiles leaflet-bar'),
                 options = this.options;
-        this._createButton(options.saveText, "Save tiles", "savetiles", container, this._saveTiles)
+        this._createButton(options.saveText, "Save tiles", "savetiles", container, this._saveTiles);
+        this._createButton('-', "Remove tiles", "rmtiles", container, this._rmTiles);
         return container;
     },
     _createButton: function(html, title, className, container, fn) {
@@ -121,6 +122,12 @@ L.Control.SaveTiles = L.Control.extend({
     },
     onRemove: function() {
 
+    },
+    _rmTiles: function() {
+        $this = this;
+        lzTiles.clear('TileLayer',function() {
+            $this._baseLayer.fire('tilesremoved')
+        });
     }
 });
 
