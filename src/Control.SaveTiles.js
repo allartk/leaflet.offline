@@ -102,7 +102,7 @@ L.Control.SaveTiles = L.Control.extend({
         };
     },
     _saveTile: function(tileUrl,blob) {        
-        lzTiles.delete('TileLayer',{'guid':tileUrl},function(data){ 
+        lzTiles.rm('TileLayer',{'guid':tileUrl},function(data){ 
             //convert blobs for webdb!
             if(lzTiles.type == 'webDB') {
                 if(!window.FileReader) {

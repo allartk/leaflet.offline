@@ -10,4 +10,4 @@ Leaflet offline layer
 * [Functional tilelayer](https://github.com/ismyrnow/Leaflet.functionaltilelayer)
 
 ##Usage
-Look in examples folder
+Look in examples folder. The tile server needs to have an Access-Control-Allow-Origin header.
