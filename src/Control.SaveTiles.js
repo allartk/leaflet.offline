@@ -9,12 +9,14 @@ var lzTiles = new LazyStorage('Leaflet',1,
 
 /**
  * inspired by control.zoom 
+ * options are position (string), saveText (string) ,rmText (string), confirm (function)
  */
 L.Control.SaveTiles = L.Control.extend({
     //TODO add zoom level to save
     options: {
         position: 'topleft',
         saveText: '',
+        rmText: '-'
     },
     initialize: function(baseLayer, options) {
         this._baseLayer = baseLayer;
@@ -24,7 +26,7 @@ L.Control.SaveTiles = L.Control.extend({
         var container = L.DomUtil.create('div', 'savetiles leaflet-bar'),
                 options = this.options;
         this._createButton(options.saveText, "Save tiles", "savetiles", container, this._saveTiles);
-        this._createButton('-', "Remove tiles", "rmtiles", container, this._rmTiles);
+        this._createButton(options.rmText, "Remove tiles", "rmtiles", container, this._rmTiles);
         return container;
     },
     _createButton: function(html, title, className, container, fn) {
@@ -74,6 +76,14 @@ L.Control.SaveTiles = L.Control.extend({
         if(this.options.zoomlevels && (this._zoomsforSave.length < this.options.zoomlevels.length)) {
             this._saveTiles();
             return;
+        }
+        //unset zoomlevels to save
+        delete this._zoomsforSave;
+        
+        if(this.options.confirm) {
+           if(!this.options.confirm(this)) {
+               return;
+           } 
         }
         this._baseLayer.fire('savestart',this);        
         this._loadTile(this._tilesforSave.shift());
