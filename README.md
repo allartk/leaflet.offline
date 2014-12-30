@@ -10,7 +10,10 @@ Leaflet offline layer
 * [Functional tilelayer](https://github.com/ismyrnow/Leaflet.functionaltilelayer)
 
 ##Usage
-Look in examples folder. The tile server needs to have an Access-Control-Allow-Origin header.
+Look in examples folder for details, you have to include both the control and tilelayer javascript file, as well as
+the dependencies.  The geojson part is unfinished work.
+
+The tile server needs to have an Access-Control-Allow-Origin header.
 
 The layer:
 ```javascript
