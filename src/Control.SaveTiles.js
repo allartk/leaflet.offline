@@ -113,8 +113,8 @@ L.Control.SaveTiles = L.Control.extend({
     },
     _saveTile: function(tileUrl,blob) {        
         lzTiles.rm('TileLayer',{'guid':tileUrl},function(data){ 
-            //convert blobs for webdb!
-            if(lzTiles.type == 'webDB') {
+            //convert blobs for webdb and old chrome!
+            if(lzTiles.type == 'webDB' || (parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10) < 39 && window.navigator.appVersion.indexOf('Chrome') > 0)) {
                 if(!window.FileReader) {
                     alert('Not supported browser');
                     return;
