@@ -16,9 +16,13 @@ L.Control.SaveTiles = L.Control.extend({
     options: {
         position: 'topleft',
         saveText: '',
-        rmText: '-'
+        rmText: '-',
+        'confirm': function() {
+            var d =  jQuery.Deferred();
+            d.resolve();
+        }
     },
-    initialize: function(baseLayer, options) {
+    initialize: function(baseLayer, options) {        
         this._baseLayer = baseLayer;
         L.setOptions(this, options);
     },
@@ -80,13 +84,18 @@ L.Control.SaveTiles = L.Control.extend({
         //unset zoomlevels to save
         delete this._zoomsforSave;
         
-        if(this.options.confirm) {
-           if(!this.options.confirm(this)) {
-               return;
-           } 
-        }
-        this._baseLayer.fire('savestart',this);        
-        this._loadTile(this._tilesforSave.shift());
+                    
+        var p = this.options.confirm(this);
+        var self = this;
+        p.then(function() {            
+            self._baseLayer.fire('savestart',self);        
+            self._loadTile(self._tilesforSave.shift());
+        },function() {
+            return;
+        });             
+        
+        
+        
     },
     //return blob in callback
     _loadTile: function(tileUrl) {
@@ -111,7 +120,8 @@ L.Control.SaveTiles = L.Control.extend({
             }
         };
     },
-    _saveTile: function(tileUrl,blob) {        
+    _saveTile: function(tileUrl,blob) {  
+        var $this = this;
         lzTiles.rm('TileLayer',{'guid':tileUrl},function(data){ 
             //convert blobs for webdb and old chrome!
             if(lzTiles.type == 'webDB' || (parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10) < 39 && window.navigator.appVersion.indexOf('Chrome') > 0)) {
@@ -121,12 +131,12 @@ L.Control.SaveTiles = L.Control.extend({
                 }
                 var fr = new FileReader();
                 fr.onloadend = function () {                    
-                    lzTiles.save('TileLayer',{'guid':tileUrl,'image': fr.result},function(data){ console.log(data) });
+                    lzTiles.save('TileLayer',{'guid':tileUrl,'image': fr.result},function(data){ $this._baseLayer.fire('savetileend'); });
                 };
                 fr.readAsDataURL(blob);                
             }
             else {
-                lzTiles.save('TileLayer',{'guid':tileUrl,'image': blob},function(data){ console.log(data) });
+                lzTiles.save('TileLayer',{'guid':tileUrl,'image': blob},function(data){ $this._baseLayer.fire('savetileend'); });
             }
         });
     },
