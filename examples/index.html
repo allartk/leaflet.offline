@@ -21,7 +21,7 @@ and open the template in the editor.
         <script type="text/javascript">
             $(function() {
                 var map = L.map('map').setView([52,5], 16);
-                //L.tileLayer('http://branta.sovon.nl/tiles/tiles.py/mq_proxy/{z}/{x}/{y}.jpg',{}).addTo(map);
+                //offline baselayer, will use offline source if available
                 var baseLayer = L.tileLayer.offline('http://branta.sovon.nl/tiles/tiles.py/mq_proxy/{z}/{x}/{y}.jpg',
                         {
                             attribution:
@@ -31,12 +31,13 @@ and open the template in the editor.
                             minZoom: 13
                         }
                 ).addTo(map);
+                //add buttons to save tiles in area viewed
                 L.control.savetiles(baseLayer,{
                         'zoomlevels':[13,16] //optional zoomlevels to save, default current zoomlevel
                     }
                 ).addTo(map);   
-                //var geojsonTileLayer = new L.TileLayer.GeoJSON('http://branta.sovon.nl/tiles/vector.py/osm_roads/{z}/{x}/{y}.geojson').addTo(map);                
-                
+            
+                //layer switcher control
                 L.control.layers({"mapbox" : baseLayer}).addTo(map);
         
                 //events while saving a tile layer
@@ -44,7 +45,7 @@ and open the template in the editor.
                 baseLayer.on('savestart',function(e) {
                     $("#total").html(e._tilesforSave.length);
                 });        
-                baseLayer.on('loadtileend',function(e) {
+                baseLayer.on('savetileend',function(e) {
                     progress++;
                     $("#progress").html(progress);
                 });
