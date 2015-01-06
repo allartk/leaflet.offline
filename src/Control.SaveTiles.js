@@ -70,7 +70,7 @@ L.Control.SaveTiles = L.Control.extend({
             bounds.min.divideBy(tileSize).floor(),
             bounds.max.divideBy(tileSize).floor());                        
         this._zoomsforSave.push(zoom);       
-	for (j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
+        for (j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
             for (i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
                 var tilePoint = new L.Point(i, j);
                 tilePoint.z = zoom;

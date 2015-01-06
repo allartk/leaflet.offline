@@ -35,3 +35,16 @@ The control:
                     }
                 ).addTo(map);
 ```
+The following events are fired on the layer while saving:
+* savestart, start downloading tiles
+* loadtileend, a tile is downloaded (eg show progress bar)
+* savetileend, one tile is saved  (eg show progress bar)
+* loadend, all tiles are downloaded
+* tilesremoved, all tiles are removed
+
+The following options for the control
+* zoomlevels, array of integers, default current zoomlevel
+* position position of the control default 'topleft'
+* saveText html to show on save button
+* rmText html to show on remove button
+* confirm, function that returns jquery promise
