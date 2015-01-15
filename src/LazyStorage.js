@@ -19,7 +19,8 @@ var LazyStorage = function(dbname,version,schemas) {
         return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
                s4() + '-' + s4() + s4() + s4();
     };    
-    if(window.indexedDB) {
+    var idb = window.indexedDB;
+    if(idb && 'deleteDatabase' in idb) {
         return LazyStorage.iDB.call(this);
     }
     else if(window.openDatabase) {        
