@@ -2,13 +2,13 @@
 var lzTiles = new LazyStorage('Leaflet',1,
     {'TileLayer':
         {
-            'name': 'TileLayer'          
+            'name': 'TileLayer'
         }
     }
 );
 
 /**
- * inspired by control.zoom 
+ * inspired by control.zoom
  * options are position (string), saveText (string) ,rmText (string), confirm (function)
  */
 L.Control.SaveTiles = L.Control.extend({
@@ -17,12 +17,10 @@ L.Control.SaveTiles = L.Control.extend({
         position: 'topleft',
         saveText: '',
         rmText: '-',
-        'confirm': function() {
-            var d =  jQuery.Deferred();
-            d.resolve();
-        }
+        //optional function called before saving tiles
+        'confirm': null
     },
-    initialize: function(baseLayer, options) {        
+    initialize: function(baseLayer, options) {
         this._baseLayer = baseLayer;
         L.setOptions(this, options);
     },
@@ -61,41 +59,41 @@ L.Control.SaveTiles = L.Control.extend({
                     zoom = this._map.getZoom();
         }
         //todo other zoomlevels
-        else {            
-            zoom = this.options.zoomlevels[this._zoomsforSave.length];                        
-            var latlngBounds = this._map.getBounds();                        
-            var bounds = L.bounds(this._map.project(latlngBounds.getNorthWest(),zoom),this._map.project(latlngBounds.getSouthEast(),zoom));            
+        else {
+            zoom = this.options.zoomlevels[this._zoomsforSave.length];
+            var latlngBounds = this._map.getBounds();
+            var bounds = L.bounds(this._map.project(latlngBounds.getNorthWest(),zoom),this._map.project(latlngBounds.getSouthEast(),zoom));
         }
         var tileBounds = L.bounds(
             bounds.min.divideBy(tileSize).floor(),
-            bounds.max.divideBy(tileSize).floor());                        
-        this._zoomsforSave.push(zoom);       
+            bounds.max.divideBy(tileSize).floor());
+        this._zoomsforSave.push(zoom);
         for (j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
             for (i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
                 var tilePoint = new L.Point(i, j);
                 tilePoint.z = zoom;
-                this._tilesforSave.push(L.TileLayer.prototype.getTileUrl.call(this._baseLayer,tilePoint));                
+                this._tilesforSave.push(L.TileLayer.prototype.getTileUrl.call(this._baseLayer,tilePoint));
             }
-        }        
+        }
         if(this.options.zoomlevels && (this._zoomsforSave.length < this.options.zoomlevels.length)) {
             this._saveTiles();
             return;
         }
         //unset zoomlevels to save
         delete this._zoomsforSave;
-        
-                    
-        var p = this.options.confirm(this);
         var self = this;
-        p.then(function() {            
-            self._baseLayer.fire('savestart',self);        
+        if(this.options.confirm) {
+          var def = $.Deferred();
+          this.options.confirm.call(this,def);
+          def.done(function() {
+            self._baseLayer.fire('savestart',self);
             self._loadTile(self._tilesforSave.shift());
-        },function() {
-            return;
-        });             
-        
-        
-        
+          });
+        }
+        else {
+          self._baseLayer.fire('savestart',self);
+          self._loadTile(self._tilesforSave.shift());
+        }
     },
     //return blob in callback
     _loadTile: function(tileUrl) {
@@ -106,7 +104,7 @@ L.Control.SaveTiles = L.Control.extend({
         xhr.send();
         var $this = this;
         xhr.onreadystatechange = function(){
-            if (this.readyState === 4 && this.status === 200){                
+            if (this.readyState === 4 && this.status === 200){
                 $this._saveTile(tileUrl,this.response);
                 if($this._tilesforSave.length > 0) {
                     $this._loadTile($this._tilesforSave.shift());
@@ -120,20 +118,20 @@ L.Control.SaveTiles = L.Control.extend({
             }
         };
     },
-    _saveTile: function(tileUrl,blob) {  
+    _saveTile: function(tileUrl,blob) {
         var $this = this;
-        lzTiles.rm('TileLayer',{'guid':tileUrl},function(data){ 
+        lzTiles.rm('TileLayer',{'guid':tileUrl},function(data){
             //convert blobs for webdb and old chrome!
-            if(lzTiles.type == 'webDB' || (parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10) < 39 && window.navigator.appVersion.indexOf('Chrome') > 0)) {
+            if(lzTiles.type == 'webDB' || (window.navigator.appVersion.indexOf('Chrome') > 0 && parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10) < 39)) {
                 if(!window.FileReader) {
                     alert('Not supported browser');
                     return;
                 }
                 var fr = new FileReader();
-                fr.onloadend = function () {                    
+                fr.onloadend = function () {
                     lzTiles.save('TileLayer',{'guid':tileUrl,'image': fr.result},function(data){ $this._baseLayer.fire('savetileend'); });
                 };
-                fr.readAsDataURL(blob);                
+                fr.readAsDataURL(blob);
             }
             else {
                 lzTiles.save('TileLayer',{'guid':tileUrl,'image': blob},function(data){ $this._baseLayer.fire('savetileend'); });

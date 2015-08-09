@@ -6,7 +6,7 @@ Leaflet offline layer
 ## Dependencies
 * Leafletjs
 * Jquery
-* [Lazystorage](https://github.com/allartk/snippets/blob/master/js/LazyStorage.js)
+* [Lazystorage](https://github.com/allartk/snippets/blob/master/js/LazyStorage.js) (included in this repo)
 * [Functional tilelayer](https://github.com/ismyrnow/Leaflet.functionaltilelayer)
 
 ##Usage
