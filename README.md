@@ -6,34 +6,41 @@ Leaflet offline layer
 ## Dependencies
 * Leafletjs
 * Jquery
-* [Lazystorage](https://github.com/allartk/snippets/blob/master/js/LazyStorage.js) (included in this repo)
+* [Lazystorage] (https://github.com/allartk/LazyStorage)
 * [Functional tilelayer](https://github.com/ismyrnow/Leaflet.functionaltilelayer)
 
-##Usage
-Look in examples folder for details, you have to include both the control and tilelayer javascript file, as well as
-the dependencies.  The geojson part is unfinished work.
+the last two can be downloaded with bower, see usage.
 
-The tile server needs to have an Access-Control-Allow-Origin header.
+
+## Usage
+Look in examples folder for details, you have to include both the control and tilelayer javascript (geojson is unfinished) file, as well as
+the dependencies, which can be downloaded with [bower] (http://bower.io/#install-bower):
+```
+bower install
+```
+The tile server you use needs to have an Access-Control-Allow-Origin header to allow tiles
+to be saved in the browser, you can eg build a proxy. Do not use the tile server from
+the example!
 
 The layer:
 ```javascript
-                var baseLayer = L.tileLayer.offline('http://branta.sovon.nl/tiles/tiles.py/mq_proxy/{z}/{x}/{y}.jpg',
-                        {
-                            attribution:
-                                    'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; ' +
-                                    'Map data {attribution.OpenStreetMap}',
-                            subdomains: '1234',
-                            minZoom: 13
-                        }
-                ).addTo(map);
+var baseLayer =  L.tileLayer.offline('http://branta.sovon.nl/tiles/tiles.py/mq_proxy/{z}/{x}/{y}.jpg',
+      {
+          attribution:
+                  'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; ' +
+                  'Map data {attribution.OpenStreetMap}',
+          subdomains: '1234',
+          minZoom: 13
+      }
+).addTo(map);
 ```
 
 The control:
 ```javascript
-                L.control.savetiles(baseLayer,{
-                        'zoomlevels':[13,16] //optional zoomlevels to save tiles for, default current zoomlevel
-                    }
-                ).addTo(map);
+L.control.savetiles(baseLayer,{
+  'zoomlevels':[13,16] //optional zoomlevels to save tiles for, default current zoomlevel
+    }
+).addTo(map);
 ```
 The following events are fired on the layer while saving:
 * savestart, start downloading tiles
