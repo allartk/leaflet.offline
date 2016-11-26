@@ -1,12 +1,11 @@
-//storage tables
-var lzTiles = new LazyStorage('Leaflet',1,
-    {'TileLayer':
-        {
-            'name': 'TileLayer'
-        }
-    }
-);
-
+//TODO transform calls to lzTiles to localforage
+var lzTiles = localforage.config({
+    name        : 'leaflet_offline',
+    version     : 1.0,
+    size        : 4980736,
+    storeName   : 'tiles',
+    description : 'the tiles'
+});
 /**
  * inspired by control.zoom
  * options are position (string), saveText (string) ,rmText (string), confirm (function)

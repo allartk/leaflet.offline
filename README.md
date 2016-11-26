@@ -6,7 +6,7 @@ Leaflet offline layer
 ## Dependencies
 * Leafletjs
 * Jquery
-* [Lazystorage] (https://github.com/allartk/LazyStorage)
+* [localforage](https://github.com/localForage/localForage)
 * [Functional tilelayer](https://github.com/ismyrnow/Leaflet.functionaltilelayer)
 
 the last two can be downloaded with bower, see usage.
@@ -16,7 +16,7 @@ the last two can be downloaded with bower, see usage.
 Look in examples folder for details, you have to include both the control and tilelayer javascript (geojson is unfinished) file, as well as
 the dependencies, which can be downloaded with [bower] (http://bower.io/#install-bower):
 ```
-bower install
+npm install
 ```
 The tile server you use needs to have an Access-Control-Allow-Origin header to allow tiles
 to be saved in the browser, you can eg build a proxy. Do not use the tile server from

@@ -19,3 +19,7 @@ gulp.task('img',function() {
     gulp.src('src/images/*')
     .pipe(gulp.dest('./dist/images/'))
 })
+
+gulp.task('example',['dist'],function() {
+    //serve external libs like localforage and index.html
+})
