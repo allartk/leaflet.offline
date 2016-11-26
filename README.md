@@ -13,8 +13,8 @@ the last two can be downloaded with bower, see usage.
 
 
 ## Usage
-Look in examples folder for details, you have to include both the control and tilelayer javascript (geojson is unfinished) file, as well as
-the dependencies, which can be downloaded with [bower] (http://bower.io/#install-bower):
+Look in examples folder for details, you need to include the files from the dist folder, as well as
+the dependencies, which can be downloaded with [npm] (http://npmjs.com):
 ```
 npm install
 ```
