@@ -2,7 +2,7 @@
   "name": "leaflet.offline",
   "version": "0.0.1",
   "description": "Offline tilelayer for leaflet",
-  "main": "index.js",
+  "main": "dist/leaflet.offline.js",
   "directories": {
     "example": "examples"
   },
@@ -22,5 +22,9 @@
   "bugs": {
     "url": "https://github.com/allartk/leaflet.offline/issues"
   },
-  "homepage": "https://github.com/allartk/leaflet.offline#readme"
+  "homepage": "https://github.com/allartk/leaflet.offline#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1"
+  }
 }
