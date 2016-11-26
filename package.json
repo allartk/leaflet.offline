@@ -1,0 +1,26 @@
+{
+  "name": "leaflet.offline",
+  "version": "0.0.1",
+  "description": "Offline tilelayer for leaflet",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allartk/leaflet.offline.git"
+  },
+  "keywords": [
+    "leaflet",
+    "offline"
+  ],
+  "author": "Allart Kooiman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/allartk/leaflet.offline/issues"
+  },
+  "homepage": "https://github.com/allartk/leaflet.offline#readme"
+}
