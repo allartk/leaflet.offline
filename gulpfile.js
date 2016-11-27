@@ -7,6 +7,7 @@ var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var connect = require('gulp-connect');
+var path = require('path');
 
 gulp.task('dist',['js','css','img']);
 
@@ -55,7 +56,11 @@ gulp.task('bundle',function() {
 
 gulp.task('example',['css','img','js'],function() {
     connect.server({
-        root: ['examples','dist'],
+        root: ['examples',
+            'dist',
+            path.dirname(require.resolve('leaflet.functionaltilelayer')),
+            path.dirname(require.resolve('localforage'))
+        ],
         livereload: true
     });
 })
