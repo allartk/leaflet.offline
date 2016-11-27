@@ -31,6 +31,7 @@
     "gulp-sourcemaps": "^1.9.1",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
+    "leaflet.functionaltilelayer": "git+https://github.com/ismyrnow/Leaflet.functionaltilelayer.git#gh-pages",
     "localforage": "^1.4.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"

@@ -30,7 +30,8 @@ npm install git@github.com:allartk/leaflet.offline.git
 
 ### Run example
 
-For running the example, you'll need [gulp](http://www.gulpjs.com)
+For running the example, you'll need [gulp](http://www.gulpjs.com).
+From the project root run and visit http://localhost:8080/:
 
 ```
 gulp example
@@ -38,7 +39,7 @@ gulp example
 
 ## Usage
 
-Look in examples folder for details, you need to include the files from the dist folder, as well as the dependencies. I encourage you to use [browserify](http://browserify.org/).
+Look in examples folder. You need to include the files from the dist folder, as well as the dependencies. I encourage you to use [browserify](http://browserify.org/).
 
 The tile server you use needs to have an Access-Control-Allow-Origin header to allow tiles to be saved in the browser. To accomplish you could build a proxy.
 

@@ -1,12 +1,12 @@
-//storage tables
-var lzTiles = new LazyStorage('Leaflet',1,
-    {'TileLayer':
-        {
-            'name': 'TileLayer'
-        }
-    }
-);
+//var localforage = require('localforage');
 
+localforage.config({
+    name        : 'leaflet_offline',
+    version     : 1.0,
+    size        : 4980736,
+    storeName   : 'tiles',
+    description : 'the tiles'
+});
 /**
  * inspired by control.zoom
  * options are position (string), saveText (string) ,rmText (string), confirm (function)
@@ -120,22 +120,14 @@ L.Control.SaveTiles = L.Control.extend({
     },
     _saveTile: function(tileUrl,blob) {
         var $this = this;
-        lzTiles.rm('TileLayer',{'guid':tileUrl},function(data){
-            //convert blobs for webdb and old chrome!
-            if(lzTiles.type == 'webDB' || (window.navigator.appVersion.indexOf('Chrome') > 0 && parseInt(window.navigator.appVersion.match(/Chrome\/(\d+)\./)[1], 10) < 39)) {
-                if(!window.FileReader) {
-                    alert('Not supported browser');
-                    return;
-                }
-                var fr = new FileReader();
-                fr.onloadend = function () {
-                    lzTiles.save('TileLayer',{'guid':tileUrl,'image': fr.result},function(data){ $this._baseLayer.fire('savetileend'); });
-                };
-                fr.readAsDataURL(blob);
-            }
-            else {
-                lzTiles.save('TileLayer',{'guid':tileUrl,'image': blob},function(data){ $this._baseLayer.fire('savetileend'); });
-            }
+        localforage.removeItem(tileUrl).then(function() {
+            localforage.setItem(tileUrl,blob).then(function() {
+                console.log(1)
+            }).catch(function(err) {
+                console.error(err);
+            })
+        }).catch(function(err) {
+            console.error(err);
         });
     },
     onRemove: function() {
@@ -143,7 +135,7 @@ L.Control.SaveTiles = L.Control.extend({
     },
     _rmTiles: function() {
         $this = this;
-        lzTiles.clear('TileLayer',function() {
+        localforage.clear().then(function() {
             $this._baseLayer.fire('tilesremoved')
         });
     }
@@ -402,7 +394,7 @@ L.TileLayer.GeoJSON = L.TileLayer.Ajax.extend({
     }
 });
 
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -416,12 +408,10 @@ L.TileLayer.Offline = L.TileLayer.Functional.extend({
                     .replace('{y}', view.tile.row)
                     .replace('{x}', view.tile.column)
                     .replace('{s}', view.subdomain);
-            lzTiles.get(ObjectUrl, 'TileLayer', function(data) {                
-                if (data && typeof data.image === "object") {                        
-                    ObjectUrl = URL.createObjectURL(data.image);                    
-                }
-                else if(data && typeof data.image === "string") {
-                    ObjectUrl = data.image;
+            localforage.getItem(ObjectUrl).then(function(data) {
+                console.log(data);
+                if (data && typeof data === "object") {
+                    ObjectUrl = URL.createObjectURL(data);
                 }
                 deferred.resolve(ObjectUrl);
             });
@@ -462,4 +452,3 @@ L.TileLayer.Offline = L.TileLayer.Functional.extend({
 L.tileLayer.offline = function(url, options) {
     return new L.TileLayer.Offline(url, options);
 };
-

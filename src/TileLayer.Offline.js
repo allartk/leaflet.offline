@@ -1,4 +1,4 @@
-/* 
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -12,12 +12,9 @@ L.TileLayer.Offline = L.TileLayer.Functional.extend({
                     .replace('{y}', view.tile.row)
                     .replace('{x}', view.tile.column)
                     .replace('{s}', view.subdomain);
-            lzTiles.get(ObjectUrl, 'TileLayer', function(data) {                
-                if (data && typeof data.image === "object") {                        
-                    ObjectUrl = URL.createObjectURL(data.image);                    
-                }
-                else if(data && typeof data.image === "string") {
-                    ObjectUrl = data.image;
+            localforage.getItem(ObjectUrl).then(function(data) {                
+                if (data && typeof data === "object") {
+                    ObjectUrl = URL.createObjectURL(data);
                 }
                 deferred.resolve(ObjectUrl);
             });
@@ -58,4 +55,3 @@ L.TileLayer.Offline = L.TileLayer.Functional.extend({
 L.tileLayer.offline = function(url, options) {
     return new L.TileLayer.Offline(url, options);
 };
-
