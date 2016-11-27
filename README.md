@@ -4,27 +4,48 @@ leaflet.offline
 Leaflet offline layer
 
 ## Dependencies
-* Leafletjs
+
+* [Leafletjs](http://leafletjs.com/)
 * Jquery
 * [localforage](https://github.com/localForage/localForage)
 * [Functional tilelayer](https://github.com/ismyrnow/Leaflet.functionaltilelayer)
 
-the last two can be downloaded with bower, see usage.
+The last two will be installed if you use `npm install`.
 
+
+## Install
+
+### Manual
+
+Just use one of github's download methods. Make sure you include
+all the dependencies in your page too.
+
+### With npm
+
+The package and it's dependencies can be downloaded with [npm](http://npmjs.com):
+
+```
+npm install git@github.com:allartk/leaflet.offline.git
+```
+
+### Run example
+
+For running the example, you'll need [gulp](http://www.gulpjs.com)
+
+```
+gulp example
+```
 
 ## Usage
-Look in examples folder for details, you need to include the files from the dist folder, as well as
-the dependencies, which can be downloaded with [npm] (http://npmjs.com):
-```
-npm install
-```
-The tile server you use needs to have an Access-Control-Allow-Origin header to allow tiles
-to be saved in the browser, you can eg build a proxy. Do not use the tile server from
-the example!
+
+Look in examples folder for details, you need to include the files from the dist folder, as well as the dependencies. I encourage you to use [browserify](http://browserify.org/).
+
+The tile server you use needs to have an Access-Control-Allow-Origin header to allow tiles to be saved in the browser. To accomplish you could build a proxy.
+
 
 The layer:
 ```javascript
-var baseLayer =  L.tileLayer.offline('http://branta.sovon.nl/tiles/tiles.py/mq_proxy/{z}/{x}/{y}.jpg',
+var baseLayer =  L.tileLayer.offline('http://tiles.example.nl/tiles/tiles.py/mq_proxy/{z}/{x}/{y}.jpg',
       {
           attribution:
                   'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; ' +
@@ -55,3 +76,7 @@ The following options for the control
 * saveText html to show on save button
 * rmText html to show on remove button
 * confirm, function that returns jquery promise
+
+## Develop
+
+See gulp task. Also make sure you use eslint in your editor.
