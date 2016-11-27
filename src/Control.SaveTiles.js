@@ -115,7 +115,6 @@ L.Control.SaveTiles = L.Control.extend({
 		var $this = this;
 		localforage.removeItem(tileUrl).then(function () {
 			localforage.setItem(tileUrl, blob).then(function () {
-				console.log(1);
 			}).catch(function (err) {
 				console.error(err);
 			});
