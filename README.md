@@ -83,4 +83,4 @@ The following options for the control
 
 ## Develop
 
-See gulp task. Also make sure you use eslint in your editor.
+Use gulp tasks. Also make sure you use eslint in your editor.

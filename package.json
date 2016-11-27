@@ -2,7 +2,7 @@
   "name": "leaflet.offline",
   "version": "0.0.1",
   "description": "Offline tilelayer for leaflet",
-  "main": "dist/leaflet.offline.js",
+  "main": "src/leaflet.offline.js",
   "directories": {
     "example": "examples"
   },

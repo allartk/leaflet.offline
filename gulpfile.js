@@ -10,7 +10,6 @@ var connect = require('gulp-connect');
 var path = require('path');
 var rename = require('gulp-rename');
 
-gulp.task('dist', ['js', 'css', 'img']);
 
 // shoud make a standalon js, without localforage
 gulp.task('js', function () {
@@ -28,7 +27,7 @@ gulp.task('js', function () {
 });
 
 gulp.task('minify', ['js'], function () {
-	gulp.src('dist/*.js')
+	gulp.src(['dist/*.js', '!dist/*.min.js'])
     .pipe(uglify())
     .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest('./dist/'));
