@@ -15,14 +15,15 @@ The last two will be installed if you use `npm install`.
 
 ## Install
 
-### Manual
+### Manual or Clone
 
 Just use one of github's download methods. Make sure you include
 all the dependencies in your page too.
 
 ### With npm
 
-The package and it's dependencies can be downloaded with [npm](http://npmjs.com):
+The package and it's dependencies can also be downloaded into
+your existing project with [npm](http://npmjs.com):
 
 ```
 npm install git@github.com:allartk/leaflet.offline.git
@@ -34,12 +35,14 @@ For running the example, you'll need [gulp](http://www.gulpjs.com).
 From the project root run and visit http://localhost:8080/:
 
 ```
+npm install
 gulp example
 ```
 
 ## Usage
 
-Look in examples folder. You need to include the files from the dist folder, as well as the dependencies. I encourage you to use [browserify](http://browserify.org/).
+Look in examples folder. You need to include the files from the dist folder, as well as the dependencies. I encourage you to use [browserify](http://browserify.org/)
+to bundle all files into one.
 
 The tile server you use needs to have an Access-Control-Allow-Origin header to allow tiles to be saved in the browser. To accomplish you could build a proxy.
 
