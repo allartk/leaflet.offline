@@ -6,15 +6,25 @@ var browserify = require('browserify');
 var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
+var connect = require('gulp-connect');
 
 gulp.task('dist',['js','css','img']);
 
-//shoud make a standalon js
+//shoud make a standalon js, without localforage
 gulp.task('js',function() {
     gulp.src('src/**/*.js')
     .pipe(concat('leaflet.offline.js'))
     .pipe(gulp.dest('./dist/'));
 });
+
+
+//should make node entry, see https://github.com/Leaflet/Leaflet/tree/v1.0.2/dist
+gulp.task('src',function() {
+    gulp.src('src/**/*.js')
+    .pipe(concat('leaflet.offline-src.js'))
+    .pipe(gulp.dest('./dist/'));
+});
+
 
 gulp.task('css',function() {
     gulp.src('src/**/*.css')
@@ -26,7 +36,7 @@ gulp.task('img',function() {
     .pipe(gulp.dest('./dist/images/'))
 });
 
-//creates a all in one
+//just an example
 gulp.task('bundle',function() {
     var b = browserify([
         './src/Control.SaveTiles.js',
@@ -39,10 +49,13 @@ gulp.task('bundle',function() {
         .pipe(uglify())
         .on('error', gutil.log)
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./dist/'));
+        .pipe(gulp.dest('./examples/js/'));
 })
 
 
-gulp.task('example',['css','img','bundle'],function() {
-    //serve external libs like localforage and index.html
+gulp.task('example',['css','img','js'],function() {
+    connect.server({
+        root: ['examples','dist'],
+        livereload: true
+    });
 })
