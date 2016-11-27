@@ -25,6 +25,7 @@
   "homepage": "https://github.com/allartk/leaflet.offline#readme",
   "devDependencies": {
     "browserify": "^13.1.1",
+    "browserify-shim": "^3.8.12",
     "eslint": "^3.11.0",
     "eslint-config-mourner": "^2.0.1",
     "eslint-plugin-promise": "^3.4.0",
@@ -32,6 +33,7 @@
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-connect": "^5.0.0",
+    "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.9.1",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
@@ -39,5 +41,8 @@
     "localforage": "^1.4.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "browserify-shim": {
+    "localforage": "global:localforage"
   }
 }

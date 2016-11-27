@@ -1,17 +1,10 @@
-/* global localforage L */
-// var localforage = require('localforage');
-
-localforage.config({
-	name: 'leaflet_offline',
-	version: 1.0,
-	size: 4980736,
-	storeName: 'tiles',
-	description: 'the tiles'
-});
+/* global L */
+var localforage = require('./localforage');
 /**
  * inspired by control.zoom
  * options are position (string), saveText (string) ,rmText (string), confirm (function)
  */
+
 L.Control.SaveTiles = L.Control.extend({
     // TODO add zoom level to save
 	options: {
