@@ -72,7 +72,6 @@ gulp.task('example', ['css', 'img', 'js'], function () {
 	connect.server({
 		root: ['examples',
 			'dist',
-			path.dirname(require.resolve('leaflet.functionaltilelayer')),
 			path.dirname(require.resolve('localforage'))
 		],
 		middleware: function () {

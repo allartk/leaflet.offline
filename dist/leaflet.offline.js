@@ -142,7 +142,7 @@ L.control.savetiles = function (baseLayer, options) {
 /* global L */
 var localforage = require('./localforage');
 /*
-* TODO add bool option to enable online fallback (default true)
+* TODO Feature add bool option to enable online fallback (default true)
 * If false reuse tiles lower/higher zoomlevels.
  */
 L.TileLayer.Offline = L.TileLayer.extend({
@@ -176,11 +176,9 @@ L.TileLayer.Offline = L.TileLayer.extend({
 					resolve(URL.createObjectURL(data));
 				}
 				resolve(url);
-			}).catch(function(e) {
+			}).catch(function (e) {
 				reject(e);
 			});
-
-
 		});
 		return p;
 	}
