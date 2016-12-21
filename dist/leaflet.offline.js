@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/* global L */
+/* global L $ */
 var localforage = require('./localforage');
 /**
  * inspired by control.zoom
@@ -19,7 +19,7 @@ L.Control.SaveTiles = L.Control.extend({
 		this._baseLayer = baseLayer;
 		L.setOptions(this, options);
 	},
-	onAdd: function (map) {
+	onAdd: function () {
 		var container = L.DomUtil.create('div', 'savetiles leaflet-bar'),
 		options = this.options;
 		this._createButton(options.saveText, 'Save tiles', 'savetiles', container, this._saveTiles);
@@ -42,29 +42,29 @@ L.Control.SaveTiles = L.Control.extend({
 		return link;
 	},
 	_saveTiles: function () {
-		var zoom;
         // zoom levels we are going to save
 		if (!this._zoomsforSave) {
 			this._zoomsforSave = [];
 			this._tilesforSave = [];
 		}
-		var tileSize = this._baseLayer._getTileSize();
+		var tileSize = this._baseLayer.getTileSize().x;
+		var bounds, zoom;
+		// current zoom or zoom options
 		if (!this.options.zoomlevels) {
-			var bounds = this._map.getPixelBounds(),
+			bounds = this._map.getPixelBounds();
 			zoom = this._map.getZoom();
-		}
-        // todo other zoomlevels
-		else {
+		} else {
 			zoom = this.options.zoomlevels[this._zoomsforSave.length];
 			var latlngBounds = this._map.getBounds();
-			var bounds = L.bounds(this._map.project(latlngBounds.getNorthWest(), zoom), this._map.project(latlngBounds.getSouthEast(), zoom));
+			bounds = L.bounds(this._map.project(latlngBounds.getNorthWest(), zoom), this._map.project(latlngBounds.getSouthEast(), zoom));
 		}
 		var tileBounds = L.bounds(
             bounds.min.divideBy(tileSize).floor(),
             bounds.max.divideBy(tileSize).floor());
+
 		this._zoomsforSave.push(zoom);
-		for (j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
-			for (i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
+		for (var j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
+			for (var i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
 				var tilePoint = new L.Point(i, j);
 				tilePoint.z = zoom;
 				this._tilesforSave.push(L.TileLayer.prototype.getTileUrl.call(this._baseLayer, tilePoint));
@@ -96,16 +96,13 @@ L.Control.SaveTiles = L.Control.extend({
 		xhr.open('GET', tileUrl);
 		xhr.responseType = 'blob';
 		xhr.send();
-		var $this = this;
 		xhr.onreadystatechange = function () {
 			if (this.readyState === 4 && this.status === 200) {
 				$this._saveTile(tileUrl, this.response);
 				if ($this._tilesforSave.length > 0) {
 					$this._loadTile($this._tilesforSave.shift());
 					$this._baseLayer.fire('loadtileend');
-				}
-                // fire some event?
-				else {
+				} else {
 					$this._baseLayer.fire('loadtileend');
 					$this._baseLayer.fire('loadend');
 				}
@@ -113,7 +110,6 @@ L.Control.SaveTiles = L.Control.extend({
 		};
 	},
 	_saveTile: function (tileUrl, blob) {
-		var $this = this;
 		localforage.removeItem(tileUrl).then(function () {
 			localforage.setItem(tileUrl, blob).then(function () {
 			}).catch(function (err) {
@@ -127,7 +123,7 @@ L.Control.SaveTiles = L.Control.extend({
 
 	},
 	_rmTiles: function () {
-		$this = this;
+		var $this = this;
 		localforage.clear().then(function () {
 			$this._baseLayer.fire('tilesremoved');
 		});
