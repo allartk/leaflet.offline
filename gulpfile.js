@@ -52,22 +52,6 @@ gulp.task('img', function () {
     .pipe(gulp.dest('./dist/images/'));
 });
 
-// just an example
-gulp.task('bundle', function () {
-	var b = browserify([
-		'./src/Control.SaveTiles.js',
-		'./src/TileLayer.Offline.js'
-	]);
-	return b.bundle()
-        .pipe(source('bundle.js'))
-        .pipe(buffer())
-        .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(uglify())
-        .on('error', gutil.log)
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./examples/js/'));
-});
-
 gulp.task('example', ['css', 'img', 'js'], function () {
 	connect.server({
 		root: ['examples',
