@@ -5,10 +5,9 @@ Leaflet offline layer
 
 ## Dependencies
 
-* [Leafletjs](http://leafletjs.com/)
+* [Leafletjs](http://leafletjs.com/) (version 1.0, look in releases if you use an older leaflet version)
 * Jquery
 * [localforage](https://github.com/localForage/localForage)
-* [Functional tilelayer](https://github.com/ismyrnow/Leaflet.functionaltilelayer)
 
 The last two will be installed if you use `npm install`.
 
