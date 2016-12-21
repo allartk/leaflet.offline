@@ -20,7 +20,7 @@ and open the template in the editor.
             $(function() {
                 var map = L.map('map').setView([52,5], 16);
                 //offline baselayer, will use offline source if available
-                var baseLayer = L.tileLayer.offline('http://branta.sovon.nl/tiles/tiles.py/mq_proxy/{z}/{x}/{y}.jpg',
+                var baseLayer = L.tileLayer.offline('/tiles/{z}/{x}/{y}.png',
                         {
                             attribution:
                                     'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; ' +

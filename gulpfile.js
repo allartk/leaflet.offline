@@ -9,6 +9,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var connect = require('gulp-connect');
 var path = require('path');
 var rename = require('gulp-rename');
+var proxy = require('http-proxy-middleware');
 
 
 // shoud make a standalon js, without localforage
@@ -74,6 +75,17 @@ gulp.task('example', ['css', 'img', 'js'], function () {
 			path.dirname(require.resolve('leaflet.functionaltilelayer')),
 			path.dirname(require.resolve('localforage'))
 		],
+		middleware: function () {
+			return [
+				proxy('/tiles', {
+					pathRewrite: {
+						'^/tiles/': '/'
+					},
+					target: 'http://a.tile.openstreetmap.org/',
+					changeOrigin:true
+				})
+			];
+		},
 		livereload: true
 	});
 	gulp.watch('./src/**/*.js', ['js']);
