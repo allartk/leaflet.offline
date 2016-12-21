@@ -57,8 +57,7 @@ The control control takes the following (optional) options:
 * position: position of the control default 'topleft'
 * saveText: html to show on save button
 * rmText: html to show on remove button
-* confirm: optional function, arg is layer, should return [promise object](
-https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+* confirm: args are layer and function that should be called when use confirms
 
 **L.tileLayer.offline** extends and has the same options as [L.TileLayer](http://leafletjs.com/reference-1.0.0.html#tilelayer).
 
