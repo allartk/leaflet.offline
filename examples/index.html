@@ -9,14 +9,12 @@ and open the template in the editor.
         <title>Example offline layer</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.2/dist/leaflet.css" />
         <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
-        <script src="/localforage.js" type="text/javascript"></script>        
+        <script src="/localforage.js" type="text/javascript"></script>
         <script src="/leaflet.offline.js" type="text/javascript"></script>
-        <link href="/leaflet.offline.css" rel="stylesheet" type="text/css"/>
         <script type="text/javascript">
-            $(function() {
+            window.addEventListener("load", function(event) {
                 var map = L.map('map').setView([52,5], 16);
                 //offline baselayer, will use offline source if available
                 var baseLayer = L.tileLayer.offline('/tiles/{z}/{x}/{y}.png',
@@ -31,30 +29,26 @@ and open the template in the editor.
                 //add buttons to save tiles in area viewed
                 L.control.savetiles(baseLayer,{
                         'zoomlevels':[13,16], //optional zoomlevels to save, default current zoomlevel
-                        'confirm' : function(d) {
-                          //do some logic to ask user for confirmation
-                          var r = window.confirm("Save "+this._tilesforSave.length);
-                          if(r) {
-                            d.resolve();
-                          }
-                          else {
-                            d.reject();
-                          }
+                        'confirm' : function(layer,succescallback) {
+                                if(window.confirm("Save "+layer._tilesforSave.length)) {
+                                    succescallback();
+                                }
+                    		}
                         }
-                    }
                 ).addTo(map);
 
                 //layer switcher control
-                L.control.layers({"mapbox" : baseLayer}).addTo(map);
+                L.control.layers({"osm" : baseLayer}).addTo(map);
 
                 //events while saving a tile layer
-                var progress = 0;
+                var progress;
                 baseLayer.on('savestart',function(e) {
-                    $("#total").html(e._tilesforSave.length);
+                    progress = 0;
+                    document.getElementById("total").innerHTML = e._tilesforSave.length;
                 });
                 baseLayer.on('savetileend',function(e) {
                     progress++;
-                    $("#progress").html(progress);
+                    document.getElementById('progress').innerHTML = progress;
                 });
                 baseLayer.on('loadend',function(e) {
                     alert("Saved all tiles");
@@ -68,7 +62,6 @@ and open the template in the editor.
     </head>
     <body>
         <div id="map" style="height: 500px"></div>
-        <div id="total"></div>
-        <p>Progress: <span id="progress"></span></p>
+        <p>Progress: <span id="progress"></span> / <span id="total"></span></p>
     </body>
 </html>

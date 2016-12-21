@@ -1,5 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/* global L $ */
+/* global L */
 var localforage = require('./localforage');
 /**
  * inspired by control.zoom
@@ -10,7 +10,7 @@ L.Control.SaveTiles = L.Control.extend({
     // TODO add zoom level to save
 	options: {
 		position: 'topleft',
-		saveText: '',
+		saveText: '+',
 		rmText: '-',
         // optional function called before saving tiles
 		'confirm': null
@@ -77,19 +77,22 @@ L.Control.SaveTiles = L.Control.extend({
         // unset zoomlevels to save
 		delete this._zoomsforSave;
 		var self = this;
-		if (this.options.confirm) {
-			var def = $.Deferred();
-			this.options.confirm.call(this, def);
-			def.done(function () {
-				self._baseLayer.fire('savestart', self);
-				self._loadTile(self._tilesforSave.shift());
-			});
-		} else {
+		var succescallback = function () {
 			self._baseLayer.fire('savestart', self);
 			self._loadTile(self._tilesforSave.shift());
+		};
+		if (this.options.confirm) {
+			this.options.confirm(this, succescallback);
+		} else {
+			succescallback();
 		}
 	},
-    // return blob in callback
+    /**
+     * Download tile blob and save function after download
+     * TODO, call with array of urls and download them all at once using fetch
+     * @param  {string} tileUrl 
+     * @return {void}
+     */
 	_loadTile: function (tileUrl) {
 		var $this = this;
 		var xhr = new XMLHttpRequest();
@@ -110,13 +113,15 @@ L.Control.SaveTiles = L.Control.extend({
 		};
 	},
 	_saveTile: function (tileUrl, blob) {
+		var self = this;
 		localforage.removeItem(tileUrl).then(function () {
 			localforage.setItem(tileUrl, blob).then(function () {
+				self._baseLayer.fire('savetileend', self);
 			}).catch(function (err) {
-				console.error(err);
+				throw new Error(err);
 			});
 		}).catch(function (err) {
-			console.error(err);
+			throw new Error(err);
 		});
 	},
 	onRemove: function () {

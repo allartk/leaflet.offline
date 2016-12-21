@@ -23,7 +23,8 @@ gulp.task('js', function () {
         .bundle()
         .pipe(source('leaflet.offline.js'))
         .pipe(buffer())
-        .pipe(gulp.dest('./dist/'));
+        .pipe(gulp.dest('./dist/'))
+		.pipe(connect.reload());
 
 });
 

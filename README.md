@@ -6,7 +6,6 @@ Leaflet offline layer
 ## Dependencies
 
 * [Leafletjs](http://leafletjs.com/) (version 1.0, look in releases if you use an older leaflet version)
-* Jquery
 * [localforage](https://github.com/localForage/localForage)
 
 The last two will be installed if you use `npm install`.
@@ -38,6 +37,37 @@ npm install
 gulp example
 ```
 
+## Api
+
+### L.control.savetiles Events
+
+The following events are fired by the control while saving tiles:
+
+* savestart, start downloading tiles
+* loadtileend, a tile is downloaded (eg show progress bar)
+* savetileend, one tile is saved  (eg show progress bar)
+* loadend, all tiles are downloaded
+* tilesremoved, all tiles are removed
+
+### L.control.savetiles options
+
+The control control takes the following (optional) options:
+
+* zoomlevels: array of integers, default current zoomlevel
+* position: position of the control default 'topleft'
+* saveText: html to show on save button
+* rmText: html to show on remove button
+* confirm: optional function, arg is layer, should return [promise object](
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+
+**L.tileLayer.offline** extends and has the same options as [L.TileLayer](http://leafletjs.com/reference-1.0.0.html#tilelayer).
+
+## Update from older release
+
+Release 0.1 will use Leaflet 1.0.x, the argument for the confirm option changed in this release.
+
+Release pre 0.1 use leaflet 0.7 (and other extra dependencies, see readme)
+
 ## Usage
 
 Look in examples folder. You need to include the files from the dist folder, as well as the dependencies. I encourage you to use [browserify](http://browserify.org/)
@@ -47,6 +77,7 @@ The tile server you use needs to have an Access-Control-Allow-Origin header to a
 
 
 The layer:
+
 ```javascript
 var baseLayer =  L.tileLayer.offline('http://tiles.example.nl/tiles/tiles.py/mq_proxy/{z}/{x}/{y}.jpg',
       {
@@ -66,19 +97,6 @@ L.control.savetiles(baseLayer,{
     }
 ).addTo(map);
 ```
-The following events are fired on the layer while saving:
-* savestart, start downloading tiles
-* loadtileend, a tile is downloaded (eg show progress bar)
-* savetileend, one tile is saved  (eg show progress bar)
-* loadend, all tiles are downloaded
-* tilesremoved, all tiles are removed
-
-The following options for the control
-* zoomlevels, array of integers, default current zoomlevel
-* position position of the control default 'topleft'
-* saveText html to show on save button
-* rmText html to show on remove button
-* confirm, function that returns jquery promise
 
 ## Develop
 
