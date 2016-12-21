@@ -90,7 +90,7 @@ L.Control.SaveTiles = L.Control.extend({
     /**
      * Download tile blob and save function after download
      * TODO, call with array of urls and download them all at once using fetch
-     * @param  {string} tileUrl 
+     * @param  {string} tileUrl
      * @return {void}
      */
 	_loadTile: function (tileUrl) {
