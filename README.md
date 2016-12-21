@@ -5,7 +5,7 @@ Leaflet offline layer
 
 ## Dependencies
 
-* [Leafletjs](http://leafletjs.com/)
+* [Leafletjs](http://leafletjs.com/) 0.7, for 1.0 log in rmfunctionaltilelayer branch
 * Jquery
 * [localforage](https://github.com/localForage/localForage)
 * [Functional tilelayer](https://github.com/ismyrnow/Leaflet.functionaltilelayer)
