@@ -143,10 +143,13 @@ L.control.savetiles = function (baseLayer, options) {
 /* global L */
 var localforage = require('./localforage');
 /*
-* TODO Feature add bool option to enable online fallback (default true)
+* TODO Feature add array option limit tileloading to certain zoomlevels
 * If false reuse tiles lower/higher zoomlevels.
  */
 L.TileLayer.Offline = L.TileLayer.extend({
+	options: {
+		'zoomlevels': null
+	},
 	createTile: function (coords, done) {
 		var tile = document.createElement('img');
 
@@ -170,6 +173,7 @@ L.TileLayer.Offline = L.TileLayer.extend({
 	},
 	getTileUrl: function (coords) {
 		var $this = this;
+		coords = $this._findTile(coords);
 		var p = new Promise(function (resolve, reject) {
 			var url = L.TileLayer.prototype.getTileUrl.call($this, coords);
 			localforage.getItem(url).then(function (data) {
@@ -182,6 +186,24 @@ L.TileLayer.Offline = L.TileLayer.extend({
 			});
 		});
 		return p;
+	},
+	_findTile: function (coords) {
+		//TODO
+		 if (this.options.zoomlevels) {
+			for (var i in this.options.zoomlevels) {
+				if (this.options.zoomlevels[i] >= coords.z) {
+					var zoom = this.options.zoomlevels[i];
+				}
+			}
+			var pixelcoords = new L.Point(coords.x, coords.y).multiplyBy(this.getTileSize().x);
+			var latlng = this._map.unproject(pixelcoords, coords.z);
+			// console.log(coords);
+			coords = this._map.project(latlng, zoom).divideBy(this.getTileSize().x).round();
+			coords.z = this._tileZoom = zoom;
+			console.log(coords);
+
+		}
+		return coords;
 	}
 
 });
