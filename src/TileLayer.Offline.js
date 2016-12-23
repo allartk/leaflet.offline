@@ -8,6 +8,7 @@ L.TileLayer.Offline = L.TileLayer.extend({
 	options: {
 		'zoomlevels': null
 	},
+	diffZoom: 1,
 	createTile: function (coords, done) {
 		var tile = document.createElement('img');
 
@@ -26,13 +27,15 @@ L.TileLayer.Offline = L.TileLayer.extend({
 			throw new Error(e);
 		});
 
-
 		return tile;
 	},
 	getTileUrl: function (coords) {
 		var $this = this;
-		coords = $this._findTile(coords);
+		var {coords, offset} = $this._findTile(coords);
 		var p = new Promise(function (resolve, reject) {
+			if (offset.x !== 0 || offset.y !== 0) {
+				reject('tiles should only load for offset 0');
+			}
 			var url = L.TileLayer.prototype.getTileUrl.call($this, coords);
 			localforage.getItem(url).then(function (data) {
 				if (data && typeof data === 'object') {
@@ -46,22 +49,26 @@ L.TileLayer.Offline = L.TileLayer.extend({
 		return p;
 	},
 	_findTile: function (coords) {
-		// TODO
+		var offset = new L.Point(0, 0);
 		 if (this.options.zoomlevels) {
 			for (var i in this.options.zoomlevels) {
-				if (this.options.zoomlevels[i] >= coords.z) {
+				if (this.options.zoomlevels[i] <= coords.z) {
 					var zoom = this.options.zoomlevels[i];
 				}
 			}
-			var pixelcoords = new L.Point(coords.x, coords.y).multiplyBy(this.getTileSize().x);
-			var latlng = this._map.unproject(pixelcoords, coords.z);
-			// console.log(coords);
-			coords = this._map.project(latlng, zoom).divideBy(this.getTileSize().x).round();
+			if (!zoom) {
+				return coords;
+			}
+			var diffZoom = this.diffZoom = (coords.z - zoom) + 1;
+			coords = coords.divideBy(diffZoom);
+			offset = coords.subtract(coords.floor());
 			coords.z = this._tileZoom = zoom;
-			console.log(coords);
-
 		}
-		return coords;
+
+		return {
+			'coords': coords,
+			'offset': offset
+		};
 	}
 
 });
