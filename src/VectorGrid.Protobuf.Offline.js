@@ -7,9 +7,10 @@ if (L.VectorGrid) {
 			'zoomlevels': null
 		},
 		_getVectorTilePromise: function (coords) {
-			coords = this._getCoords(coords);
-			L.VectorGrid.Protobuf.prototype._getVectorTilePromise.call(this, coords);
+			coords = this._getCoords(coords);			
+			return L.VectorGrid.Protobuf.prototype._getVectorTilePromise.call(this, coords);
 		},
+		//BROKEN CODE
 		_getCoords: function (coords) {
 			if (this.options.zoomlevels) {
 				for (var i in this.options.zoomlevels) {
@@ -20,9 +21,8 @@ if (L.VectorGrid) {
 				if (!zoom) {
 					return coords;
 				}
-				var diffZoom = this.diffZoom = (coords.z - zoom) + 1;
-				coords = coords.divideBy(diffZoom);
-// offset = coords.subtract(coords.floor());
+				var diffZoom = (coords.z - zoom) + 1;
+				coords = coords.divideBy(diffZoom).floor();
 				coords.z = this._tileZoom = zoom;
 			}
 			return coords;

@@ -68,6 +68,10 @@ First arg is layer object to save, second if object of optional options:
 * rmText: html to show on remove button
 * confirm: args are layer and function that should be called when use confirms
 
+#### L.control.savetiles methods
+
+* setlayer: change the layer to save tiles from
+
 #### L.tileLayer.offline
 
 Extends and has the same options as [L.TileLayer](http://leafletjs.com/reference-1.0.0.html#tilelayer).
@@ -76,7 +80,7 @@ as stored. The tileserver should server the tiles with a Access-Control-Allow-Or
 
 #### L.VectorGrid.Protobuf.Offline
 
-TODO
+Work in progress
 
 ## Update from older release
 

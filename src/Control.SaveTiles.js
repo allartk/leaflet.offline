@@ -18,6 +18,9 @@ L.Control.SaveTiles = L.Control.extend({
 		this._baseLayer = baseLayer;
 		L.setOptions(this, options);
 	},
+	setLayer: function (layer) {
+		this._baseLayer = layer;
+	},
 	onAdd: function () {
 		var container = L.DomUtil.create('div', 'savetiles leaflet-bar'),
 		options = this.options;

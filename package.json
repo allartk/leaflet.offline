@@ -37,7 +37,8 @@
     "gulp-sourcemaps": "^1.9.1",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
-    "http-proxy-middleware": "^0.17.3",    
+    "http-proxy-middleware": "^0.17.3",
+    "leaflet.vectorgrid": "^1.1.0",
     "localforage": "^1.4.3",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"

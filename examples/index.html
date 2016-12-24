@@ -57,6 +57,7 @@
         //Vector tile (work in progress, does not work)
         var url = 'https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token=pk.eyJ1IjoiYWxsYXJ0ayIsImEiOiJjaXgzNGZzZmgwMDB4MnpwYmJwZzAwYjVnIn0.sLhPn4FuHSjTBWgSm2t0-Q';
         var vectorTileOptions = {
+            //zoomlevels: [13,15], TODO: IS BROKEN
             rendererFactory: L.canvas.tile,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://www.mapbox.com/about/maps/">MapBox</a>',
             vectorTileLayerStyles: {
@@ -109,7 +110,7 @@
 
             },
         };
-        var pbfLayer = L.vectorGrid.protobuf(url, vectorTileOptions);
+        var pbfLayer = L.vectorGrid.protobuf.offline(url, vectorTileOptions);
 
         map.setView({
             lat: 51.985,
