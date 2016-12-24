@@ -72,7 +72,7 @@ First arg is layer object to save, second if object of optional options:
 
 Extends and has the same options as [L.TileLayer](http://leafletjs.com/reference-1.0.0.html#tilelayer).
 It uses offline tiles when available and falls back to online if not. Tile url should be identitical (including subdomain)
-as stored.
+as stored. The tileserver should server the tiles with a Access-Control-Allow-Origin header.
 
 #### L.VectorGrid.Protobuf.Offline
 
@@ -85,9 +85,6 @@ Release 0.1 will use Leaflet 1.0.x, the argument for the confirm option changed 
 Release pre 0.1 use leaflet 0.7 (and other extra dependencies, see readme)
 
 ### Example
-
-The tile server you use needs to have an Access-Control-Allow-Origin header to allow tiles to be saved in the browser. To accomplish you could build a proxy.
-
 
 The layer:
 
