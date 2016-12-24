@@ -31,11 +31,7 @@ L.TileLayer.Offline = L.TileLayer.extend({
 	},
 	getTileUrl: function (coords) {
 		var $this = this;
-		var {coords, offset} = $this._findTile(coords);
 		var p = new Promise(function (resolve, reject) {
-			if (offset.x !== 0 || offset.y !== 0) {
-				reject('tiles should only load for offset 0');
-			}
 			var url = L.TileLayer.prototype.getTileUrl.call($this, coords);
 			localforage.getItem(url).then(function (data) {
 				if (data && typeof data === 'object') {
@@ -47,30 +43,7 @@ L.TileLayer.Offline = L.TileLayer.extend({
 			});
 		});
 		return p;
-	},
-	_findTile: function (coords) {
-		var offset = new L.Point(0, 0);
-		 if (this.options.zoomlevels) {
-			for (var i in this.options.zoomlevels) {
-				if (this.options.zoomlevels[i] <= coords.z) {
-					var zoom = this.options.zoomlevels[i];
-				}
-			}
-			if (!zoom) {
-				return coords;
-			}
-			var diffZoom = this.diffZoom = (coords.z - zoom) + 1;
-			coords = coords.divideBy(diffZoom);
-			offset = coords.subtract(coords.floor());
-			coords.z = this._tileZoom = zoom;
-		}
-
-		return {
-			'coords': coords,
-			'offset': offset
-		};
 	}
-
 });
 
 L.tileLayer.offline = function (url, options) {

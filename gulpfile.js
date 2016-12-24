@@ -57,7 +57,8 @@ gulp.task('example', ['css', 'img', 'js'], function () {
 	connect.server({
 		root: ['examples',
 			'dist',
-			path.dirname(require.resolve('localforage'))
+			path.dirname(require.resolve('localforage')),
+			path.dirname(require.resolve('leaflet.vectorgrid'))
 		],
 		middleware: function () {
 			return [
