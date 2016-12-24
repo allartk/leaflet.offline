@@ -66,7 +66,7 @@ First arg is layer object to save, second if object of optional options:
 * position: position of the control default 'topleft'
 * saveText: html to show on save button
 * rmText: html to show on remove button
-* confirm: args are layer and function that should be called when use confirms
+* confirm: a function with args layer and a callback function that should be called when user confirms download
 
 #### L.control.savetiles methods
 
