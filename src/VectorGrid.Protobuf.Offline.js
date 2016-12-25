@@ -7,12 +7,12 @@ if (L.VectorGrid) {
 			'zoomlevels': null
 		},
 		_getVectorTilePromise: function (coords) {
-			coords = this._getCoords(coords);			
+			coords = this._getCoords(coords);
 			return L.VectorGrid.Protobuf.prototype._getVectorTilePromise.call(this, coords);
 		},
-		//BROKEN CODE
+		// BROKEN CODE
 		_getCoords: function (coords) {
-			if (this.options.zoomlevels) {
+			/* if (this.options.zoomlevels) {
 				for (var i in this.options.zoomlevels) {
 					if (this.options.zoomlevels[i] <= coords.z) {
 						var zoom = this.options.zoomlevels[i];
@@ -24,7 +24,7 @@ if (L.VectorGrid) {
 				var diffZoom = (coords.z - zoom) + 1;
 				coords = coords.divideBy(diffZoom).floor();
 				coords.z = this._tileZoom = zoom;
-			}
+			}*/
 			return coords;
 		}
 
