@@ -2,7 +2,8 @@ leaflet.offline
 ===============
 
 Just a modern and slim library to store image and vector tiles offline.
-Easy to use in your existing projects. Take a look in the example folder and see how it works!
+Easy to use in your existing projects. Take a look in the example folder and see how it works, or head
+to **http://allartk.github.io/leaflet.offline/**!
 
 
 ## Dependencies
