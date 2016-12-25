@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Example github pages</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.4.3/localforage.min.js" type="text/javascript"></script>
+    <script src="/dist/leaflet.offline.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://opensource.keycdn.com/fontawesome/4.7.0/font-awesome.min.css" integrity="sha384-dNpIIXE8U05kAbPhy3G1cz+yZmTzA6CY8Vg/u2L9xRnHjJiAK76m2BIEaSEV+/aU" crossorigin="anonymous">
+</head>
+
+<body>
+    <div id="map" style="height: 80vh; max-width:700px"></div>
+    <p>Progress: <span id="progress"></span> / <span id="total"></span></p>
+    <script type="text/javascript">
+        var map = L.map('map');
+        //offline baselayer, will use offline source if available
+        var baseLayer = L.tileLayer.offline('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data {attribution.OpenStreetMap}',
+            subdomains: '1234', //ignored
+            minZoom: 13,
+        }).addTo(map);
+        //add buttons to save tiles in area viewed
+        L.control.savetiles(baseLayer, {
+            'zoomlevels': [13, 16], //optional zoomlevels to save, default current zoomlevel
+            'confirm': function(layer, succescallback) {
+                if (window.confirm("Save " + layer._tilesforSave.length)) {
+                    succescallback();
+                }
+            },
+            'saveText': '<i class="fa fa-download" aria-hidden="true"></i>',
+            'rmText': '<i class="fa fa-trash" aria-hidden="true"></i>'
+        }).addTo(map);
+
+
+
+        //events while saving a tile layer
+        var progress;
+        baseLayer.on('savestart', function(e) {
+            progress = 0;
+            document.getElementById("total").innerHTML = e._tilesforSave.length;
+        });
+        baseLayer.on('savetileend', function(e) {
+            progress++;
+            document.getElementById('progress').innerHTML = progress;
+        });
+        baseLayer.on('loadend', function(e) {
+            alert("Saved all tiles");
+        });
+        baseLayer.on('tilesremoved', function(e) {
+            alert("Removed all tiles");
+        });
+
+
+        map.setView({
+            lat: 51.985,
+            lng: 5
+        }, 16);
+        //layer switcher control
+        L.control.layers({
+            "osm (offline)": baseLayer
+        }).addTo(map);
+    </script>
+</body>
+
+</html>
