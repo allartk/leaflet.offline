@@ -142,7 +142,7 @@ L.control.savetiles = function (baseLayer, options) {
 	return new L.Control.SaveTiles(baseLayer, options);
 };
 
-},{"./localforage":5}],2:[function(require,module,exports){
+},{"./localforage":4}],2:[function(require,module,exports){
 /* global L */
 var localforage = require('./localforage');
 /*
@@ -195,50 +195,12 @@ L.tileLayer.offline = function (url, options) {
 	return new L.TileLayer.Offline(url, options);
 };
 
-},{"./localforage":5}],3:[function(require,module,exports){
-/* global L */
-// var localforage = require('./localforage');
-// TODO localforage loading
-if (L.VectorGrid) {
-	L.VectorGrid.Protobuf.Offline = L.VectorGrid.Protobuf.extend({
-		options: {
-			'zoomlevels': null
-		},
-		_getVectorTilePromise: function (coords) {
-			coords = this._getCoords(coords);			
-			return L.VectorGrid.Protobuf.prototype._getVectorTilePromise.call(this, coords);
-		},
-		//BROKEN CODE
-		_getCoords: function (coords) {
-			if (this.options.zoomlevels) {
-				for (var i in this.options.zoomlevels) {
-					if (this.options.zoomlevels[i] <= coords.z) {
-						var zoom = this.options.zoomlevels[i];
-					}
-				}
-				if (!zoom) {
-					return coords;
-				}
-				var diffZoom = (coords.z - zoom) + 1;
-				coords = coords.divideBy(diffZoom).floor();
-				coords.z = this._tileZoom = zoom;
-			}
-			return coords;
-		}
-
-	});
-
-	L.vectorGrid.protobuf.offline = function (url, options) {
-		return new L.VectorGrid.Protobuf.Offline(url, options);
-	};
-}
-
-},{}],4:[function(require,module,exports){
+},{"./localforage":4}],3:[function(require,module,exports){
 require('./Control.SaveTiles');
 require('./TileLayer.Offline');
-require('./VectorGrid.Protobuf.Offline');
+// require('./VectorGrid.Protobuf.Offline');
 
-},{"./Control.SaveTiles":1,"./TileLayer.Offline":2,"./VectorGrid.Protobuf.Offline":3}],5:[function(require,module,exports){
+},{"./Control.SaveTiles":1,"./TileLayer.Offline":2}],4:[function(require,module,exports){
 (function (global){
 var lf = (typeof window !== "undefined" ? window['localforage'] : typeof global !== "undefined" ? global['localforage'] : null);
 
@@ -253,4 +215,4 @@ lf.config({
 module.exports = lf;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[4]);
+},{}]},{},[3]);
