@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"></script>
-    <script src="/Leaflet.VectorGrid.bundled.js"></script>
+    <script src="https://unpkg.com/leaflet@1.0.0/dist/leaflet.js"></script>    
     <script src="/localforage.js" type="text/javascript"></script>
     <script src="/leaflet.offline.js" type="text/javascript"></script>
     <link rel="stylesheet" href="https://opensource.keycdn.com/fontawesome/4.7.0/font-awesome.min.css" integrity="sha384-dNpIIXE8U05kAbPhy3G1cz+yZmTzA6CY8Vg/u2L9xRnHjJiAK76m2BIEaSEV+/aU" crossorigin="anonymous">
@@ -54,63 +53,7 @@
         baseLayer.on('tilesremoved', function(e) {
             alert("Removed all tiles");
         });
-        //Vector tile (work in progress, does not work)
-        var url = 'https://{s}.tiles.mapbox.com/v4/mapbox.mapbox-streets-v6/{z}/{x}/{y}.vector.pbf?access_token=pk.eyJ1IjoiYWxsYXJ0ayIsImEiOiJjaXgzNGZzZmgwMDB4MnpwYmJwZzAwYjVnIn0.sLhPn4FuHSjTBWgSm2t0-Q';
-        var vectorTileOptions = {
-            //zoomlevels: [13,15], TODO: IS BROKEN
-            rendererFactory: L.canvas.tile,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://www.mapbox.com/about/maps/">MapBox</a>',
-            vectorTileLayerStyles: {
-                water: {
-                    weight: 0,
-                    fillColor: '#9bc2c4',
-                    fillOpacity: 1,
-                    fill: true,
-                    stroke: false
-                },
 
-                admin: function(properties, zoom) {
-                    var level = properties.admin_level;
-                    var weight = 1;
-                    if (level == 2) {
-                        weight = 4;
-                    }
-                    return {
-                        weight: weight,
-                        color: '#cf52d3',
-                        dashArray: '2, 6',
-                        fill: false,
-                        // 						lineCap: 'butt',
-                        lineJoin: 'miter'
-                    }
-                },
-
-                country_label: [],
-                marine_label: [],
-                state_label: [],
-                place_label: [],
-                waterway_label: [],
-                landuse: [],
-                landuse_overlay: [],
-                road: {
-                    weight: 1,
-                    color: '#000000',
-                    fillOpacity: 1,
-                    fill: true
-                },
-                poi_label: [],
-                waterway: [],
-                aeroway: [],
-                tunnel: [],
-                bridge: [],
-                barrier_line: [],
-                building: [],
-                road_label: [],
-                housenum_label: [],
-
-            },
-        };
-        var pbfLayer = L.vectorGrid.protobuf.offline(url, vectorTileOptions);
 
         map.setView({
             lat: 51.985,
@@ -118,8 +61,7 @@
         }, 16);
         //layer switcher control
         L.control.layers({
-            "osm (offline)": baseLayer,
-            "vector": pbfLayer
+            "osm (offline)": baseLayer
         }).addTo(map);
     </script>
 </body>

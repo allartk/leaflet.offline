@@ -1,3 +1,3 @@
 require('./Control.SaveTiles');
 require('./TileLayer.Offline');
-require('./VectorGrid.Protobuf.Offline');
+// require('./VectorGrid.Protobuf.Offline');

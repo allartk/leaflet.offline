@@ -46,7 +46,7 @@ gulp example
 
 ### L.control.savetiles
 
-Saves tiles of current baselayer.
+Show control buttons to saves tiles.
 
 #### L.control.savetiles Events
 
@@ -60,7 +60,7 @@ The following events are fired by the control while saving tiles:
 
 #### L.control.savetiles options
 
-First arg is layer object to save, second if object of optional options:
+First arg of constructor is layer object to save, second is object of all optional options:
 
 * zoomlevels: array of integers, default current zoomlevel
 * position: position of the control default 'topleft'
