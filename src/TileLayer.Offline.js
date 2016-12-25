@@ -1,57 +1,49 @@
-/* global L $ */
+/* global L */
 var localforage = require('./localforage');
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+* TODO Feature add array option limit tileloading to certain zoomlevels
+* If false reuse tiles lower/higher zoomlevels.
  */
-L.TileLayer.Offline = L.TileLayer.Functional.extend({
-	initialize: function (url, options) {
-		var tileFunction = function (url, view) {
-			var deferred = $.Deferred();
-			var ObjectUrl = url
-                    .replace('{z}', view.zoom)
-                    .replace('{y}', view.tile.row)
-                    .replace('{x}', view.tile.column)
-                    .replace('{s}', view.subdomain);
-			localforage.getItem(ObjectUrl).then(function (data) {
-				if (data && typeof data === 'object') {
-					ObjectUrl = URL.createObjectURL(data);
-				}
-				deferred.resolve(ObjectUrl);
-			});
-			return deferred.promise();
-		};
-		this._tileFunction = tileFunction;
-		L.TileLayer.prototype.initialize.call(this, url, options);
+L.TileLayer.Offline = L.TileLayer.extend({
+	options: {
+		'zoomlevels': null
 	},
-	getTileUrl: function (tilePoint) {
-		var map = this._map,
-		crs = map.options.crs,
-		tileSize = this.options.tileSize,
-		zoom = tilePoint.z,
-		nwPoint = tilePoint.multiplyBy(tileSize),
-		sePoint = nwPoint.add(new L.Point(tileSize, tileSize)),
-		nw = crs.project(map.unproject(nwPoint, zoom)),
-		se = crs.project(map.unproject(sePoint, zoom)),
-		bbox = [nw.x, se.y, se.x, nw.y].join(',');
+	diffZoom: 1,
+	createTile: function (coords, done) {
+		var tile = document.createElement('img');
 
-        // Setup object to send to tile function.
-		var view = {
-			bbox: bbox,
-			width: tileSize,
-			height: tileSize,
-			zoom: zoom,
-			tile: {
-				row: this.options.tms ? this._tileNumBounds.max.y - tilePoint.y : tilePoint.y,
-				column: tilePoint.x
-			},
-			subdomain: this._getSubdomain(tilePoint)
-		};
+		L.DomEvent.on(tile, 'load', L.bind(this._tileOnLoad, this, done, tile));
+		L.DomEvent.on(tile, 'error', L.bind(this._tileOnError, this, done, tile));
 
-		return this._tileFunction(this._url, view);
+		if (this.options.crossOrigin) {
+			tile.crossOrigin = '';
+		}
+		tile.alt = '';
+
+		tile.setAttribute('role', 'presentation');
+		this.getTileUrl(coords).then(function (url) {
+			tile.src = url;
+		}).catch(function (e) {
+			throw new Error(e);
+		});
+
+		return tile;
+	},
+	getTileUrl: function (coords) {
+		var $this = this;
+		var p = new Promise(function (resolve, reject) {
+			var url = L.TileLayer.prototype.getTileUrl.call($this, coords);
+			localforage.getItem(url).then(function (data) {
+				if (data && typeof data === 'object') {
+					resolve(URL.createObjectURL(data));
+				}
+				resolve(url);
+			}).catch(function (e) {
+				reject(e);
+			});
+		});
+		return p;
 	}
-
 });
 
 L.tileLayer.offline = function (url, options) {

@@ -10,7 +10,7 @@ L.Control.SaveTiles = L.Control.extend({
     // TODO add zoom level to save
 	options: {
 		position: 'topleft',
-		saveText: '',
+		saveText: '+',
 		rmText: '-',
         // optional function called before saving tiles
 		'confirm': null
@@ -19,7 +19,10 @@ L.Control.SaveTiles = L.Control.extend({
 		this._baseLayer = baseLayer;
 		L.setOptions(this, options);
 	},
-	onAdd: function (map) {
+	setLayer: function (layer) {
+		this._baseLayer = layer;
+	},
+	onAdd: function () {
 		var container = L.DomUtil.create('div', 'savetiles leaflet-bar'),
 		options = this.options;
 		this._createButton(options.saveText, 'Save tiles', 'savetiles', container, this._saveTiles);
@@ -42,29 +45,29 @@ L.Control.SaveTiles = L.Control.extend({
 		return link;
 	},
 	_saveTiles: function () {
-		var zoom;
         // zoom levels we are going to save
 		if (!this._zoomsforSave) {
 			this._zoomsforSave = [];
 			this._tilesforSave = [];
 		}
-		var tileSize = this._baseLayer._getTileSize();
+		var tileSize = this._baseLayer.getTileSize().x;
+		var bounds, zoom;
+		// current zoom or zoom options
 		if (!this.options.zoomlevels) {
-			var bounds = this._map.getPixelBounds(),
+			bounds = this._map.getPixelBounds();
 			zoom = this._map.getZoom();
-		}
-        // todo other zoomlevels
-		else {
+		} else {
 			zoom = this.options.zoomlevels[this._zoomsforSave.length];
 			var latlngBounds = this._map.getBounds();
-			var bounds = L.bounds(this._map.project(latlngBounds.getNorthWest(), zoom), this._map.project(latlngBounds.getSouthEast(), zoom));
+			bounds = L.bounds(this._map.project(latlngBounds.getNorthWest(), zoom), this._map.project(latlngBounds.getSouthEast(), zoom));
 		}
 		var tileBounds = L.bounds(
             bounds.min.divideBy(tileSize).floor(),
             bounds.max.divideBy(tileSize).floor());
+
 		this._zoomsforSave.push(zoom);
-		for (j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
-			for (i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
+		for (var j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
+			for (var i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
 				var tilePoint = new L.Point(i, j);
 				tilePoint.z = zoom;
 				this._tilesforSave.push(L.TileLayer.prototype.getTileUrl.call(this._baseLayer, tilePoint));
@@ -77,35 +80,35 @@ L.Control.SaveTiles = L.Control.extend({
         // unset zoomlevels to save
 		delete this._zoomsforSave;
 		var self = this;
-		if (this.options.confirm) {
-			var def = $.Deferred();
-			this.options.confirm.call(this, def);
-			def.done(function () {
-				self._baseLayer.fire('savestart', self);
-				self._loadTile(self._tilesforSave.shift());
-			});
-		} else {
+		var succescallback = function () {
 			self._baseLayer.fire('savestart', self);
 			self._loadTile(self._tilesforSave.shift());
+		};
+		if (this.options.confirm) {
+			this.options.confirm(this, succescallback);
+		} else {
+			succescallback();
 		}
 	},
-    // return blob in callback
+    /**
+     * Download tile blob and save function after download
+     * TODO, call with array of urls and download them all at once using fetch
+     * @param  {string} tileUrl
+     * @return {void}
+     */
 	_loadTile: function (tileUrl) {
 		var $this = this;
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', tileUrl);
 		xhr.responseType = 'blob';
 		xhr.send();
-		var $this = this;
 		xhr.onreadystatechange = function () {
 			if (this.readyState === 4 && this.status === 200) {
 				$this._saveTile(tileUrl, this.response);
 				if ($this._tilesforSave.length > 0) {
 					$this._loadTile($this._tilesforSave.shift());
 					$this._baseLayer.fire('loadtileend');
-				}
-                // fire some event?
-				else {
+				} else {
 					$this._baseLayer.fire('loadtileend');
 					$this._baseLayer.fire('loadend');
 				}
@@ -113,21 +116,22 @@ L.Control.SaveTiles = L.Control.extend({
 		};
 	},
 	_saveTile: function (tileUrl, blob) {
-		var $this = this;
+		var self = this;
 		localforage.removeItem(tileUrl).then(function () {
 			localforage.setItem(tileUrl, blob).then(function () {
+				self._baseLayer.fire('savetileend', self);
 			}).catch(function (err) {
-				console.error(err);
+				throw new Error(err);
 			});
 		}).catch(function (err) {
-			console.error(err);
+			throw new Error(err);
 		});
 	},
 	onRemove: function () {
 
 	},
 	_rmTiles: function () {
-		$this = this;
+		var $this = this;
 		localforage.clear().then(function () {
 			$this._baseLayer.fire('tilesremoved');
 		});
@@ -138,72 +142,103 @@ L.control.savetiles = function (baseLayer, options) {
 	return new L.Control.SaveTiles(baseLayer, options);
 };
 
-},{"./localforage":4}],2:[function(require,module,exports){
-/* global L $ */
+},{"./localforage":5}],2:[function(require,module,exports){
+/* global L */
 var localforage = require('./localforage');
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+* TODO Feature add array option limit tileloading to certain zoomlevels
+* If false reuse tiles lower/higher zoomlevels.
  */
-L.TileLayer.Offline = L.TileLayer.Functional.extend({
-	initialize: function (url, options) {
-		var tileFunction = function (url, view) {
-			var deferred = $.Deferred();
-			var ObjectUrl = url
-                    .replace('{z}', view.zoom)
-                    .replace('{y}', view.tile.row)
-                    .replace('{x}', view.tile.column)
-                    .replace('{s}', view.subdomain);
-			localforage.getItem(ObjectUrl).then(function (data) {
-				if (data && typeof data === 'object') {
-					ObjectUrl = URL.createObjectURL(data);
-				}
-				deferred.resolve(ObjectUrl);
-			});
-			return deferred.promise();
-		};
-		this._tileFunction = tileFunction;
-		L.TileLayer.prototype.initialize.call(this, url, options);
+L.TileLayer.Offline = L.TileLayer.extend({
+	options: {
+		'zoomlevels': null
 	},
-	getTileUrl: function (tilePoint) {
-		var map = this._map,
-		crs = map.options.crs,
-		tileSize = this.options.tileSize,
-		zoom = tilePoint.z,
-		nwPoint = tilePoint.multiplyBy(tileSize),
-		sePoint = nwPoint.add(new L.Point(tileSize, tileSize)),
-		nw = crs.project(map.unproject(nwPoint, zoom)),
-		se = crs.project(map.unproject(sePoint, zoom)),
-		bbox = [nw.x, se.y, se.x, nw.y].join(',');
+	diffZoom: 1,
+	createTile: function (coords, done) {
+		var tile = document.createElement('img');
 
-        // Setup object to send to tile function.
-		var view = {
-			bbox: bbox,
-			width: tileSize,
-			height: tileSize,
-			zoom: zoom,
-			tile: {
-				row: this.options.tms ? this._tileNumBounds.max.y - tilePoint.y : tilePoint.y,
-				column: tilePoint.x
-			},
-			subdomain: this._getSubdomain(tilePoint)
-		};
+		L.DomEvent.on(tile, 'load', L.bind(this._tileOnLoad, this, done, tile));
+		L.DomEvent.on(tile, 'error', L.bind(this._tileOnError, this, done, tile));
 
-		return this._tileFunction(this._url, view);
+		if (this.options.crossOrigin) {
+			tile.crossOrigin = '';
+		}
+		tile.alt = '';
+
+		tile.setAttribute('role', 'presentation');
+		this.getTileUrl(coords).then(function (url) {
+			tile.src = url;
+		}).catch(function (e) {
+			throw new Error(e);
+		});
+
+		return tile;
+	},
+	getTileUrl: function (coords) {
+		var $this = this;
+		var p = new Promise(function (resolve, reject) {
+			var url = L.TileLayer.prototype.getTileUrl.call($this, coords);
+			localforage.getItem(url).then(function (data) {
+				if (data && typeof data === 'object') {
+					resolve(URL.createObjectURL(data));
+				}
+				resolve(url);
+			}).catch(function (e) {
+				reject(e);
+			});
+		});
+		return p;
 	}
-
 });
 
 L.tileLayer.offline = function (url, options) {
 	return new L.TileLayer.Offline(url, options);
 };
 
-},{"./localforage":4}],3:[function(require,module,exports){
+},{"./localforage":5}],3:[function(require,module,exports){
+/* global L */
+// var localforage = require('./localforage');
+// TODO localforage loading
+if (L.VectorGrid) {
+	L.VectorGrid.Protobuf.Offline = L.VectorGrid.Protobuf.extend({
+		options: {
+			'zoomlevels': null
+		},
+		_getVectorTilePromise: function (coords) {
+			coords = this._getCoords(coords);			
+			return L.VectorGrid.Protobuf.prototype._getVectorTilePromise.call(this, coords);
+		},
+		//BROKEN CODE
+		_getCoords: function (coords) {
+			if (this.options.zoomlevels) {
+				for (var i in this.options.zoomlevels) {
+					if (this.options.zoomlevels[i] <= coords.z) {
+						var zoom = this.options.zoomlevels[i];
+					}
+				}
+				if (!zoom) {
+					return coords;
+				}
+				var diffZoom = (coords.z - zoom) + 1;
+				coords = coords.divideBy(diffZoom).floor();
+				coords.z = this._tileZoom = zoom;
+			}
+			return coords;
+		}
+
+	});
+
+	L.vectorGrid.protobuf.offline = function (url, options) {
+		return new L.VectorGrid.Protobuf.Offline(url, options);
+	};
+}
+
+},{}],4:[function(require,module,exports){
 require('./Control.SaveTiles');
 require('./TileLayer.Offline');
+require('./VectorGrid.Protobuf.Offline');
 
-},{"./Control.SaveTiles":1,"./TileLayer.Offline":2}],4:[function(require,module,exports){
+},{"./Control.SaveTiles":1,"./TileLayer.Offline":2,"./VectorGrid.Protobuf.Offline":3}],5:[function(require,module,exports){
 (function (global){
 var lf = (typeof window !== "undefined" ? window['localforage'] : typeof global !== "undefined" ? global['localforage'] : null);
 
@@ -218,4 +253,4 @@ lf.config({
 module.exports = lf;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[3]);
+},{}]},{},[4]);

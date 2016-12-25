@@ -23,7 +23,8 @@ gulp.task('js', function () {
         .bundle()
         .pipe(source('leaflet.offline.js'))
         .pipe(buffer())
-        .pipe(gulp.dest('./dist/'));
+        .pipe(gulp.dest('./dist/'))
+		.pipe(connect.reload());
 
 });
 
@@ -52,28 +53,12 @@ gulp.task('img', function () {
     .pipe(gulp.dest('./dist/images/'));
 });
 
-// just an example
-gulp.task('bundle', function () {
-	var b = browserify([
-		'./src/Control.SaveTiles.js',
-		'./src/TileLayer.Offline.js'
-	]);
-	return b.bundle()
-        .pipe(source('bundle.js'))
-        .pipe(buffer())
-        .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(uglify())
-        .on('error', gutil.log)
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./examples/js/'));
-});
-
 gulp.task('example', ['css', 'img', 'js'], function () {
 	connect.server({
 		root: ['examples',
 			'dist',
-			path.dirname(require.resolve('leaflet.functionaltilelayer')),
-			path.dirname(require.resolve('localforage'))
+			path.dirname(require.resolve('localforage')),
+			path.dirname(require.resolve('leaflet.vectorgrid'))
 		],
 		middleware: function () {
 			return [
