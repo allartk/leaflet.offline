@@ -12,13 +12,13 @@ to **http://allartk.github.io/leaflet.offline/**!
 * [localforage](https://github.com/localForage/localForage) To store the tiles
 * Optional [Leaflet.VectorGrid](https://github.com/Leaflet/Leaflet.VectorGrid)
 
-Leaflet should be a global var L. Localforage will be installed if you use `npm install`.
 
 ## Install
 
 ### Manual or Clone
 
-Just use one of github's download methods and add dist/leaflet.offline.min.js in a script tag to your page (after leaflet and localforage)
+Just use one of github's download methods (look under the releasestab ) and add dist/leaflet.offline.min.js in a script tag
+to your page (after leaflet and localforage)
 
 ### With npm
 
@@ -30,8 +30,14 @@ npm install git+https://git@github.com:allartk/leaflet.offline.git
 ```
 
 I encourage you to use [browserify](http://browserify.org/)
-to bundle all files into one.
+to bundle all files (localforage, this script and any other you use) into one.
+Require the offline script like this:
 
+```
+require('leaflet.offline');
+```
+
+Leaflet is expected to be global var L
 
 ### Run example
 
@@ -112,19 +118,7 @@ L.control.savetiles(baseLayer,{
     }
 ).addTo(map);
 ```
-The following events are fired on the layer while saving:
-* savestart, start downloading tiles
-* loadtileend, a tile is downloaded (eg show progress bar)
-* savetileend, one tile is saved  (eg show progress bar)
-* loadend, all tiles are downloaded
-* tilesremoved, all tiles are removed
 
-The following options for the control
-* zoomlevels, array of integers, default current zoomlevel
-* position position of the control default 'topleft'
-* saveText html to show on save button
-* rmText html to show on remove button
-* confirm, function that returns jquery promise
 
 ## Develop
 
