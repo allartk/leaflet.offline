@@ -3,13 +3,11 @@ var concat = require('gulp-concat');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var browserify = require('browserify');
-var gutil = require('gulp-util');
 var uglify = require('gulp-uglify');
-var sourcemaps = require('gulp-sourcemaps');
 var connect = require('gulp-connect');
 var path = require('path');
 var rename = require('gulp-rename');
-var proxy = require('http-proxy-middleware');
+
 
 
 // shoud make a standalon js, without localforage
@@ -43,37 +41,17 @@ gulp.task('src', function () {
     .pipe(connect.reload());
 });
 
-gulp.task('css', function () {
-	gulp.src('src/**/*.css')
-    .pipe(gulp.dest('./dist/'));
-});
 
-gulp.task('img', function () {
-	gulp.src('src/images/*')
-    .pipe(gulp.dest('./dist/images/'));
-});
 
-gulp.task('example', ['css', 'img', 'js'], function () {
+gulp.task('example', ['js'], function () {
 	connect.server({
-		root: ['examples',
-			'dist',
+		root: ['./',
 			path.dirname(require.resolve('localforage')),
 			path.dirname(require.resolve('leaflet.vectorgrid'))
 		],
-		middleware: function () {
-			return [
-				proxy('/tiles', {
-					pathRewrite: {
-						'^/tiles/': '/'
-					},
-					target: 'http://a.tile.openstreetmap.org/',
-					changeOrigin:true
-				})
-			];
-		},
 		livereload: true
 	});
 	gulp.watch('./src/**/*.js', ['js']);
 });
 
-gulp.task('release', ['css', 'img', 'minify']);
+gulp.task('release', ['minify']);
