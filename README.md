@@ -10,7 +10,7 @@ to **http://allartk.github.io/leaflet.offline/**!
 
 * [Leafletjs](http://leafletjs.com/) (version 1.0, look in releases if you use an older leaflet version)
 * [localforage](https://github.com/localForage/localForage) To store the tiles
-* Optional [Leaflet.VectorGrid](https://github.com/Leaflet/Leaflet.VectorGrid)
+* ~~In progress: optional [Leaflet.VectorGrid](https://github.com/Leaflet/Leaflet.VectorGrid)~~
 
 
 ## Install

@@ -1,11 +1,8 @@
 {
   "name": "leaflet.offline",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Offline tilelayer for leaflet",
   "main": "src/leaflet.offline.js",
-  "directories": {
-    "example": "examples"
-  },
   "scripts": {
     "test": "./node_modules/karma/bin/karma  start karma.conf.js"
   },
@@ -45,7 +42,8 @@
     "localforage": "^1.4.3",
     "mocha": "^3.2.0",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.9.0"
   },
   "browserify-shim": {
     "localforage": "global:localforage"
