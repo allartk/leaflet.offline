@@ -43,6 +43,31 @@ L.TileLayer.Offline = L.TileLayer.extend({
 			});
 		});
 		return p;
+	},
+	/**
+	 * getTileUrls for single zoomlevel
+	 * @param  {object} L.latLngBounds
+	 * @param  {number} zoom
+	 * @return {object[]} the tile urls, key, url
+	 */
+	getTileUrls: function (bounds, zoom) {
+		var tiles = [];
+		console.log(bounds);
+		var tileBounds = L.bounds(
+			bounds.min.divideBy(this.getTileSize().x).floor(),
+			bounds.max.divideBy(this.getTileSize().x).floor());
+		for (var j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
+			for (var i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
+				var tilePoint = new L.Point(i, j);
+				tilePoint.z = zoom;
+				tiles.push({
+					'key': L.TileLayer.prototype.getTileUrl.call(this, tilePoint),
+					'url': L.TileLayer.prototype.getTileUrl.call(this, tilePoint),
+				});
+			}
+		}
+		return tiles;
+
 	}
 });
 

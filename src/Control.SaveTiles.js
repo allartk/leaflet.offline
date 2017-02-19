@@ -44,40 +44,19 @@ L.Control.SaveTiles = L.Control.extend({
 		return link;
 	},
 	_saveTiles: function () {
-        // zoom levels we are going to save
-		if (!this._zoomsforSave) {
-			this._zoomsforSave = [];
-			this._tilesforSave = [];
-		}
-		var tileSize = this._baseLayer.getTileSize().x;
-		var bounds, zoom;
+		var bounds;
+		var tiles = [];
 		// current zoom or zoom options
-		if (!this.options.zoomlevels) {
-			bounds = this._map.getPixelBounds();
-			zoom = this._map.getZoom();
-		} else {
-			zoom = this.options.zoomlevels[this._zoomsforSave.length];
-			var latlngBounds = this._map.getBounds();
-			bounds = L.bounds(this._map.project(latlngBounds.getNorthWest(), zoom), this._map.project(latlngBounds.getSouthEast(), zoom));
+		var zoomlevels = this.options.zoomlevels || [this._map.getZoom()];
+		var latlngBounds = this._map.getBounds();
+		for (var i in zoomlevels) {
+			bounds = L.bounds(this._map.project(latlngBounds.getNorthWest(), zoomlevels[i]),
+				this._map.project(latlngBounds.getSouthEast(), zoomlevels[i]));
+			tiles = tiles.concat(this._baseLayer.getTileUrls(bounds, zoomlevels[i]));
 		}
-		var tileBounds = L.bounds(
-            bounds.min.divideBy(tileSize).floor(),
-            bounds.max.divideBy(tileSize).floor());
+		// usage in confirm function
+		this._tilesforSave = tiles;
 
-		this._zoomsforSave.push(zoom);
-		for (var j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
-			for (var i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
-				var tilePoint = new L.Point(i, j);
-				tilePoint.z = zoom;
-				this._tilesforSave.push(L.TileLayer.prototype.getTileUrl.call(this._baseLayer, tilePoint));
-			}
-		}
-		if (this.options.zoomlevels && (this._zoomsforSave.length < this.options.zoomlevels.length)) {
-			this._saveTiles();
-			return;
-		}
-        // unset zoomlevels to save
-		delete this._zoomsforSave;
 		var self = this;
 		var succescallback = function () {
 			self._baseLayer.fire('savestart', self);
@@ -98,12 +77,12 @@ L.Control.SaveTiles = L.Control.extend({
 	_loadTile: function (tileUrl) {
 		var $this = this;
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', tileUrl);
+		xhr.open('GET', tileUrl.url);
 		xhr.responseType = 'blob';
 		xhr.send();
 		xhr.onreadystatechange = function () {
 			if (this.readyState === 4 && this.status === 200) {
-				$this._saveTile(tileUrl, this.response);
+				$this._saveTile(tileUrl.key, this.response);
 				if ($this._tilesforSave.length > 0) {
 					$this._loadTile($this._tilesforSave.shift());
 					$this._baseLayer.fire('loadtileend');
@@ -114,6 +93,12 @@ L.Control.SaveTiles = L.Control.extend({
 			}
 		};
 	},
+	/**
+	 * [_saveTile description]
+	 * @param  {string} tileUrl save key
+	 * @param  {blob} blob    [description]
+	 * @return {void}         [description]
+	 */
 	_saveTile: function (tileUrl, blob) {
 		var self = this;
 		localforage.removeItem(tileUrl).then(function () {
