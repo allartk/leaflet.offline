@@ -26,7 +26,7 @@ The package and it's dependencies can also be downloaded into
 your existing project with [npm](http://npmjs.com):
 
 ```
-npm install git+https://git@github.com:allartk/leaflet.offline.git
+npm install leaflet.offline
 ```
 
 I encourage you to use [browserify](http://browserify.org/)
