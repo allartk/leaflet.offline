@@ -1,11 +1,11 @@
 {
   "name": "leaflet.offline",
-  "version": "0.0.3",
+  "version": "v0.1.0-beta.1",
   "description": "Offline tilelayer for leaflet",
   "main": "src/leaflet.offline.js",
   "scripts": {
     "test": "./node_modules/karma/bin/karma  start karma.conf.js",
-    "version": "gulp build"
+    "version": "gulp release"
   },
   "repository": {
     "type": "git",
