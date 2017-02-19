@@ -182,20 +182,23 @@ L.TileLayer.Offline = L.TileLayer.extend({
 	 */
 	getTileUrls: function (bounds, zoom) {
 		var tiles = [];
-		console.log(bounds);
+		var origurl = this._url;
 		var tileBounds = L.bounds(
 			bounds.min.divideBy(this.getTileSize().x).floor(),
 			bounds.max.divideBy(this.getTileSize().x).floor());
 		for (var j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
 			for (var i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
 				var tilePoint = new L.Point(i, j);
-				tilePoint.z = zoom;
+				// getTileUrl uses current zoomlevel..
+				this.setUrl(this._url.replace('{z}', zoom), true);
 				tiles.push({
 					'key': L.TileLayer.prototype.getTileUrl.call(this, tilePoint),
 					'url': L.TileLayer.prototype.getTileUrl.call(this, tilePoint),
 				});
 			}
 		}
+		// restore url
+		this.setUrl(origurl, true);
 		return tiles;
 
 	}

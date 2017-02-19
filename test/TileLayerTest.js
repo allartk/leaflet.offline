@@ -13,7 +13,7 @@ describe('tilelayer', function () {
 			assert.isString(url);
 		});
 	});
-	it('calculates all tiles', function () {
+	it('calculates tiles at level 16', function () {
 		var layer = L.tileLayer.offline('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png');
 		var bounds = new L.Bounds(
 			new L.Point(8621975, 5543267.999999999),
@@ -21,5 +21,8 @@ describe('tilelayer', function () {
 		);
 		var tiles = layer.getTileUrls(bounds, 16);
 		assert.lengthOf(tiles, 16);
+		var urls = tiles.map(function (t) { return t.url; });
+		assert.include(urls, 'http://a.tile.openstreetmap.org/16/33677/21651.png');
+
 	});
 });
