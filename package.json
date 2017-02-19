@@ -4,7 +4,8 @@
   "description": "Offline tilelayer for leaflet",
   "main": "src/leaflet.offline.js",
   "scripts": {
-    "test": "./node_modules/karma/bin/karma  start karma.conf.js"
+    "test": "./node_modules/karma/bin/karma  start karma.conf.js",
+    "version": "gulp build"
   },
   "repository": {
     "type": "git",
