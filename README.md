@@ -82,7 +82,7 @@ First arg of constructor is layer object to save, second is object of all option
 #### L.tileLayer.offline
 
 Extends and has the same options as [L.TileLayer](http://leafletjs.com/reference-1.0.0.html#tilelayer).
-It uses offline tiles when available and falls back to online if not. Tile url should be identitical (including subdomain)
+It uses offline tiles when available and falls back to online if not. Tile url should be identitical
 as stored. The tileserver should server the tiles with a Access-Control-Allow-Origin header.
 
 #### L.VectorGrid.Protobuf.Offline

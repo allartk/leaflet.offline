@@ -17,9 +17,9 @@
     <script type="text/javascript">
         var map = L.map('map');
         //offline baselayer, will use offline source if available
-        var baseLayer = L.tileLayer.offline('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        var baseLayer = L.tileLayer.offline('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: 'Map data {attribution.OpenStreetMap}',
-            subdomains: '1234', //ignored
+            subdomains: 'abc', //ignored
             minZoom: 13,
         }).addTo(map);
         //add buttons to save tiles in area viewed

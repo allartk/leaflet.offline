@@ -135,9 +135,6 @@ var localforage = require('./localforage');
 * If false reuse tiles lower/higher zoomlevels.
  */
 L.TileLayer.Offline = L.TileLayer.extend({
-	options: {
-		'zoomlevels': null
-	},
 	diffZoom: 1,
 	createTile: function (coords, done) {
 		var tile = document.createElement('img');
@@ -163,7 +160,8 @@ L.TileLayer.Offline = L.TileLayer.extend({
 		var $this = this;
 		var p = new Promise(function (resolve, reject) {
 			var url = L.TileLayer.prototype.getTileUrl.call($this, coords);
-			localforage.getItem(url).then(function (data) {
+			var key = url.replace(/[abc]\./, $this.options.subdomains['0'] + '.');
+			localforage.getItem(key).then(function (data) {
 				if (data && typeof data === 'object') {
 					resolve(URL.createObjectURL(data));
 				}
@@ -183,17 +181,29 @@ L.TileLayer.Offline = L.TileLayer.extend({
 	getTileUrls: function (bounds, zoom) {
 		var tiles = [];
 		var origurl = this._url;
+		// getTileUrl uses current zoomlevel, we want to overwrite it
+		this.setUrl(this._url.replace('{z}', zoom), true);
+		var zoomurl = this._url;
 		var tileBounds = L.bounds(
 			bounds.min.divideBy(this.getTileSize().x).floor(),
 			bounds.max.divideBy(this.getTileSize().x).floor());
+		var url, key;
 		for (var j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
 			for (var i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
 				var tilePoint = new L.Point(i, j);
-				// getTileUrl uses current zoomlevel..
-				this.setUrl(this._url.replace('{z}', zoom), true);
+				url = L.TileLayer.prototype.getTileUrl.call(this, tilePoint);
+				// key should ignore subdomain
+				if (this.options.subdomains) {
+					this.setUrl(this._url.replace('{s}', this.options.subdomains['0']), true);
+					key = L.TileLayer.prototype.getTileUrl.call(this, tilePoint);
+					this.setUrl(zoomurl, true);
+				}				else {
+					key = url;
+				}
+				L.TileLayer.prototype.getTileUrl.call(this, tilePoint);
 				tiles.push({
-					'key': L.TileLayer.prototype.getTileUrl.call(this, tilePoint),
-					'url': L.TileLayer.prototype.getTileUrl.call(this, tilePoint),
+					'key': key,
+					'url': url,
 				});
 			}
 		}
