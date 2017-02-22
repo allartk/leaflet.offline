@@ -1,4 +1,2 @@
-* create a method storekey that takes url -> and returns key to use in localforage, should be used in control:72 and offline tilelayer.
-After it multiple subdomains can be used
 * simultanuous downloads
 * create more tests!
