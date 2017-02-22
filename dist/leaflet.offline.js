@@ -160,8 +160,7 @@ L.TileLayer.Offline = L.TileLayer.extend({
 		var $this = this;
 		var p = new Promise(function (resolve, reject) {
 			var url = L.TileLayer.prototype.getTileUrl.call($this, coords);
-			var key = url.replace(/[abc]\./, $this.options.subdomains['0'] + '.');
-			localforage.getItem(key).then(function (data) {
+			localforage.getItem(this._getStorageKey(url)).then(function (data) {
 				if (data && typeof data === 'object') {
 					resolve(URL.createObjectURL(data));
 				}
@@ -171,6 +170,14 @@ L.TileLayer.Offline = L.TileLayer.extend({
 			});
 		});
 		return p;
+	},
+	_getStorageKey(url) {
+		var key;
+		if (url.indexOf('{s}')) {
+			var regexstring  = new RegExp('[' + this.options.subdomains.join('|') + ']\.');			
+			key = url.replace(regexstring, this.options.subdomains['0'] + '.');
+		}
+		return key || url;
 	},
 	/**
 	 * getTileUrls for single zoomlevel
@@ -183,26 +190,16 @@ L.TileLayer.Offline = L.TileLayer.extend({
 		var origurl = this._url;
 		// getTileUrl uses current zoomlevel, we want to overwrite it
 		this.setUrl(this._url.replace('{z}', zoom), true);
-		var zoomurl = this._url;
 		var tileBounds = L.bounds(
 			bounds.min.divideBy(this.getTileSize().x).floor(),
 			bounds.max.divideBy(this.getTileSize().x).floor());
-		var url, key;
+		var url;
 		for (var j = tileBounds.min.y; j <= tileBounds.max.y; j++) {
 			for (var i = tileBounds.min.x; i <= tileBounds.max.x; i++) {
 				var tilePoint = new L.Point(i, j);
 				url = L.TileLayer.prototype.getTileUrl.call(this, tilePoint);
-				// key should ignore subdomain
-				if (this.options.subdomains) {
-					this.setUrl(this._url.replace('{s}', this.options.subdomains['0']), true);
-					key = L.TileLayer.prototype.getTileUrl.call(this, tilePoint);
-					this.setUrl(zoomurl, true);
-				}				else {
-					key = url;
-				}
-				L.TileLayer.prototype.getTileUrl.call(this, tilePoint);
 				tiles.push({
-					'key': key,
+					'key': this._getStorageKey(url),
 					'url': url,
 				});
 			}
