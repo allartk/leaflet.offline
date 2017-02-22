@@ -43,6 +43,7 @@
     "leaflet.vectorgrid": "^1.1.0",
     "localforage": "^1.4.3",
     "mocha": "^3.2.0",
+    "pump": "^1.0.2",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.9.0"

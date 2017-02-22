@@ -7,6 +7,7 @@ var uglify = require('gulp-uglify');
 var connect = require('gulp-connect');
 var path = require('path');
 var rename = require('gulp-rename');
+var pump = require('pump');
 
 
 
@@ -17,7 +18,7 @@ gulp.task('js', function () {
 	], {
 		'transform': ['browserify-shim']
 	});
-	   b.external('localforage')
+	return b.external('localforage')
         .bundle()
         .pipe(source('leaflet.offline.js'))
         .pipe(buffer())
@@ -26,11 +27,13 @@ gulp.task('js', function () {
 
 });
 
-gulp.task('minify', ['js'], function () {
-	gulp.src(['dist/*.js', '!dist/*.min.js'])
-    .pipe(uglify())
-    .pipe(rename({suffix: '.min'}))
-    .pipe(gulp.dest('./dist/'));
+gulp.task('minify', ['js'], function (cb) {
+	pump([
+		gulp.src(['dist/*.js', '!dist/*.min.js']),
+		uglify(),
+		rename({suffix: '.min'}),
+		gulp.dest('./dist/')
+	], cb);
 });
 
 // should make node entry, see https://github.com/Leaflet/Leaflet/tree/v1.0.2/dist

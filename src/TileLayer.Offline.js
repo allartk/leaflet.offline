@@ -41,7 +41,7 @@ L.TileLayer.Offline = L.TileLayer.extend({
 		});
 		return p;
 	},
-	_getStorageKey(url) {
+	_getStorageKey: function (url) {
 		var key;
 		if (url.indexOf('{s}')) {
 			var regexstring  = new RegExp('[' + this.options.subdomains.join('|') + ']\.');
