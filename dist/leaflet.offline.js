@@ -160,7 +160,7 @@ L.TileLayer.Offline = L.TileLayer.extend({
 		var $this = this;
 		var p = new Promise(function (resolve, reject) {
 			var url = L.TileLayer.prototype.getTileUrl.call($this, coords);
-			localforage.getItem(this._getStorageKey(url)).then(function (data) {
+			localforage.getItem($this._getStorageKey(url)).then(function (data) {
 				if (data && typeof data === 'object') {
 					resolve(URL.createObjectURL(data));
 				}
@@ -174,7 +174,7 @@ L.TileLayer.Offline = L.TileLayer.extend({
 	_getStorageKey(url) {
 		var key;
 		if (url.indexOf('{s}')) {
-			var regexstring  = new RegExp('[' + this.options.subdomains.join('|') + ']\.');			
+			var regexstring  = new RegExp('[' + this.options.subdomains.join('|') + ']\.');
 			key = url.replace(regexstring, this.options.subdomains['0'] + '.');
 		}
 		return key || url;

@@ -30,7 +30,7 @@ L.TileLayer.Offline = L.TileLayer.extend({
 		var $this = this;
 		var p = new Promise(function (resolve, reject) {
 			var url = L.TileLayer.prototype.getTileUrl.call($this, coords);
-			localforage.getItem(this._getStorageKey(url)).then(function (data) {
+			localforage.getItem($this._getStorageKey(url)).then(function (data) {
 				if (data && typeof data === 'object') {
 					resolve(URL.createObjectURL(data));
 				}
