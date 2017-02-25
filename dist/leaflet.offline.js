@@ -7,7 +7,6 @@ var localforage = require('./localforage');
  */
 
 L.Control.SaveTiles = L.Control.extend({
-    // TODO add zoom level to save
 	options: {
 		position: 'topleft',
 		saveText: '+',
@@ -15,9 +14,23 @@ L.Control.SaveTiles = L.Control.extend({
         // optional function called before saving tiles
 		'confirm': null
 	},
+	// save dl and save status
+	status: {
+		'storagesize': null,
+		'lengthToBeSaved': null,
+		'lengthSaved': null,
+		'lengthLoaded': null,
+		'_tilesforSave': null
+	},
 	initialize: function (baseLayer, options) {
 		this._baseLayer = baseLayer;
+		this.setStorageSize();
 		L.setOptions(this, options);
+	},
+	setStorageSize: function () {
+		localforage.length().then(function (numberOfKeys) {
+			this.status.storagesize = numberOfKeys;
+		});
 	},
 	setLayer: function (layer) {
 		this._baseLayer = layer;
@@ -46,6 +59,7 @@ L.Control.SaveTiles = L.Control.extend({
 	},
 	_saveTiles: function () {
 		var bounds;
+		var self = this;
 		var tiles = [];
 		// current zoom or zoom options
 		var zoomlevels = this.options.zoomlevels || [this._map.getZoom()];
@@ -55,22 +69,27 @@ L.Control.SaveTiles = L.Control.extend({
 				this._map.project(latlngBounds.getSouthEast(), zoomlevels[i]));
 			tiles = tiles.concat(this._baseLayer.getTileUrls(bounds, zoomlevels[i]));
 		}
-		// usage in confirm function
-		this._tilesforSave = tiles;
-
-		var self = this;
+		this._resetStatus(tiles);
 		var succescallback = function () {
-			self._baseLayer.fire('savestart', self);
+			self._baseLayer.fire('savestart', self.status);
 			var subdlength = self._baseLayer.getSimultaneous();
 			for (var i = 0; i < subdlength; i++) {
-				self._loadTile(self._tilesforSave.shift());
+				self._loadTile(self.status._tilesforSave.shift());
 			}
 		};
 		if (this.options.confirm) {
-			this.options.confirm(this, succescallback);
+			this.options.confirm(this.status, succescallback);
 		} else {
 			succescallback();
 		}
+	},
+	_resetStatus: function (tiles) {
+		this.status = {
+			lengthLoaded: 0,
+			lengthToBeSaved: tiles.length,
+			lengthSaved: 0,
+			_tilesforSave: tiles
+		};
 	},
     /**
      * Download tile blob and save function after download
@@ -80,20 +99,23 @@ L.Control.SaveTiles = L.Control.extend({
      * @return {void}
      */
 	_loadTile: function (tileUrl) {
-		var $this = this;
+		var self = this;
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', tileUrl.url);
 		xhr.responseType = 'blob';
 		xhr.send();
 		xhr.onreadystatechange = function () {
 			if (this.readyState === 4 && this.status === 200) {
-				$this._saveTile(tileUrl.key, this.response);
-				if ($this._tilesforSave.length > 0) {
-					$this._loadTile($this._tilesforSave.shift());
-					$this._baseLayer.fire('loadtileend');
+				self.status.lengthLoaded++;
+				self._saveTile(tileUrl.key, this.response);
+				if (self.status._tilesforSave.length > 0) {
+					self._loadTile(self.status._tilesforSave.shift());
+					self._baseLayer.fire('loadtileend', self.status);
 				} else {
-					$this._baseLayer.fire('loadtileend');
-					$this._baseLayer.fire('loadend');
+					self._baseLayer.fire('loadtileend', self.status);
+					if (self.status.lengthLoaded === self.status.lengthToBeSaved) {
+						self._baseLayer.fire('loadend', self.status);
+					}
 				}
 			}
 		};
@@ -108,7 +130,12 @@ L.Control.SaveTiles = L.Control.extend({
 		var self = this;
 		localforage.removeItem(tileUrl).then(function () {
 			localforage.setItem(tileUrl, blob).then(function () {
-				self._baseLayer.fire('savetileend', self);
+				self.status.lengthSaved++;
+				self._baseLayer.fire('savetileend', self.status);
+				if (self.status.lengthSaved === self.status.lengthToBeSaved) {
+					self._baseLayer.fire('saveend', self.status);
+					self.setStorageSize();
+				}
 			}).catch(function (err) {
 				throw new Error(err);
 			});
@@ -116,13 +143,11 @@ L.Control.SaveTiles = L.Control.extend({
 			throw new Error(err);
 		});
 	},
-	onRemove: function () {
-
-	},
 	_rmTiles: function () {
-		var $this = this;
+		var self = this;
 		localforage.clear().then(function () {
-			$this._baseLayer.fire('tilesremoved');
+			self._baseLayer.fire('tilesremoved');
+			self.status.storagesize = 0;
 		});
 	}
 });

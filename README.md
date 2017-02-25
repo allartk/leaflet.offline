@@ -64,6 +64,14 @@ The following events are fired by the control while saving tiles:
 * savetileend, one tile is saved  (eg show progress bar)
 * loadend, all tiles are downloaded
 * tilesremoved, all tiles are removed
+* saveend
+
+Each event object has the following properties:
+* storagesize
+* lengthToBeSaved
+* lengthSaved
+* lengthLoaded
+* \_tilesforSave
 
 #### L.control.savetiles options
 
