@@ -26,11 +26,35 @@ L.Control.SaveTiles = L.Control.extend({
 		this.setStorageSize();
 		L.setOptions(this, options);
 	},
-	setStorageSize: function () {
+	/**
+	 * [setStorageSize description]
+	 * @param {Function} callback [description]
+	 */
+	setStorageSize: function (callback) {
+		var self = this;
+		if (this.status.storagesize) {
+			callback(this.status.storagesize);
+			return;
+		}
 		localforage.length().then(function (numberOfKeys) {
-			this.status.storagesize = numberOfKeys;
+			self.status.storagesize = numberOfKeys;
+			self._baseLayer.fire('storagesize', self.status);
+			if (callback) {
+				callback(numberOfKeys);
+			}
 		});
 	},
+	/**
+	 * [getStorageSize description]
+	 * @param  {Function} callback [description]
+	 */
+	getStorageSize: function (callback) {
+		this.setStorageSize(callback);
+	},
+	/**
+	 * [setLayer description]
+	 * @param {Object} layer [description]
+	 */
 	setLayer: function (layer) {
 		this._baseLayer = layer;
 	},
@@ -145,8 +169,9 @@ L.Control.SaveTiles = L.Control.extend({
 	_rmTiles: function () {
 		var self = this;
 		localforage.clear().then(function () {
-			self._baseLayer.fire('tilesremoved');
 			self.status.storagesize = 0;
+			self._baseLayer.fire('tilesremoved');
+			self._baseLayer.fire('storagesize', self.status);
 		});
 	}
 });

@@ -12,8 +12,9 @@
 </head>
 
 <body>
-    <div id="map" style="height: 80vh; max-width:700px"></div>
+    <div id="map" style="height: 75vh; max-width:700px"></div>
     <p>Progress: <span id="progress"></span> / <span id="total"></span></p>
+    <p>Current storage: <span id="storage"></storage> files </p>
     <script type="text/javascript">
         var map = L.map('map');
         //offline baselayer, will use offline source if available
@@ -23,7 +24,7 @@
             minZoom: 13,
         }).addTo(map);
         //add buttons to save tiles in area viewed
-        L.control.savetiles(baseLayer, {
+        var control = L.control.savetiles(baseLayer, {
             'zoomlevels': [13, 16], //optional zoomlevels to save, default current zoomlevel
             'confirm': function(layer, succescallback) {
                 if (window.confirm("Save " + layer._tilesforSave.length)) {
@@ -32,7 +33,11 @@
             },
             'saveText': '<i class="fa fa-download" aria-hidden="true"></i>',
             'rmText': '<i class="fa fa-trash" aria-hidden="true"></i>'
-        }).addTo(map);
+        });
+        control.addTo(map);
+        baseLayer.on('storagesize', function(e) {            
+            document.getElementById('storage').innerHTML = e.storagesize;
+        })
 
 
 

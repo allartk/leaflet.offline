@@ -57,7 +57,7 @@ Show control buttons to saves tiles.
 
 #### L.control.savetiles Events
 
-The following events are fired by the control while saving tiles:
+The following events are fired by the control on the layer while saving tiles:
 
 * savestart, start downloading tiles
 * loadtileend, a tile is downloaded (eg show progress bar)
@@ -65,13 +65,14 @@ The following events are fired by the control while saving tiles:
 * loadend, all tiles are downloaded
 * tilesremoved, all tiles are removed
 * saveend
+* storagesize files saved in total for all layers
 
 Each event object has the following properties:
-* storagesize
-* lengthToBeSaved
-* lengthSaved
-* lengthLoaded
-* \_tilesforSave
+* storagesize int
+* lengthToBeSaved int
+* lengthSaved int
+* lengthLoaded int
+* \_tilesforSave array of objects
 
 #### L.control.savetiles options
 
@@ -90,8 +91,9 @@ First arg of constructor is layer object to save, second is object of all option
 #### L.tileLayer.offline
 
 Extends and has the same options as [L.TileLayer](http://leafletjs.com/reference-1.0.0.html#tilelayer).
-It uses offline tiles when available and falls back to online if not. Tile url should be identitical
-as stored. The tileserver should server the tiles with a Access-Control-Allow-Origin header.
+It uses offline tiles when available and falls back to online if not. If configured to use subdomains, the key used to
+store has the first defined subdomain.
+The tileserver should server the tiles with a Access-Control-Allow-Origin header.
 
 #### L.VectorGrid.Protobuf.Offline
 
