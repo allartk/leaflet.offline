@@ -49,6 +49,9 @@ L.TileLayer.Offline = L.TileLayer.extend({
 		}
 		return key || url;
 	},
+	getSimultaneous: function () {
+		return this.options.subdomains.length;
+	},
 	/**
 	 * getTileUrls for single zoomlevel
 	 * @param  {object} L.latLngBounds

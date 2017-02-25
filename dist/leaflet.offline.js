@@ -61,7 +61,10 @@ L.Control.SaveTiles = L.Control.extend({
 		var self = this;
 		var succescallback = function () {
 			self._baseLayer.fire('savestart', self);
-			self._loadTile(self._tilesforSave.shift());
+			var subdlength = self._baseLayer.getSimultaneous();
+			for (var i = 0; i < subdlength; i++) {
+				self._loadTile(self._tilesforSave.shift());
+			}
 		};
 		if (this.options.confirm) {
 			this.options.confirm(this, succescallback);
@@ -72,6 +75,7 @@ L.Control.SaveTiles = L.Control.extend({
     /**
      * Download tile blob and save function after download
      * TODO, call with array of urls and download them all at once using fetch
+     * TODO, call loadend only once
      * @param  {string} tileUrl
      * @return {void}
      */
@@ -178,6 +182,9 @@ L.TileLayer.Offline = L.TileLayer.extend({
 			key = url.replace(regexstring, this.options.subdomains['0'] + '.');
 		}
 		return key || url;
+	},
+	getSimultaneous: function () {
+		return this.options.subdomains.length;
 	},
 	/**
 	 * getTileUrls for single zoomlevel
