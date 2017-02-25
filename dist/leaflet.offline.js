@@ -172,7 +172,7 @@ L.Control.SaveTiles = L.Control.extend({
 		localforage.clear().then(function () {
 			self.status.storagesize = 0;
 			self._baseLayer.fire('tilesremoved');
-			self._baseLayer.fire('storagesize', self.status);			
+			self._baseLayer.fire('storagesize', self.status);
 		});
 	}
 });

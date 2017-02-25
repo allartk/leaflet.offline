@@ -1,3 +1,1 @@
-* simultanuous downloads, in progress, _loadTile events should be fixed now!
 * create more tests!
-* rollup!
