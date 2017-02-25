@@ -50,8 +50,7 @@ L.TileLayer.Offline = L.TileLayer.extend({
 		return key || url;
 	},
 	getSimultaneous: function () {
-		return 1;
-		// return this.options.subdomains.length;
+		return this.options.subdomains.length;
 	},
 	/**
 	 * getTileUrls for single zoomlevel
