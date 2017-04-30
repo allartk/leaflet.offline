@@ -29,7 +29,7 @@ your existing project with [npm](http://npmjs.com):
 npm install leaflet.offline
 ```
 
-I encourage you to use [browserify](http://browserify.org/)
+I encourage you to a bundler like [browserify](http://browserify.org/)
 to bundle all files (localforage, this script and any other you use) into one.
 Require the offline script like this:
 
@@ -55,6 +55,29 @@ gulp example
 
 Show control buttons to saves tiles.
 
+
+
+#### L.control.savetiles options
+
+First arg of constructor is layer object to save, second is object of all optional options:
+
+* zoomlevels: array of integers, default current zoomlevel
+* position: position of the control default 'topleft'
+* saveText: html to show on save button
+* rmText: html to show on remove button
+* confirm: a function with args layer and a callback function that should be called when user confirms download
+
+#### L.control.savetiles methods
+
+* setlayer: change the layer to save tiles from
+
+### L.tileLayer.offline
+
+Extends and has the same options as [L.TileLayer](http://leafletjs.com/reference-1.0.0.html#tilelayer).
+It uses offline tiles when available and falls back to online if not. If configured to use subdomains, the key used to
+store has the first defined subdomain.
+The tileserver should server the tiles with a Access-Control-Allow-Origin header.
+
 #### L.control.savetiles Events
 
 The following events are fired by the control on the layer while saving tiles:
@@ -73,27 +96,6 @@ Each event object has the following properties:
 * lengthSaved int
 * lengthLoaded int
 * \_tilesforSave array of objects
-
-#### L.control.savetiles options
-
-First arg of constructor is layer object to save, second is object of all optional options:
-
-* zoomlevels: array of integers, default current zoomlevel
-* position: position of the control default 'topleft'
-* saveText: html to show on save button
-* rmText: html to show on remove button
-* confirm: a function with args layer and a callback function that should be called when user confirms download
-
-#### L.control.savetiles methods
-
-* setlayer: change the layer to save tiles from
-
-#### L.tileLayer.offline
-
-Extends and has the same options as [L.TileLayer](http://leafletjs.com/reference-1.0.0.html#tilelayer).
-It uses offline tiles when available and falls back to online if not. If configured to use subdomains, the key used to
-store has the first defined subdomain.
-The tileserver should server the tiles with a Access-Control-Allow-Origin header.
 
 #### L.VectorGrid.Protobuf.Offline
 
