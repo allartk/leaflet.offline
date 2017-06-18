@@ -20,7 +20,7 @@
         //offline baselayer, will use offline source if available
         var baseLayer = L.tileLayer.offline('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: 'Map data {attribution.OpenStreetMap}',
-            subdomains: 'abc', //ignored
+            subdomains: 'abc', 
             minZoom: 13,
         }).addTo(map);
         //add buttons to save tiles in area viewed
@@ -35,7 +35,7 @@
             'rmText': '<i class="fa fa-trash" aria-hidden="true"></i>'
         });
         control.addTo(map);
-        baseLayer.on('storagesize', function(e) {            
+        baseLayer.on('storagesize', function(e) {
             document.getElementById('storage').innerHTML = e.storagesize;
         })
 

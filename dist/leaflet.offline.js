@@ -28,8 +28,8 @@ L.Control.SaveTiles = L.Control.extend({
 		L.setOptions(this, options);
 	},
 	/**
-	 * [setStorageSize description]
-	 * @param {Function} callback [description]
+	 * Set storagesize prop on object init
+	 * @param {Function} callback with arg number of saved files
 	 */
 	setStorageSize: function (callback) {
 		var self = this;
@@ -43,10 +43,13 @@ L.Control.SaveTiles = L.Control.extend({
 			if (callback) {
 				callback(numberOfKeys);
 			}
+		}).catch(function (err) {
+			callback(0);
+			throw err;
 		});
 	},
 	/**
-	 * [getStorageSize description]
+	 * get number of saved files
 	 * @param  {Function} callback [description]
 	 */
 	getStorageSize: function (callback) {
@@ -116,9 +119,8 @@ L.Control.SaveTiles = L.Control.extend({
 		};
 	},
     /**
-     * Download tile blob and save function after download
-     * TODO, call with array of urls and download them all at once using fetch
-     * TODO, call loadend only once
+     * Download tile blob and call _saveTile function after download
+     *
      * @param  {string} tileUrl
      * @return {void}
      */

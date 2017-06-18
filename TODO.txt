@@ -1,1 +1,2 @@
-* create more tests!
+* create more test, with sinon!
+* autosave / autoclean.
