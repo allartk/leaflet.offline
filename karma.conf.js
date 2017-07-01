@@ -16,7 +16,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'https://unpkg.com/leaflet@1.0.0/dist/leaflet.js',
+      'https://unpkg.com/leaflet@1.1.0/dist/leaflet.js',
       'https://cdnjs.cloudflare.com/ajax/libs/localforage/1.4.3/localforage.min.js',
       'test/*.js'
     ],
