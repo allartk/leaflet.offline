@@ -1,9 +1,5 @@
 /* global L */
 var localforage = require('./localforage');
-/**
- * inspired by control.zoom
- * options are position (string), saveText (string) ,rmText (string), confirm (function)
- */
 
 L.Control.SaveTiles = L.Control.extend({
 	options: {
@@ -100,7 +96,7 @@ L.Control.SaveTiles = L.Control.extend({
 			self._baseLayer.fire('savestart', self.status);
 			var subdlength = self._baseLayer.getSimultaneous();
 			for (var i = 0; i < subdlength; i++) {
-				self._loadTile(self.status._tilesforSave.shift());
+				self._loadTile();
 			}
 		};
 		if (this.options.confirm) {
@@ -118,13 +114,14 @@ L.Control.SaveTiles = L.Control.extend({
 		};
 	},
     /**
-     * Download tile blob and call _saveTile function after download
-     *
+     * Loop over status._tilesforSave prop till all tiles are downloaded
+     * Calls _saveTile for each download
      * @param  {string} tileUrl
      * @return {void}
      */
-	_loadTile: function (tileUrl) {
+	_loadTile: function () {
 		var self = this;
+		var tileUrl = self.status._tilesforSave.shift();
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', tileUrl.url);
 		xhr.responseType = 'blob';
@@ -134,7 +131,7 @@ L.Control.SaveTiles = L.Control.extend({
 				self.status.lengthLoaded++;
 				self._saveTile(tileUrl.key, this.response);
 				if (self.status._tilesforSave.length > 0) {
-					self._loadTile(self.status._tilesforSave.shift());
+					self._loadTile();
 					self._baseLayer.fire('loadtileend', self.status);
 				} else {
 					self._baseLayer.fire('loadtileend', self.status);
