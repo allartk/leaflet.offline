@@ -31,6 +31,11 @@
                     succescallback();
                 }
             },
+            'confirmRemoval': function(layer, successCallback) {
+                if (window.confirm("Remove all the tiles?")) {
+                    successCallback();
+                }
+            },
             'saveText': '<i class="fa fa-download" aria-hidden="true"></i>',
             'rmText': '<i class="fa fa-trash" aria-hidden="true"></i>'
         });
