@@ -7,7 +7,9 @@ L.Control.SaveTiles = L.Control.extend({
 		saveText: '+',
 		rmText: '-',
         // optional function called before saving tiles
-		'confirm': null
+		'confirm': null,
+		// optional function called before removing tiles
+		'confirmRemoval': null
 	},
 	// save dl and save status
 	status: {
@@ -167,11 +169,18 @@ L.Control.SaveTiles = L.Control.extend({
 	},
 	_rmTiles: function () {
 		var self = this;
-		localforage.clear().then(function () {
-			self.status.storagesize = 0;
-			self._baseLayer.fire('tilesremoved');
-			self._baseLayer.fire('storagesize', self.status);
-		});
+		var successCallback = function () {
+			localforage.clear().then(function () {
+				self.status.storagesize = 0;
+				self._baseLayer.fire('tilesremoved');
+				self._baseLayer.fire('storagesize', self.status);
+			});
+		};
+		if (this.options.confirmRemoval) {
+			this.options.confirmRemoval(this.status, successCallback);
+		} else {
+			successCallback();
+		}
 	}
 });
 

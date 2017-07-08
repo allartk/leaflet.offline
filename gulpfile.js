@@ -44,8 +44,6 @@ gulp.task('src', function () {
     .pipe(connect.reload());
 });
 
-
-
 gulp.task('example', ['js'], function () {
 	connect.server({
 		root: ['./',
