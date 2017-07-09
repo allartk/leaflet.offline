@@ -1,2 +1,3 @@
 * create more test, with sinon!
 * autosave / autoclean.
+* Add dist when doing release
