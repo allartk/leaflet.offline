@@ -6,6 +6,10 @@ L.Control.SaveTiles = L.Control.extend({
 		position: 'topleft',
 		saveText: '+',
 		rmText: '-',
+		// maximum zoom level that will be reached when saving tiles with saveWhatYouSee
+		maxZoom: 19,
+		// saves the tiles that you see on screen plus deeper zooms (ignores zoomLevels array if true)
+		saveWhatYouSee: false,
         // optional function called before saving tiles
 		'confirm': null,
 		// optional function called before removing tiles
@@ -85,8 +89,25 @@ L.Control.SaveTiles = L.Control.extend({
 		var bounds;
 		var self = this;
 		var tiles = [];
+		// minimum zoom to prevent the user from saving the whole world
+		var minZoom = 5;
 		// current zoom or zoom options
-		var zoomlevels = this.options.zoomlevels || [this._map.getZoom()];
+		var zoomlevels = [];
+
+		if (this.options.saveWhatYouSee) {
+			var currentZoom = this._map.getZoom();
+			if (currentZoom < minZoom) {
+				throw new Error('It\'s not possible to save with zoom below level 5.');
+			}
+			var maxZoom = this.options.maxZoom;
+
+			for (var zoom = currentZoom; zoom <= maxZoom; zoom++) {
+				zoomlevels.push(zoom);
+			}
+		} else {
+			zoomlevels = this.options.zoomlevels || [this._map.getZoom()];
+		}
+
 		var latlngBounds = this._map.getBounds();
 		for (var i in zoomlevels) {
 			bounds = L.bounds(this._map.project(latlngBounds.getNorthWest(), zoomlevels[i]),
