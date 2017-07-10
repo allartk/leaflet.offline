@@ -65,7 +65,10 @@ First arg of constructor is layer object to save, second is object of all option
 * position: position of the control default 'topleft'
 * saveText: html to show on save button
 * rmText: html to show on remove button
+* maxZoom: maximum zoom level that will be reached when saving tiles with saveWhatYouSee. Default value: 19 (ignored if saveWhatYouSee is false)
+* saveWhatYouSee: saves the tiles that you see on screen plus deeper zoom levels (ignores zoomLevels array if true). This feature won't work when trying to save with zoom below level 5
 * confirm: a function with args layer and a callback function that should be called when user confirms download
+* confirmRemoval: a function with args layer and a callback function that should be called when user confirms removal of tiles
 
 #### L.control.savetiles methods
 
