@@ -5,7 +5,7 @@
   "main": "src/leaflet.offline.js",
   "scripts": {
     "test": "./node_modules/karma/bin/karma  start karma.conf.js",
-    "preversion": "npm test",
+    "preversion": "./node_modules/karma/bin/karma  start  karma.conf.js --single-run",
     "version": "gulp release  && git add -Af dist",
     "postversion": "git push --tags && git rm -r dist && git commit -m 'remove dist' && git push"
   },
