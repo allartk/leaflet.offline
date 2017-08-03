@@ -69,6 +69,8 @@ First arg of constructor is layer object to save, second is object of all option
 * saveWhatYouSee: saves the tiles that you see on screen plus deeper zoom levels (ignores zoomLevels array if true). This feature won't work when trying to save with zoom below level 5
 * confirm: a function with args layer and a callback function that should be called when user confirms download
 * confirmRemoval: a function with args layer and a callback function that should be called when user confirms removal of tiles
+* saveTitle: an optional parameter to change the title of the button that downloads the tiles
+* rmTitle: an optional parameter to change the title of the button that removes the tiles
 
 #### L.control.savetiles methods
 

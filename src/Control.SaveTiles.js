@@ -11,9 +11,13 @@ L.Control.SaveTiles = L.Control.extend({
 		// saves the tiles that you see on screen plus deeper zooms (ignores zoomLevels array if true)
 		saveWhatYouSee: false,
         // optional function called before saving tiles
-		'confirm': null,
+		confirm: null,
 		// optional function called before removing tiles
-		'confirmRemoval': null
+		confirmRemoval: null,
+		// optional parameter to change the title of the download button
+		saveTitle: 'Save tiles',
+		// optional parameter to change the title of the remove button
+		rmTitle: 'Remove tiles'
 	},
 	// save dl and save status
 	status: {
@@ -66,8 +70,8 @@ L.Control.SaveTiles = L.Control.extend({
 	onAdd: function () {
 		var container = L.DomUtil.create('div', 'savetiles leaflet-bar'),
 		options = this.options;
-		this._createButton(options.saveText, 'Save tiles', 'savetiles', container, this._saveTiles);
-		this._createButton(options.rmText, 'Remove tiles', 'rmtiles', container, this._rmTiles);
+		this._createButton(options.saveText, options.saveTitle, 'savetiles', container, this._saveTiles);
+		this._createButton(options.rmText, options.rmTitle, 'rmtiles', container, this._rmTiles);
 		return container;
 	},
 	_createButton: function (html, title, className, container, fn) {
