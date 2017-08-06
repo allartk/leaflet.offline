@@ -66,15 +66,14 @@ L.Control.SaveTiles = L.Control.extend({
 	onAdd: function () {
 		var container = L.DomUtil.create('div', 'savetiles leaflet-bar'),
 		options = this.options;
-		this._createButton(options.saveText, 'Save tiles', 'savetiles', container, this._saveTiles);
-		this._createButton(options.rmText, 'Remove tiles', 'rmtiles', container, this._rmTiles);
+		this._createButton(options.saveText, 'savetiles', container, this._saveTiles);
+		this._createButton(options.rmText, 'rmtiles', container, this._rmTiles);
 		return container;
 	},
-	_createButton: function (html, title, className, container, fn) {
+	_createButton: function (html, className, container, fn) {
 		var link = L.DomUtil.create('a', className, container);
 		link.innerHTML = html;
 		link.href = '#';
-		link.title = title;
 
 		L.DomEvent
                 .on(link, 'mousedown dblclick', L.DomEvent.stopPropagation)
