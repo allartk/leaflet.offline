@@ -1,6 +1,6 @@
 {
   "name": "leaflet.offline",
-  "version": "0.1.0-beta.6",
+  "version": "0.1.0-beta.7",
   "description": "Offline tilelayer for leaflet",
   "main": "src/leaflet.offline.js",
   "scripts": {
