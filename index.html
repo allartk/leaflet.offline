@@ -42,8 +42,8 @@
         }).addTo(map);
         //add buttons to save tiles in area viewed
         var control = L.control.savetiles(baseLayer, {
-            'zoomlevels': [13, 16], //optional zoomlevels to save, default current zoomlevel
-            bounds:[[47.67186,11.78489],[47.78617,12.44476]],
+            'zoomlevels': [10], //optional zoomlevels to save, default current zoomlevel
+            bounds:L.latLngBounds([[47.67186,11.78489],[47.78617,12.44476]]),
             'confirm': function(layer, succescallback) {
                 if (window.confirm("Save " + layer._tilesforSave.length)) {
                     succescallback();
