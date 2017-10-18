@@ -10,6 +10,7 @@ L.Control.SaveTiles = L.Control.extend({
 		maxZoom: 19,
 		// saves the tiles that you see on screen plus deeper zooms (ignores zoomLevels array if true)
 		saveWhatYouSee: false,
+		bounds: null,
         // optional function called before saving tiles
 		'confirm': null,
 		// optional function called before removing tiles
@@ -107,7 +108,11 @@ L.Control.SaveTiles = L.Control.extend({
 			zoomlevels = this.options.zoomlevels || [this._map.getZoom()];
 		}
 
-		var latlngBounds = this._map.getBounds();
+		if(this.options.bounds){
+			var latlngBounds = this.options.bounds;
+		}else{
+			var latlngBounds = this._map.getBounds();
+		}
 		for (var i in zoomlevels) {
 			bounds = L.bounds(this._map.project(latlngBounds.getNorthWest(), zoomlevels[i]),
 				this._map.project(latlngBounds.getSouthEast(), zoomlevels[i]));
