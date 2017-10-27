@@ -64,6 +64,13 @@ L.Control.SaveTiles = L.Control.extend({
 	setLayer: function (layer) {
 		this._baseLayer = layer;
 	},
+	/**
+	 * set the bounds of the area to save
+	 * @param {L.latLngBounds} bounds
+	 */
+	setBounds: function (bounds) {
+		this.options.bounds = bounds;
+	},
 	onAdd: function () {
 		var container = L.DomUtil.create('div', 'savetiles leaflet-bar'),
 		options = this.options;
