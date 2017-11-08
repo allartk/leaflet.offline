@@ -2,16 +2,31 @@
 
 require('../src/TileLayer.Offline.js');
 
-describe('tilelayer', function () {
+describe('TileLayer.Offline', function () {
 	it('exists', function () {
 		assert.ok(L.tileLayer.offline);
+		return;
 	});
-	it('creates', function () {
+	it('get getTileUrl', function () {
 		var layer = L.tileLayer.offline('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png');
-		assert.instanceOf(layer.getTileUrl({'z': 16, 'x': 123456, y: 123456}), Promise);
-		layer.getTileUrl({'z': 16, 'x': 123456, y: 123456}).then(function (url) {
+		layer._tileZoom = 16;
+		assert.instanceOf(layer.getTileUrl({'x': 123456, y: 456789}), Promise);
+		return layer.getTileUrl({'x': 123456, y: 456789}).then(function (url) {
 			assert.isString(url);
+			assert.equal(url, 'http://a.tile.openstreetmap.org/16/123456/456789.png');
 		});
+	});
+	it('get storagekey openstreetmap', function () {
+		var layer = L.tileLayer.offline('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+		const key = layer._getStorageKey('http://b.tile.openstreetmap.org/16/123456/456789.png');
+		assert.equal(key, 'http://a.tile.openstreetmap.org/16/123456/456789.png');
+
+	});
+	it('get storagekey cartodb', function () {
+		var layer = L.tileLayer.offline('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png');
+		const key = layer._getStorageKey('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/16/123456/456789.png');
+		assert.equal(key, 'https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/16/123456/456789.png');
+
 	});
 	it('calculates tiles at level 16', function () {
 		var layer = L.tileLayer.offline('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png');

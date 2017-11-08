@@ -43,7 +43,7 @@ L.TileLayer.Offline = L.TileLayer.extend({
 	},
 	_getStorageKey: function (url) {
 		var key;
-		if (url.indexOf('{s}')) {
+		if (this._url.indexOf('{s}')) {
 			var regexstring  = new RegExp('[' + this.options.subdomains.join('|') + ']\.');
 			key = url.replace(regexstring, this.options.subdomains['0'] + '.');
 		}
