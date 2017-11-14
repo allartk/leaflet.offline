@@ -1,8 +1,8 @@
 /* global L */
 var localforage = require('./localforage');
-/*
-* TODO Feature add array option limit tileloading to certain zoomlevels
-* If false reuse tiles lower/higher zoomlevels.
+/**
+ * An offline tile layer, extends L.TileLayer
+ * @class L.TileLayer.Offline
  */
 L.TileLayer.Offline = L.TileLayer.extend({
 	diffZoom: 1,
@@ -86,6 +86,12 @@ L.TileLayer.Offline = L.TileLayer.extend({
 	}
 });
 
+/**
+ * @function L.tileLayer.offline
+ * @param  {string} url     [description]
+ * @param  {object} options [description]
+ * @return {L.TileLayer.Offline}         [description]
+ */
 L.tileLayer.offline = function (url, options) {
 	return new L.TileLayer.Offline(url, options);
 };

@@ -4,6 +4,7 @@
   "description": "Offline tilelayer for leaflet",
   "main": "src/leaflet.offline.js",
   "scripts": {
+    "docs": "node_modules/documentation/bin/documentation.js build src/** -f html -o docs",
     "test": "./node_modules/karma/bin/karma  start karma.conf.js",
     "preversion": "./node_modules/karma/bin/karma  start  karma.conf.js --single-run",
     "version": "gulp release  && git add -Af dist",
@@ -27,6 +28,7 @@
     "browserify": "^13.1.1",
     "browserify-shim": "^3.8.12",
     "chai": "^3.5.0",
+    "documentation": "^5.3.3",
     "eslint": "^3.11.0",
     "eslint-config-mourner": "^2.0.1",
     "eslint-plugin-promise": "^3.4.0",

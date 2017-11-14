@@ -32,6 +32,7 @@ L.Control.SaveTiles = L.Control.extend({
 	/**
 	 * Set storagesize prop on object init
 	 * @param {Function} callback with arg number of saved files
+	 * @private
 	 */
 	setStorageSize: function (callback) {
 		var self = this;
@@ -53,6 +54,7 @@ L.Control.SaveTiles = L.Control.extend({
 	/**
 	 * get number of saved files
 	 * @param  {Function} callback [description]
+	 * @private
 	 */
 	getStorageSize: function (callback) {
 		this.setStorageSize(callback);
@@ -60,6 +62,7 @@ L.Control.SaveTiles = L.Control.extend({
 	/**
 	 * [setLayer description]
 	 * @param {Object} layer [description]
+	 * @private
 	 */
 	setLayer: function (layer) {
 		this._baseLayer = layer;
@@ -67,6 +70,7 @@ L.Control.SaveTiles = L.Control.extend({
 	/**
 	 * set the bounds of the area to save
 	 * @param {L.latLngBounds} bounds
+	 * @private
 	 */
 	setBounds: function (bounds) {
 		this.options.bounds = bounds;
@@ -115,9 +119,9 @@ L.Control.SaveTiles = L.Control.extend({
 			zoomlevels = this.options.zoomlevels || [this._map.getZoom()];
 		}
 
-		if(this.options.bounds){
+		if (this.options.bounds) {
 			var latlngBounds = this.options.bounds;
-		}else{
+		} else {
 			var latlngBounds = this._map.getBounds();
 		}
 		for (var i in zoomlevels) {
@@ -147,12 +151,13 @@ L.Control.SaveTiles = L.Control.extend({
 			_tilesforSave: tiles
 		};
 	},
-    /**
-     * Loop over status._tilesforSave prop till all tiles are downloaded
-     * Calls _saveTile for each download
-     * @param  {string} tileUrl
-     * @return {void}
-     */
+  /**
+   * Loop over status._tilesforSave prop till all tiles are downloaded
+   * Calls _saveTile for each download
+   * @private
+   * @param  {string} tileUrl
+   * @return {void}
+   */
 	_loadTile: function () {
 		var self = this;
 		var tileUrl = self.status._tilesforSave.shift();
@@ -178,6 +183,7 @@ L.Control.SaveTiles = L.Control.extend({
 	},
 	/**
 	 * [_saveTile description]
+	 * @private
 	 * @param  {string} tileUrl save key
 	 * @param  {blob} blob    [description]
 	 * @return {void}         [description]
