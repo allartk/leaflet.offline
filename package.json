@@ -5,6 +5,7 @@
   "main": "src/leaflet.offline.js",
   "scripts": {
     "docs": "node_modules/documentation/bin/documentation.js build src/** -f html -o docs",
+    "build": "./node_modules/rollup/bin/rollup -c",
     "test": "./node_modules/karma/bin/karma  start karma.conf.js",
     "preversion": "./node_modules/karma/bin/karma  start  karma.conf.js --single-run",
     "version": "gulp release  && git add -Af dist",
@@ -48,6 +49,7 @@
     "localforage": "^1.4.3",
     "mocha": "^3.2.0",
     "pump": "^1.0.2",
+    "rollup": "^0.51.5",
     "sinon": "^2.3.4",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",

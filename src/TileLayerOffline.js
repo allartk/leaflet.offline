@@ -108,11 +108,13 @@ var TileLayerOffline = L.TileLayer.extend(
 	});
 
 /**
- * @function L.tileLayer.offline
+ *
  * @param  {string} url     [description]
  * @param  {object} options {@link http://leafletjs.com/reference-1.2.0.html#tilelayer}
  * @return {TileLayerOffline}      an instance of TileLayerOffline
  */
-L.tileLayer.offline = function (url, options) {
+function TileLayer(url, options) {
 	return new TileLayerOffline(url, options);
 };
+
+export default TileLayer;
