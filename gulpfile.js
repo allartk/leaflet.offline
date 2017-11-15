@@ -14,7 +14,7 @@ var pump = require('pump');
 // shoud make a standalon js, without localforage
 gulp.task('js', function () {
 	var b = browserify([
-		'./src/leaflet.offline.js',
+		'./src/index.js',
 	], {
 		'transform': ['browserify-shim']
 	});
