@@ -5,10 +5,13 @@
   "main": "src/leaflet.offline.js",
   "scripts": {
     "docs": "node_modules/documentation/bin/documentation.js build src/** -f html -o docs",
-    "build": "./node_modules/rollup/bin/rollup -c",
+    "build": "rollup -c",
     "test": "./node_modules/karma/bin/karma  start karma.conf.js",
+    "watch": "rollup -c -w",
+    "serve": "browser-sync start --server",
+    "start": "npm-run-all -p serve watch",
     "preversion": "./node_modules/karma/bin/karma  start  karma.conf.js --single-run",
-    "version": "gulp release  && git add -Af dist",
+    "version": "npm  build && git add -Af dist",
     "postversion": "git push --tags && git rm -r dist && git commit -m 'remove dist' && git push"
   },
   "repository": {
@@ -26,18 +29,11 @@
   },
   "homepage": "https://github.com/allartk/leaflet.offline#readme",
   "devDependencies": {
-    "browserify": "^13.1.1",
-    "browserify-shim": "^3.8.12",
     "chai": "^3.5.0",
     "documentation": "^5.3.3",
     "eslint": "^4.11.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
-    "gulp": "^3.9.1",
-    "gulp-concat": "^2.6.1",
-    "gulp-connect": "^5.0.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^2.0.0",
     "karma": "^1.3.0",
     "karma-browserify": "^5.1.0",
     "karma-chai": "^0.1.0",
@@ -47,14 +43,7 @@
     "leaflet.vectorgrid": "^1.1.0",
     "localforage": "^1.4.3",
     "mocha": "^3.2.0",
-    "pump": "^1.0.2",
     "rollup": "^0.51.5",
-    "sinon": "^2.3.4",
-    "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.9.0"
-  },
-  "browserify-shim": {
-    "localforage": "global:localforage"
+    "sinon": "^2.3.4"
   }
 }
