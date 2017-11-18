@@ -3,6 +3,14 @@ export default {
   output: {
     file: 'dist/bundle.js',
     format: 'umd',
-    name: 'LeafletOffline'
-  }
+    name: 'LeafletOffline',
+  },
+  external: [
+    'leaflet',
+    'localforage',
+  ],
+  globals: {
+    localforage: 'localforage',
+    leaflet: 'L',
+  },
 };
