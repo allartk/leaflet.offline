@@ -47,6 +47,8 @@
     "mocha": "^3.2.0",
     "npm-run-all": "^4.1.2",
     "rollup": "^0.51.5",
+    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-node-resolve": "^3.0.0",
     "sinon": "^2.4.1"
   }
 }

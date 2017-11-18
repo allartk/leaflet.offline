@@ -2,7 +2,7 @@
 
 import '../src/TileLayerOffline';
 
-describe('TileLayer.Offline', () => {
+describe.only('TileLayer.Offline', () => {
   it('exists', () => {
     assert.ok(L.tileLayer.offline);
   });

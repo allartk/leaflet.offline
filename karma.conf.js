@@ -1,6 +1,8 @@
 /* eslint-disable*/
 // Karma configuration
 // Generated on Wed Dec 28 2016 13:40:25 GMT+0100 (CET)
+var resolve = require('rollup-plugin-node-resolve');
+var commonjs = require('rollup-plugin-commonjs');
 
 module.exports = function(config) {
   config.set({
@@ -18,7 +20,7 @@ module.exports = function(config) {
     files: [
       'https://unpkg.com/leaflet@1.1.0/dist/leaflet.js',
       'https://cdnjs.cloudflare.com/ajax/libs/localforage/1.4.3/localforage.min.js',
-      'test/*.js'
+      'test/TileLayerTest.js'
     ],
 
 
@@ -36,10 +38,21 @@ module.exports = function(config) {
      format: 'iife',
      name: 'LeafletOffline',
      sourcemap: 'inline',
+     external: [
+       'leaflet',
+       'localforage',
+     ],
      globals: {
        localforage: 'localforage',
        leaflet: 'L',
      },
+     plugins: [
+       resolve({
+         jsnext: true,
+         main: true
+       }),
+       commonjs()
+   ]
     },
 
 

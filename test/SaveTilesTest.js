@@ -4,8 +4,8 @@ import '../src/ControlSaveTiles';
 
 
 // set up a map
-let c,
-  baseLayer;
+let c;
+let baseLayer;
 beforeEach(() => {
   const map = L.map(document.createElement('div'));
   map.setView({
