@@ -11,7 +11,7 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['browserify', 'mocha','chai'],
+    frameworks: ['mocha','chai'],
 
 
     // list of files / patterns to load in the browser
@@ -30,11 +30,16 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/*.js': [ 'browserify' ]
+      'test/*.js': ['rollup'],
     },
-    browserify: {
-      debug: true,
-      transform: [ ]
+    rollupPreprocessor: {
+     format: 'iife',
+     name: 'LeafletOffline',
+     sourcemap: 'inline',
+     globals: {
+       localforage: 'localforage',
+       leaflet: 'L',
+     },
     },
 
 
