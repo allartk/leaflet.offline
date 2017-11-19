@@ -30,6 +30,7 @@
   "homepage": "https://github.com/allartk/leaflet.offline#readme",
   "devDependencies": {
     "browser-sync": "^2.18.13",
+    "buble": "^0.18.0",
     "chai": "^3.5.0",
     "documentation": "^5.3.3",
     "eslint": "^4.11.0",
@@ -47,8 +48,10 @@
     "mocha": "^3.2.0",
     "npm-run-all": "^4.1.2",
     "rollup": "^0.51.5",
+    "rollup-plugin-buble": "^0.18.0",
     "rollup-plugin-commonjs": "^8.2.6",
     "rollup-plugin-node-resolve": "^3.0.0",
     "sinon": "^4.1.2"
-  }
+  },
+  "dependencies": {}
 }
