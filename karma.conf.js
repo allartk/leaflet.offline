@@ -20,7 +20,7 @@ module.exports = function(config) {
     files: [
       'https://unpkg.com/leaflet@1.1.0/dist/leaflet.js',
       'https://cdnjs.cloudflare.com/ajax/libs/localforage/1.4.3/localforage.min.js',
-      'test/TileLayerTest.js'
+      'test/*.js'
     ],
 
 
@@ -47,10 +47,7 @@ module.exports = function(config) {
        leaflet: 'L',
      },
      plugins: [
-       resolve({
-         jsnext: true,
-         main: true
-       }),
+       resolve(),
        commonjs()
    ]
     },
