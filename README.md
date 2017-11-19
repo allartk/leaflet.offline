@@ -1,16 +1,19 @@
 leaflet.offline
 ===============
 
-Just a modern and slim library to store image and vector tiles offline.
-Easy to use in your existing projects. Take a look in the example folder and see how it works, or head
-to **http://allartk.github.io/leaflet.offline/**!
+Working on a new version based on es6 code. For docs of the latest release look here:
+
+**https://github.com/allartk/leaflet.offline/tree/v0.2.0**
+
+
+Just a modern and slim library to store tiles offline.
+Easy to use in your existing projects. Take a look at [index.html](http://allartk.github.io/leaflet.offline/) for a working example
 
 
 ## Dependencies
 
 * [Leafletjs](http://leafletjs.com/) (version 1.0, look in releases if you use an older leaflet version)
 * [localforage](https://github.com/localForage/localForage) To store the tiles
-* ~~In progress: optional [Leaflet.VectorGrid](https://github.com/Leaflet/Leaflet.VectorGrid)~~
 
 
 ## Install
@@ -28,26 +31,21 @@ your existing project with [npm](http://npmjs.com):
 ```
 npm install leaflet.offline
 ```
-
-I encourage you to a bundler like [browserify](http://browserify.org/), webpack or so.
-
+In your script add:
 
 ```
 import 'leaflet.offline'
 ```
 
+### Development
 
-
-### Run example
-
-For running the example, you'll need to clone the project.
-Then, from the project root run and 
+For running the example locally, you'll need to clone the project and run:
 
 ```
 npm install
 npm start
 ```
-Visit http://localhost:3000/:
+Visit http://localhost:3000/ and watch the page reload when you change.
 
 ## Api
 
