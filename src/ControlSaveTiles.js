@@ -6,17 +6,17 @@ import localforage from './localforage';
  * @class
  */
 const ControlSaveTiles = L.Control.extend(
-  /** @lends  ControlSaveTiles */		{
+  /** @lends  ControlSaveTiles */ {
     /**
-		 *  @property {Object} options
-		 *  @property {string} options.position
-		 *  @property {string} options.saveText
-		 *  @property {string} options.rmText
-		 *  @property {number} options.maxZoom maximum zoom level that will be reached when saving tiles with saveWhatYouSee
-		 *  @property {boolean} options.saveWhatYouSee save the tiles that you see on screen plus deeper zooms, ignores zoomLevels
-		 *  @property {function} options.confirm function called before confirm, default null
-		 *  @property {function} options.confirmRemoval function called before confirm, default null
-		*/
+     *  @property {Object} options
+     *  @property {string} options.position
+     *  @property {string} options.saveText
+     *  @property {string} options.rmText
+     *  @property {number} options.maxZoom maximum zoom level that will be reached when saving tiles with saveWhatYouSee
+     *  @property {boolean} options.saveWhatYouSee save the tiles that you see on screen plus deeper zooms, ignores zoomLevels
+     *  @property {function} options.confirm function called before confirm, default null
+     *  @property {function} options.confirmRemoval function called before confirm, default null
+    */
     options: {
       position: 'topleft',
       saveText: '+',
@@ -28,13 +28,13 @@ const ControlSaveTiles = L.Control.extend(
       confirmRemoval: null,
     },
     /**
-		 *  @property {Object} status
-		 *  @property {number} status.storagesize
-		 *  @property {number} status.lengthToBeSaved
-		 *  @property {number} status.lengthSaved
-		 *  @property {number} status.lengthLoaded
-		 *  @property {array} status._tilesforSave
-		*/
+     *  @property {Object} status
+     *  @property {number} status.storagesize
+     *  @property {number} status.lengthToBeSaved
+     *  @property {number} status.lengthSaved
+     *  @property {number} status.lengthLoaded
+     *  @property {array} status._tilesforSave
+    */
     status: {
       storagesize: null,
       lengthToBeSaved: null,
@@ -43,21 +43,21 @@ const ControlSaveTiles = L.Control.extend(
       _tilesforSave: null,
     },
     /**
-		 * @private
-		 * @param  {Object} baseLayer
-		 * @param  {Object} options
-		 * @return {void}
-		 */
+     * @private
+     * @param  {Object} baseLayer
+     * @param  {Object} options
+     * @return {void}
+     */
     initialize(baseLayer, options) {
       this._baseLayer = baseLayer;
       this.setStorageSize();
       L.setOptions(this, options);
     },
     /**
-	 * Set storagesize prop on object init
-	 * @param {Function} callback with arg number of saved files
-	 * @private
-	 */
+   * Set storagesize prop on object init
+   * @param {Function} callback with arg number of saved files
+   * @private
+   */
     setStorageSize(callback) {
       const self = this;
       if (this.status.storagesize) {
@@ -76,26 +76,26 @@ const ControlSaveTiles = L.Control.extend(
       });
     },
     /**
-	 * get number of saved files
-	 * @param  {Function} callback [description]
-	 * @private
-	 */
+   * get number of saved files
+   * @param  {Function} callback [description]
+   * @private
+   */
     getStorageSize(callback) {
       this.setStorageSize(callback);
     },
     /**
-	 * [setLayer description]
-	 * @param {Object} layer [description]
-	 * @private
-	 */
+   * [setLayer description]
+   * @param {Object} layer [description]
+   * @private
+   */
     setLayer(layer) {
       this._baseLayer = layer;
     },
     /**
-	 * set the bounds of the area to save
-	 * @param {L.latLngBounds} bounds
-	 * @private
-	 */
+   * set the bounds of the area to save
+   * @param {L.latLngBounds} bounds
+   * @private
+   */
     setBounds(bounds) {
       this.options.bounds = bounds;
     },
@@ -208,12 +208,12 @@ const ControlSaveTiles = L.Control.extend(
       };
     },
     /**
-	 * [_saveTile description]
-	 * @private
-	 * @param  {string} tileUrl save key
-	 * @param  {blob} blob    [description]
-	 * @return {void}         [description]
-	 */
+   * [_saveTile description]
+   * @private
+   * @param  {string} tileUrl save key
+   * @param  {blob} blob    [description]
+   * @return {void}         [description]
+   */
     _saveTile(tileUrl, blob) {
       const self = this;
       localforage.removeItem(tileUrl).then(() => {

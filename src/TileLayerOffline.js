@@ -6,14 +6,14 @@ import localforage from './localforage';
  * @class
  */
 const TileLayerOffline = L.TileLayer.extend(
-  /** @lends  TileLayerOffline */	{
+  /** @lends  TileLayerOffline */ {
     diffZoom: 1,
     /**
-		 * Create tile HTMLElement
-		 * @param  {array}   coords [description]
-		 * @param  {Function} done   [description]
-		 * @return {HTMLElement}          [description]
-		 */
+     * Create tile HTMLElement
+     * @param  {array}   coords [description]
+     * @param  {Function} done   [description]
+     * @return {HTMLElement}          [description]
+     */
     createTile(coords, done) {
       const tile = document.createElement('img');
 
@@ -35,10 +35,10 @@ const TileLayerOffline = L.TileLayer.extend(
       return tile;
     },
     /**
-		 * [description]
-		 * @param  {array} coords [description]
-		 * @return {string} url
-		 */
+     * [description]
+     * @param  {array} coords [description]
+     * @return {string} url
+     */
     getTileUrl(coords) {
       const $this = this;
       const p = new Promise(((resolve, reject) => {
@@ -55,32 +55,32 @@ const TileLayerOffline = L.TileLayer.extend(
       return p;
     },
     /**
-		 * @private
-		 * @param  {[type]} url [description]
-		 * @return {[type]}     [description]
-		 */
+     * @private
+     * @param  {[type]} url [description]
+     * @return {[type]}     [description]
+     */
     _getStorageKey(url) {
       let key;
       const subdomainpos = this._url.indexOf('{s}');
       if (subdomainpos > 0) {
         key = url.substring(0, subdomainpos) +
-				this.options.subdomains['0'] +
-				url.substring(subdomainpos + 1, url.length);
+        this.options.subdomains['0'] +
+        url.substring(subdomainpos + 1, url.length);
       }
       return key || url;
     },
     /**
-		 * @return {number} Number of simultanous downloads from tile server
-		 */
+     * @return {number} Number of simultanous downloads from tile server
+     */
     getSimultaneous() {
       return this.options.subdomains.length;
     },
     /**
-	 * getTileUrls for single zoomlevel
-	 * @param  {object} L.latLngBounds
-	 * @param  {number} zoom
-	 * @return {object[]} the tile urls, key, url
-	 */
+   * getTileUrls for single zoomlevel
+   * @param  {object} L.latLngBounds
+   * @param  {number} zoom
+   * @return {object[]} the tile urls, key, url
+   */
     getTileUrls(bounds, zoom) {
       const tiles = [];
       const origurl = this._url;
