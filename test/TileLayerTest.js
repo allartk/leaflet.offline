@@ -15,6 +15,12 @@ describe('TileLayer.Offline', () => {
       assert.equal(url, 'http://a.tile.openstreetmap.org/16/123456/456789.png');
     });
   });
+  it('createTile', () => {
+    const url  = 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    const layer = L.tileLayer.offline(url);
+    const tile = layer.createTile({ x: 123456, y: 456789 });
+    assert.instanceOf(tile, HTMLElement);
+  });
   it('get storagekey openstreetmap', () => {
     const layer = L.tileLayer.offline('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
     const key = layer._getStorageKey('http://b.tile.openstreetmap.org/16/123456/456789.png');
