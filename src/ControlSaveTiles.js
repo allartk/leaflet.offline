@@ -99,6 +99,30 @@ const ControlSaveTiles = L.Control.extend(
     setBounds(bounds) {
       this.options.bounds = bounds;
     },
+    /**
+   * set saveWhatYouSee
+   * @param {boolean}
+   * @private
+   */
+    setSaveWhatYouSee: function (saveWhatYouSee) {
+      this.options.saveWhatYouSee = saveWhatYouSee;
+    },
+    /**
+   * set the maxZoom
+   * @param {number} zoom
+   * @private
+   */
+    setMaxZoom: function (zoom) {
+      this.options.maxZoom = zoom;
+    },
+    /**
+   * set the zoomLevels
+   * @param {array} [min,max]
+   * @private
+   */
+    setZoomlevels: function (zoomlevels) {
+      this.options.zoomlevels = zoomlevels;
+    },
     onAdd() {
       let container = L.DomUtil.create('div', 'savetiles leaflet-bar'),
         options = this.options;
