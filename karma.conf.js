@@ -20,6 +20,7 @@ module.exports = function(config) {
     files: [
       'https://unpkg.com/leaflet@1.1.0/dist/leaflet.js',
       'https://cdnjs.cloudflare.com/ajax/libs/localforage/1.4.3/localforage.min.js',
+      'node_modules/sinon/pkg/sinon.js',
       'test/*.js'
     ],
 
@@ -41,10 +42,12 @@ module.exports = function(config) {
      external: [
        'leaflet',
        'localforage',
+       'sinon'
      ],
      globals: {
        localforage: 'localforage',
        leaflet: 'L',
+       sinon: 'sinon'
      },
      plugins: [
        resolve(),
