@@ -52,5 +52,5 @@ Visit http://localhost:3000/ and watch the page reload when you change.
 Generate docs with
 
 ```
-npm docs
+npm run-script docs
 ```
