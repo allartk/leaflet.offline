@@ -15,7 +15,7 @@ beforeEach(() => {
   baseLayer = L.tileLayer.offline('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     subdomains: 'abc', // ignored
   }).addTo(map);
-  c = new L.control.savetiles(baseLayer);
+  c = L.control.savetiles(baseLayer);
   c.addTo(map);
   c._rmTiles();
 });
