@@ -196,7 +196,7 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
     xhr.responseType = 'blob';
     xhr.send();
     xhr.onreadystatechange = () => {
-      if (this.readyState === 4 && this.status === 200) {
+      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
         self.status.lengthLoaded += 1;
         self._saveTile(tileUrl.key, this.response);
         if (self.status._tilesforSave.length > 0) {
