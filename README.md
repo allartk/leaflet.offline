@@ -47,6 +47,10 @@ npm start
 ```
 Visit http://localhost:3000/ and watch the page reload when you change.
 
+You can test your code with `npm test`. Please configure eslint in your editor if you wish to contribute.
+
+**pull requests welcome**
+
 ## Api
 
 Generate docs with
