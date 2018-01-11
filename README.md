@@ -1,6 +1,8 @@
 leaflet.offline
 ===============
 
+[![npm version](https://badge.fury.io/js/leaflet.offline.svg)](https://badge.fury.io/js/leaflet.offline)
+
 Working on a new version based on es6 code. For docs of the latest release look here:
 
 **https://github.com/allartk/leaflet.offline/tree/v0.2.0**
