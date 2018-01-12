@@ -2,6 +2,7 @@ leaflet.offline
 ===============
 
 [![npm version](https://badge.fury.io/js/leaflet.offline.svg)](https://badge.fury.io/js/leaflet.offline)
+[![Build Status](https://travis-ci.org/allartk/leaflet.offline.svg?branch=travis)](https://travis-ci.org/allartk/leaflet.offline)
 
 Working on a new version based on es6 code. For docs of the latest release look here:
 
