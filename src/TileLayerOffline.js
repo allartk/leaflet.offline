@@ -7,50 +7,34 @@ import localforage from './localforage';
  */
 const TileLayerOffline = L.TileLayer.extend(/** @lends  TileLayerOffline */ {
   /**
-     * Create tile HTMLElement
-     * @param  {array}   coords [description]
-     * @param  {Function} done   [description]
-     * @return {HTMLElement}          [description]
-     */
+  * Create tile HTMLElement
+  * @private
+  * @param  {array}   coords [description]
+  * @param  {Function} done   [description]
+  * @return {HTMLElement}          [description]
+  */
   createTile(coords, done) {
-    const tile = document.createElement('img');
-
-    L.DomEvent.on(tile, 'load', L.bind(this._tileOnLoad, this, done, tile));
-    L.DomEvent.on(tile, 'error', L.bind(this._tileOnError, this, done, tile));
-
-    if (this.options.crossOrigin) {
-      tile.crossOrigin = '';
-    }
-    tile.alt = '';
-
-    tile.setAttribute('role', 'presentation');
-    this.getTileUrl(coords).then((url) => {
+    const tile = L.TileLayer.prototype.createTile.call(this, coords, done);
+    const url = tile.src;
+    tile.src = undefined;
+    this.setDataUrl(tile, url).then((dataurl) => {
+      tile.src = dataurl;
+    }).catch(() => {
       tile.src = url;
-    }).catch((e) => {
-      throw new Error(e);
     });
-
     return tile;
   },
-  /**
-     * [description]
-     * @param  {array} coords [description]
-     * @return {string} url
-     */
-  getTileUrl(coords) {
-    const $this = this;
-    const p = new Promise(((resolve, reject) => {
-      const url = L.TileLayer.prototype.getTileUrl.call($this, coords);
-      localforage.getItem($this._getStorageKey(url)).then((data) => {
+
+  setDataUrl(tile, url) {
+    return new Promise((resolve, reject) => {
+      localforage.getItem(this._getStorageKey(url)).then((data) => {
         if (data && typeof data === 'object') {
           resolve(URL.createObjectURL(data));
+        } else {
+          reject();
         }
-        resolve(url);
-      }).catch((e) => {
-        reject(e);
-      });
-    }));
-    return p;
+      }).catch((e) => { reject(e); });
+    });
   },
   /**
      * @private

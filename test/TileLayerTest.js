@@ -9,14 +9,10 @@ describe('TileLayer.Offline', () => {
   it('get getTileUrl', () => {
     const layer = L.tileLayer.offline('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png');
     layer._tileZoom = 16;
-    assert.instanceOf(layer.getTileUrl({ x: 123456, y: 456789 }), Promise);
-    return layer.getTileUrl({ x: 123456, y: 456789 }).then((url) => {
-      assert.isString(url);
-      assert.equal(url, 'http://a.tile.openstreetmap.org/16/123456/456789.png');
-    });
+    assert.instanceOf(layer.setDataUrl({ x: 123456, y: 456789 }), Promise);
   });
   it('createTile', () => {
-    const url  = 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    const url = 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
     const layer = L.tileLayer.offline(url);
     const tile = layer.createTile({ x: 123456, y: 456789 });
     assert.instanceOf(tile, HTMLElement);
