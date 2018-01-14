@@ -7,7 +7,7 @@ leaflet.offline
 Just a modern and slim library to store tiles offline.
 
 * [example](http://allartk.github.io/leaflet.offline/)
-* [api docs](https://github.com/allartk/leaflet.offline/docs)
+* [api docs](docs/api.md)
 
 
 ## Dependencies
