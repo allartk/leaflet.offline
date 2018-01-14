@@ -2,15 +2,21 @@ import L from 'leaflet';
 import localforage from './localforage';
 
 /**
+ * Status of ControlSaveTiles, used internal and as object for events.
+ * @typedef {Object} ControlStatus
+ * @property {number} storagesize
+ * @property {number} lengthToBeSaved
+ * @property {number} lengthSaved
+ * @property {number} lengthLoaded
+ * @property {array} _tilesforSave
+ */
+
+
+/**
 * Shows control on map to save tiles
 * @class ControlSaveTiles
 *
-* @property {Object} status
-* @property {number} status.storagesize
-* @property {number} status.lengthToBeSaved
-* @property {number} status.lengthSaved
-* @property {number} status.lengthLoaded
-* @property {array} status._tilesforSave
+* @property {ControlStatus} status
 */
 const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
   options: {

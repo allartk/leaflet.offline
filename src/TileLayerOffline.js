@@ -1,9 +1,10 @@
 import L from 'leaflet';
 import localforage from './localforage';
 
+
 /**
  * A layer that uses store tiles when available. Falls back to online.
- * @class
+ * @class TileLayerOffline
  */
 const TileLayerOffline = L.TileLayer.extend(/** @lends  TileLayerOffline */ {
   /**
@@ -24,7 +25,12 @@ const TileLayerOffline = L.TileLayer.extend(/** @lends  TileLayerOffline */ {
     });
     return tile;
   },
-
+  /**
+   * dataurl from locatostorage
+   * @param {DomElement} tile [description]
+   * @param {string} url  [description]
+   * @return {Promise} resolves to base64 url
+   */
   setDataUrl(tile, url) {
     return new Promise((resolve, reject) => {
       localforage.getItem(this._getStorageKey(url)).then((data) => {
@@ -37,10 +43,11 @@ const TileLayerOffline = L.TileLayer.extend(/** @lends  TileLayerOffline */ {
     });
   },
   /**
-     * @private
-     * @param  {[type]} url [description]
-     * @return {[type]}     [description]
-     */
+   * get key to use for storage
+   * @private
+   * @param  {string} url url used to load tile
+   * @return {string} unique identifier.
+   */
   _getStorageKey(url) {
     let key;
     const subdomainpos = this._url.indexOf('{s}');
@@ -52,8 +59,8 @@ const TileLayerOffline = L.TileLayer.extend(/** @lends  TileLayerOffline */ {
     return key || url;
   },
   /**
-     * @return {number} Number of simultanous downloads from tile server
-     */
+   * @return {number} Number of simultanous downloads from tile server
+   */
   getSimultaneous() {
     return this.options.subdomains.length;
   },
@@ -90,7 +97,57 @@ const TileLayerOffline = L.TileLayer.extend(/** @lends  TileLayerOffline */ {
 });
 
 /**
- *
+* Tiles removed event
+* @event storagesize
+* @memberof TileLayerOffline
+* @type {object}
+*/
+
+/**
+ * Start saving tiles
+ * @event savestart
+ * @memberof TileLayerOffline
+ * @type {object}
+ */
+
+/**
+ * Tile fetched
+ * @event loadtileend
+ * @memberof TileLayerOffline
+ * @type {object}
+ */
+
+/**
+ * All tiles fetched
+ * @event loadend
+ * @memberof TileLayerOffline
+ * @type {object}
+ */
+
+/**
+ * Tile saved
+ * @event savetileend
+ * @memberof TileLayerOffline
+ * @type {object}
+ */
+
+/**
+ * All tiles saved
+ * @event saveend
+ * @memberof TileLayerOffline
+ * @type {object}
+ */
+
+/**
+ * Tile removed
+ * @event tilesremoved
+ * @memberof TileLayerOffline
+ * @type {object}
+ */
+
+
+/**
+ * @function L.tileLayer.offline
  * @param  {string} url     [description]
  * @param  {object} options {@link http://leafletjs.com/reference-1.2.0.html#tilelayer}
  * @return {TileLayerOffline}      an instance of TileLayerOffline
