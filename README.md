@@ -4,18 +4,13 @@ leaflet.offline
 [![npm version](https://badge.fury.io/js/leaflet.offline.svg)](https://badge.fury.io/js/leaflet.offline)
 [![Build Status](https://travis-ci.org/allartk/leaflet.offline.svg?branch=travis)](https://travis-ci.org/allartk/leaflet.offline)
 
-Working on a new version based on es6 code. For docs of the latest release look here:
-
-**https://github.com/allartk/leaflet.offline/tree/v0.2.0**
-
-
 Just a modern and slim library to store tiles offline.
-Easy to use in your existing projects. Take a look at [index.html](http://allartk.github.io/leaflet.offline/) for a working example
+Take a look at http://allartk.github.io/leaflet.offline/ for an **example** and **api docs**.
 
 
 ## Dependencies
 
-* [Leafletjs](http://leafletjs.com/) (version 1.0, look in releases if you use an older leaflet version)
+* [Leafletjs](http://leafletjs.com/)
 * [localforage](https://github.com/localForage/localForage) To store the tiles
 
 
