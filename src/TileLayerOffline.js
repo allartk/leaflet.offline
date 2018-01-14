@@ -26,7 +26,7 @@ const TileLayerOffline = L.TileLayer.extend(/** @lends  TileLayerOffline */ {
     return tile;
   },
   /**
-   * dataurl from locatostorage
+   * dataurl from localstorage
    * @param {DomElement} tile [description]
    * @param {string} url  [description]
    * @return {Promise} resolves to base64 url

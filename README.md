@@ -5,7 +5,9 @@ leaflet.offline
 [![Build Status](https://travis-ci.org/allartk/leaflet.offline.svg?branch=travis)](https://travis-ci.org/allartk/leaflet.offline)
 
 Just a modern and slim library to store tiles offline.
-Take a look at http://allartk.github.io/leaflet.offline/ for an **example** and **api docs**.
+
+* [example](http://allartk.github.io/leaflet.offline/)
+* [api docs](https://github.com/allartk/leaflet.offline/docs)
 
 
 ## Dependencies

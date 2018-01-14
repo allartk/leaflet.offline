@@ -2,13 +2,15 @@ import L from 'leaflet';
 import localforage from './localforage';
 
 /**
- * Status of ControlSaveTiles, used internal and as object for events.
+ * Status of ControlSaveTiles, keeps info about process during downloading
+ * ans saving tiles. Used internal and as object for events.
  * @typedef {Object} ControlStatus
- * @property {number} storagesize
- * @property {number} lengthToBeSaved
- * @property {number} lengthSaved
- * @property {number} lengthLoaded
- * @property {array} _tilesforSave
+ * @property {number} storagesize total number of saved tiles.
+ * @property {number} lengthToBeSaved number of tiles that will be saved in db
+ * during current process
+ * @property {number} lengthSaved number of tiles saved during current process
+ * @property {number} lengthLoaded number of tiles loaded during current process
+ * @property {array} _tilesforSave tiles waiting for processing
  */
 
 
@@ -49,7 +51,7 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
   },
   /**
    * Set storagesize prop on object init
-   * @param {Function} callback with arg number of saved files
+   * @param {Function} [callback] receives arg number of saved files
    * @private
    */
   setStorageSize(callback) {
@@ -78,8 +80,8 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
     this.setStorageSize(callback);
   },
   /**
-   * [setLayer description]
-   * @param {Object} layer [description]
+   * Change baseLayer
+   * @param {TileLayerOffline} layer
    */
   setLayer(layer) {
     this._baseLayer = layer;
@@ -93,7 +95,7 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
   },
   /**
    * set saveWhatYouSee
-   * @param {boolean}
+   * @param {boolean} saveWhatYouSee
    */
   setSaveWhatYouSee(saveWhatYouSee) {
     this.options.saveWhatYouSee = saveWhatYouSee;
@@ -107,7 +109,7 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
   },
   /**
    * set the zoomLevels
-   * @param {array} [min,max]
+   * @param {array} zoomlevels min,max
    */
   setZoomlevels(zoomlevels) {
     this.options.zoomlevels = zoomlevels;
@@ -133,6 +135,11 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
 
     return link;
   },
+  /**
+   * starts processing tiles
+   * @private
+   * @return {void}
+   */
   _saveTiles() {
     let bounds;
     const self = this;
@@ -261,15 +268,16 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
 * @function L.control.savetiles
 * @param  {object} baseLayer     {@link http://leafletjs.com/reference-1.2.0.html#tilelayer}
 * @property {Object} options
-* @property {string} options.position
-* @property {string} options.saveText
-* @property {string} options.rmText
-* @property {number} options.maxZoom maximum zoom level that will be reached
-* when saving tiles with saveWhatYouSee
-* @property {boolean} options.saveWhatYouSee save the tiles that you see
-* on screen plus deeper zooms, ignores zoomLevels
-* @property {function} options.confirm function called before confirm, default null
-* @property {function} options.confirmRemoval function called before confirm, default null
+* @property {string} [options.position] default topleft
+* @property {string} [options.saveText] html for save button, default +
+* @property {string} [options.rmText] html for remove button, deflault -
+* @property {number} [options.maxZoom] maximum zoom level that will be reached
+* when saving tiles with saveWhatYouSee. Default 19
+* @property {boolean} [options.saveWhatYouSee] save the tiles that you see
+* on screen plus deeper zooms, ignores zoomLevels options. Default false
+* @property {function} [options.confirm] function called before confirm, default null.
+* Args of function are ControlStatus and callback.
+* @property {function} [options.confirmRemoval] function called before confirm, default null
 * @return {ControlSaveTiles}
 */
 L.control.savetiles = (baseLayer, options) => new ControlSaveTiles(baseLayer, options);
