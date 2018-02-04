@@ -5,13 +5,13 @@
 -   [L.tileLayer.offline](#ltilelayeroffline)
 -   [L.control.savetiles](#lcontrolsavetiles)
 -   [Types](#types)
--   [ControlStatus](#controlstatus)
 -   [ControlSaveTiles](#controlsavetiles)
     -   [setLayer](#setlayer)
     -   [setBounds](#setbounds)
     -   [setSaveWhatYouSee](#setsavewhatyousee)
     -   [setMaxZoom](#setmaxzoom)
     -   [setZoomlevels](#setzoomlevels)
+-   [ControlStatus](#controlstatus)
 -   [TileLayerOffline](#tilelayeroffline)
     -   [setDataUrl](#setdataurl)
     -   [getSimultaneous](#getsimultaneous)
@@ -50,24 +50,8 @@ Returns **[ControlSaveTiles](#controlsavetiles)**
 
 ## Types
 
+The factory methods above use the following types.
 
-
-
-## ControlStatus
-
-Status of ControlSaveTiles, keeps info about process during downloading
-ans saving tiles. Used internal and as object for events.
-
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
-
-**Properties**
-
--   `storagesize` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** total number of saved tiles.
--   `lengthToBeSaved` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** number of tiles that will be saved in db
-    during current process
--   `lengthSaved` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** number of tiles saved during current process
--   `lengthLoaded` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** number of tiles loaded during current process
--   `_tilesforSave` **[array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** tiles waiting for processing
 
 ## ControlSaveTiles
 
@@ -117,9 +101,26 @@ set the zoomLevels
 
 -   `zoomlevels` **[array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** min,max
 
+## ControlStatus
+
+Status of ControlSaveTiles, keeps info about process during downloading
+ans saving tiles. Used internal and as object for events.
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+**Properties**
+
+-   `storagesize` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** total number of saved tiles.
+-   `lengthToBeSaved` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** number of tiles that will be saved in db
+    during current process
+-   `lengthSaved` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** number of tiles saved during current process
+-   `lengthLoaded` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** number of tiles loaded during current process
+-   `_tilesforSave` **[array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** tiles waiting for processing
+
 ## TileLayerOffline
 
 A layer that uses store tiles when available. Falls back to online.
+Use this layer directly or extend it
 
 ### setDataUrl
 

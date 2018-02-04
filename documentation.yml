@@ -4,6 +4,6 @@ toc:
   - name: Types
     description: |
       The factory methods above use the following types.
-    ControlSaveTiles
-    ControlStatus
-    TileLayerOffline
+  - ControlSaveTiles
+  - ControlStatus
+  - TileLayerOffline
