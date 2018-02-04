@@ -2,6 +2,9 @@
 
 ### Table of Contents
 
+-   [L.tileLayer.offline](#ltilelayeroffline)
+-   [L.control.savetiles](#lcontrolsavetiles)
+-   [Types](#types)
 -   [ControlStatus](#controlstatus)
 -   [ControlSaveTiles](#controlsavetiles)
     -   [setLayer](#setlayer)
@@ -9,12 +12,46 @@
     -   [setSaveWhatYouSee](#setsavewhatyousee)
     -   [setMaxZoom](#setmaxzoom)
     -   [setZoomlevels](#setzoomlevels)
--   [L.control.savetiles](#lcontrolsavetiles)
 -   [TileLayerOffline](#tilelayeroffline)
     -   [setDataUrl](#setdataurl)
     -   [getSimultaneous](#getsimultaneous)
     -   [getTileUrls](#gettileurls)
--   [L.tileLayer.offline](#ltilelayeroffline)
+
+## L.tileLayer.offline
+
+**Parameters**
+
+-   `url` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** [description]
+-   `options` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** <http://leafletjs.com/reference-1.2.0.html#tilelayer>
+
+Returns **[TileLayerOffline](#tilelayeroffline)** an instance of TileLayerOffline
+
+## L.control.savetiles
+
+**Parameters**
+
+-   `baseLayer` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** <http://leafletjs.com/reference-1.2.0.html#tilelayer>
+
+**Properties**
+
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+    -   `options.position` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** default topleft
+    -   `options.saveText` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** html for save button, default +
+    -   `options.rmText` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** html for remove button, deflault -
+    -   `options.maxZoom` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** maximum zoom level that will be reached
+        when saving tiles with saveWhatYouSee. Default 19
+    -   `options.saveWhatYouSee` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** save the tiles that you see
+        on screen plus deeper zooms, ignores zoomLevels options. Default false
+    -   `options.confirm` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** function called before confirm, default null.
+        Args of function are ControlStatus and callback.
+    -   `options.confirmRemoval` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** function called before confirm, default null
+
+Returns **[ControlSaveTiles](#controlsavetiles)** 
+
+## Types
+
+
+
 
 ## ControlStatus
 
@@ -80,28 +117,6 @@ set the zoomLevels
 
 -   `zoomlevels` **[array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** min,max
 
-## L.control.savetiles
-
-**Parameters**
-
--   `baseLayer` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** <http://leafletjs.com/reference-1.2.0.html#tilelayer>
-
-**Properties**
-
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-    -   `options.position` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** default topleft
-    -   `options.saveText` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** html for save button, default +
-    -   `options.rmText` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** html for remove button, deflault -
-    -   `options.maxZoom` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** maximum zoom level that will be reached
-        when saving tiles with saveWhatYouSee. Default 19
-    -   `options.saveWhatYouSee` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** save the tiles that you see
-        on screen plus deeper zooms, ignores zoomLevels options. Default false
-    -   `options.confirm` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** function called before confirm, default null.
-        Args of function are ControlStatus and callback.
-    -   `options.confirmRemoval` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** function called before confirm, default null
-
-Returns **[ControlSaveTiles](#controlsavetiles)** 
-
 ## TileLayerOffline
 
 A layer that uses store tiles when available. Falls back to online.
@@ -131,12 +146,3 @@ getTileUrls for single zoomlevel
 -   `zoom` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
 
 Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** the tile urls, key, url
-
-## L.tileLayer.offline
-
-**Parameters**
-
--   `url` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** [description]
--   `options` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** <http://leafletjs.com/reference-1.2.0.html#tilelayer>
-
-Returns **[TileLayerOffline](#tilelayeroffline)** an instance of TileLayerOffline

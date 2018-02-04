@@ -4,6 +4,7 @@ import localforage from './localforage';
 
 /**
  * A layer that uses store tiles when available. Falls back to online.
+ * Use this layer directly or extend it
  * @class TileLayerOffline
  */
 const TileLayerOffline = L.TileLayer.extend(/** @lends  TileLayerOffline */ {

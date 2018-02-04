@@ -1,0 +1,9 @@
+toc:
+  - L.tileLayer.offline
+  - L.control.savetiles
+  - name: Types
+    description: |
+      The factory methods above use the following types.
+    ControlSaveTiles
+    ControlStatus
+    TileLayerOffline

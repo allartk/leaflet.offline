@@ -4,7 +4,7 @@
   "description": "Offline tilelayer for leaflet",
   "main": "src/leaflet.offline.js",
   "scripts": {
-    "docs": "node_modules/documentation/bin/documentation.js build src/** -f md -o docs/api.md",
+    "docs": "documentation build src/** -f md --config documentation.yml -o docs/api.md",
     "build": "rollup -c",
     "test": "./node_modules/karma/bin/karma  start karma.conf.js",
     "watch": "rollup -c -w",
