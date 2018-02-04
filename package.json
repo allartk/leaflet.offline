@@ -2,7 +2,7 @@
   "name": "leaflet.offline",
   "version": "1.0.0",
   "description": "Offline tilelayer for leaflet",
-  "main": "src/leaflet.offline.js",
+  "main": "dist/bundle.js",
   "scripts": {
     "docs": "documentation build src/** -f md --config documentation.yml -o docs/api.md",
     "build": "rollup -c",
