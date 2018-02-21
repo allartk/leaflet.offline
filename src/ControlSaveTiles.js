@@ -211,7 +211,7 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
     xhr.onreadystatechange = () => {
       if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
         self.status.lengthLoaded += 1;
-        self._saveTile(tileUrl.key, this.response);
+        self._saveTile(tileUrl.key, xhr.response);
         if (self.status._tilesforSave.length > 0) {
           self._loadTile();
           self._baseLayer.fire('loadtileend', self.status);
