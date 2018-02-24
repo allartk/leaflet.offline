@@ -6,7 +6,8 @@
   "scripts": {
     "docs": "documentation build src/** -f md --config documentation.yml -o docs/api.md",
     "build": "rollup -c",
-    "test": "./node_modules/karma/bin/karma  start karma.conf.js",
+    "test": "karma  start karma.conf.js",
+    "test:watch": "karma start --no-single-run karma.conf.js",
     "watch": "rollup -c -w",
     "serve": "browser-sync start --server -f ./dist index.html",
     "start": "npm-run-all -p serve watch",
@@ -29,30 +30,30 @@
   },
   "homepage": "https://github.com/allartk/leaflet.offline#readme",
   "devDependencies": {
-    "browser-sync": "^2.21.0",
+    "browser-sync": "^2.23.6",
     "buble": "^0.18.0",
     "chai": "^4.0.0",
-    "documentation": "^5.3.3",
-    "eslint": "^4.14.0",
+    "documentation": "^5.4.0",
+    "eslint": "^4.18.1",
     "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-import": "^2.9.0",
     "karma": "^2.0.0",
     "karma-chai": "^0.1.0",
     "karma-firefox-launcher": "^1.0.0",
     "karma-mocha": "^1.3.0",
     "karma-mocha-reporter": "^2.2.5",
-    "karma-rollup-preprocessor": "^5.0.2",
+    "karma-rollup-preprocessor": "^5.1.1",
     "leaflet.vectorgrid": "^1.1.0",
-    "mocha": "^4.0.0",
+    "mocha": "^4.1.0",
     "npm-run-all": "^4.1.2",
-    "rollup": "^0.53.0",
-    "rollup-plugin-buble": "^0.18.0",
-    "rollup-plugin-commonjs": "^8.2.6",
-    "rollup-plugin-node-resolve": "^3.0.0",
-    "sinon": "^4.1.4"
+    "rollup": "^0.53.4",
+    "rollup-plugin-buble": "^0.19.0",
+    "rollup-plugin-commonjs": "^8.3.0",
+    "rollup-plugin-node-resolve": "^3.0.3",
+    "sinon": "^4.4.1"
   },
   "dependencies": {
-    "leaflet": "^1.2.0",
-    "localforage": "^1.5.5"
+    "leaflet": "^1.3.1",
+    "localforage": "^1.5.7"
   }
 }

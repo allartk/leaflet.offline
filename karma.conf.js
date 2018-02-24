@@ -18,8 +18,8 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'https://unpkg.com/leaflet@1.1.0/dist/leaflet.js',
-      'https://cdnjs.cloudflare.com/ajax/libs/localforage/1.4.3/localforage.min.js',
+      'node_modules/leaflet/dist/leaflet.js',
+      'node_modules/localforage/dist/localforage.js',
       'node_modules/sinon/pkg/sinon.js',
       'test/*.js'
     ],
@@ -36,19 +36,21 @@ module.exports = function(config) {
       'test/*.js': ['rollup'],
     },
     rollupPreprocessor: {
-     format: 'iife',
-     name: 'LeafletOffline',
-     sourcemap: 'inline',
+      output: {
+        format: 'iife',
+        name: 'LeafletOffline',
+        sourcemap: 'inline',
+        globals: {
+          localforage: 'localforage',
+          leaflet: 'L',
+          sinon: 'sinon'
+        },
+      },
      external: [
        'leaflet',
        'localforage',
        'sinon'
      ],
-     globals: {
-       localforage: 'localforage',
-       leaflet: 'L',
-       sinon: 'sinon'
-     },
      plugins: [
        resolve(),
        commonjs()

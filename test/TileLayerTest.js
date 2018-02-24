@@ -14,7 +14,7 @@ describe('TileLayer.Offline', () => {
   it('createTile', () => {
     const url = 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
     const layer = L.tileLayer.offline(url);
-    const tile = layer.createTile({ x: 123456, y: 456789 });
+    const tile = layer.createTile({ x: 123456, y: 456789 }, () => {});
     assert.instanceOf(tile, HTMLElement);
   });
   it('get storagekey openstreetmap', () => {
