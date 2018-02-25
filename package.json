@@ -47,7 +47,7 @@
     "mocha": "^4.1.0",
     "npm-run-all": "^4.1.2",
     "rollup": "^0.53.4",
-    "rollup-plugin-buble": "^0.19.0",
+    "rollup-plugin-buble": "^0.19.2",
     "rollup-plugin-commonjs": "^8.3.0",
     "rollup-plugin-node-resolve": "^3.0.3",
     "sinon": "^4.4.1"
