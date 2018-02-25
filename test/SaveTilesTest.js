@@ -1,5 +1,4 @@
-/* global describe, it, assert, beforeEach L */
-// import sinon from 'sinon';
+/* global describe, it, assert, beforeEach L sinon */
 import '../src/ControlSaveTiles';
 
 
@@ -13,7 +12,7 @@ beforeEach(() => {
     lng: 5,
   }, 16);
   baseLayer = L.tileLayer.offline('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    subdomains: 'abc', // ignored
+    subdomains: 'abc',
   }).addTo(map);
   c = L.control.savetiles(baseLayer);
   c.addTo(map);
@@ -35,14 +34,19 @@ describe('control', () => {
       done();
     });
   });
-  it('save tiles', (done) => {
-    const spy = sinon.spy();
-    const stub = sinon.stub(c, '_loadTile').callsFake(spy);
+  it('_saveTiles fires savestart with _tilesforSave prop', (done) => {
+    const stub = sinon.stub(c, '_loadTile');
     baseLayer.on('savestart', (status) => {
       assert.lengthOf(status._tilesforSave, 1);
       stub.resetBehavior();
       done();
     });
     c._saveTiles();
+  });
+
+  it.only('_saveTiles calls loadTile for each subdomain', () => {
+    const stub = sinon.stub(c, '_loadTile');
+    c._saveTiles();
+    assert(stub.calledThrice, '_loadTile has not been called');
   });
 });

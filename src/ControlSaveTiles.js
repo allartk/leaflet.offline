@@ -165,7 +165,7 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
 
     const latlngBounds = this.options.bounds || this._map.getBounds();
 
-    for (const i in zoomlevels) {
+    for (let i = 0; i < zoomlevels.length; i += 1) {
       bounds = L.bounds(
         this._map.project(latlngBounds.getNorthWest(), zoomlevels[i]),
         this._map.project(latlngBounds.getSouthEast(), zoomlevels[i]),
@@ -177,7 +177,7 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
       self._baseLayer.fire('savestart', self.status);
       const subdlength = self._baseLayer.getSimultaneous();
       for (let i = 0; i < subdlength; i += 1) {
-        self._loadTile();
+        this._loadTile();
       }
     };
     if (this.options.confirm) {
