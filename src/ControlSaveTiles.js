@@ -142,7 +142,6 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
    */
   _saveTiles() {
     let bounds;
-    const self = this;
     let tiles = [];
     // minimum zoom to prevent the user from saving the whole world
     const minZoom = 5;
@@ -174,8 +173,8 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
     }
     this._resetStatus(tiles);
     const succescallback = () => {
-      self._baseLayer.fire('savestart', self.status);
-      const subdlength = self._baseLayer.getSimultaneous();
+      this._baseLayer.fire('savestart', this.status);
+      const subdlength = this._baseLayer.getSimultaneous();
       for (let i = 0; i < subdlength; i += 1) {
         this._loadTile();
       }
@@ -186,6 +185,11 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
       succescallback();
     }
   },
+  /**
+   * set status prop on save init
+   * @param {string[]} tiles [description]
+   * @private
+   */
   _resetStatus(tiles) {
     this.status = {
       lengthLoaded: 0,
