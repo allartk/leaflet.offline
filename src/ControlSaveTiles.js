@@ -213,7 +213,7 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
     xhr.responseType = 'blob';
     xhr.send();
     xhr.onreadystatechange = () => {
-      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+      if (xhr.readyState === XMLHttpRequest.DONE && (xhr.status >= 200 && xhr.status <= 300)) {
         self.status.lengthLoaded += 1;
         self._saveTile(tileUrl.key, xhr.response);
         if (self.status._tilesforSave.length > 0) {
@@ -225,6 +225,8 @@ const ControlSaveTiles = L.Control.extend(/** @lends ControlSaveTiles */ {
             self._baseLayer.fire('loadend', self.status);
           }
         }
+      } else {
+        throw new Error(`Request failed with status ${xhr.status}`);
       }
     };
   },
