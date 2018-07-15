@@ -9,7 +9,10 @@ describe('TileLayer.Offline', () => {
   it('get getTileUrl', () => {
     const layer = L.tileLayer.offline('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png');
     layer._tileZoom = 16;
-    assert.instanceOf(layer.setDataUrl({ x: 123456, y: 456789 }), Promise);
+    assert.instanceOf(
+      layer.setDataUrl({ x: 123456, y: 456789 }, 'http://exampletile.nl/'),
+      Promise,
+    );
   });
   it('createTile', () => {
     const url = 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -25,7 +28,10 @@ describe('TileLayer.Offline', () => {
   it('get storagekey cartodb', () => {
     const layer = L.tileLayer.offline('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png');
     const key = layer._getStorageKey('https://cartodb-basemaps-b.global.ssl.fastly.net/light_all/16/123456/456789.png');
-    assert.equal(key, 'https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/16/123456/456789.png');
+    assert.equal(
+      key,
+      'https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/16/123456/456789.png',
+    );
   });
   it('calculates tiles at level 16', () => {
     const layer = L.tileLayer.offline('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png');
