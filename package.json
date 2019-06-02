@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/allartk/leaflet.offline#readme",
   "devDependencies": {
-    "browser-sync": "^2.24.5",
+    "browser-sync": "^2.26.5",
     "buble": "^0.18.0",
     "chai": "^4.0.0",
     "documentation": "^5.5.0",
