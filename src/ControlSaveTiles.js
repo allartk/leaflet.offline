@@ -1,5 +1,6 @@
 import L from 'leaflet';
 import localforage from './localforage';
+import TileManager from './TileManager';
 
 /**
  * Status of ControlSaveTiles, keeps info about process during downloading
@@ -47,6 +48,7 @@ const ControlSaveTiles = L.Control.extend(
     initialize(baseLayer, options) {
       this._baseLayer = baseLayer;
       this.setStorageSize();
+      this.tileManager = TileManager(baseLayer);
       L.setOptions(this, options);
     },
     /**
@@ -55,16 +57,15 @@ const ControlSaveTiles = L.Control.extend(
      * @private
      */
     setStorageSize(callback) {
-      const self = this;
       if (this.status.storagesize) {
         callback(this.status.storagesize);
         return;
       }
-      localforage
-        .length()
+      this.tileManager
+        .countStoredTiles()
         .then((numberOfKeys) => {
-          self.status.storagesize = numberOfKeys;
-          self._baseLayer.fire('storagesize', self.status);
+          this.status.storagesize = numberOfKeys;
+          this._baseLayer.fire('storagesize', this.status);
           if (callback) {
             callback(numberOfKeys);
           }
