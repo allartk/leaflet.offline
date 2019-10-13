@@ -1,20 +1,39 @@
 import L from 'leaflet';
 import localforage from './localforage';
 /**
- * @return Promise
+ * @return Promise which resolves to int
  */
-function countStoredTiles() {
+export function getStorageLength() {
   return localforage.length();
 }
 
-function storeArea(bounds) {}
 /**
- * @param {L.Layer} map leafletmap
+ * TODO replace logic in _saveTiles
+ * @param {Object[]} tiles
+ * @param {string} tiles[].url url of tile
+ * @param {string} tiles[].key unique identifier of tile
+ *
  */
-function TileManager(layer) {
-  return {
-    countStoredTiles,
-  };
+export function storeTiles(tiles, parallel = 2) {
+  console.log(tiles);
 }
 
-export default TileManager;
+/**
+ * Get a geojson with stored tiles
+ */
+function getStoredTilesAsJson() {}
+
+/**
+ * Remove tile by key
+ * @param {} key
+ */
+function removeTile(key) {}
+
+/**
+ * Remove everything
+ *
+ * @return Promise
+ */
+export function truncate() {
+  return localforage.clear();
+}

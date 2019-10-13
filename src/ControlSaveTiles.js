@@ -1,6 +1,6 @@
 import L from 'leaflet';
 import localforage from './localforage';
-import TileManager from './TileManager';
+import { truncate, getStorageLength, storeTiles } from './TileManager';
 
 /**
  * Status of ControlSaveTiles, keeps info about process during downloading
@@ -48,7 +48,6 @@ const ControlSaveTiles = L.Control.extend(
     initialize(baseLayer, options) {
       this._baseLayer = baseLayer;
       this.setStorageSize();
-      this.tileManager = TileManager(baseLayer);
       L.setOptions(this, options);
     },
     /**
@@ -61,8 +60,7 @@ const ControlSaveTiles = L.Control.extend(
         callback(this.status.storagesize);
         return;
       }
-      this.tileManager
-        .countStoredTiles()
+      getStorageLength()
         .then((numberOfKeys) => {
           this.status.storagesize = numberOfKeys;
           this._baseLayer.fire('storagesize', this.status);
@@ -178,9 +176,11 @@ const ControlSaveTiles = L.Control.extend(
       const succescallback = () => {
         this._baseLayer.fire('savestart', this.status);
         const subdlength = this._baseLayer.getSimultaneous();
-        for (let i = 0; i < subdlength; i += 1) {
-          this._loadTile();
-        }
+        // TODO!
+        storeTiles(tiles, subdlength);
+        // for (let i = 0; i < subdlength; i += 1) {
+        //   this._loadTile();
+        // }
       };
       if (this.options.confirm) {
         this.options.confirm(this.status, succescallback);
@@ -268,7 +268,7 @@ const ControlSaveTiles = L.Control.extend(
     _rmTiles() {
       const self = this;
       const successCallback = () => {
-        localforage.clear().then(() => {
+        truncate().then(() => {
           self.status.storagesize = 0;
           self._baseLayer.fire('tilesremoved');
           self._baseLayer.fire('storagesize', self.status);
