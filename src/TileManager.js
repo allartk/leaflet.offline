@@ -1,4 +1,3 @@
-import L from 'leaflet';
 import localforage from './localforage';
 /**
  * @return Promise which resolves to int
@@ -6,7 +5,18 @@ import localforage from './localforage';
 export function getStorageLength() {
   return localforage.length();
 }
-
+/**
+ *
+ * @param {string} tileUrl
+ */
+export function downloadTile(tileUrl) {
+  return fetch(tileUrl).then((response) => {
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.statusText}`);
+    }
+    return response.blob();
+  });
+}
 /**
  * TODO replace logic in _saveTiles
  * @param {Object[]} tiles

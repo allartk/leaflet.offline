@@ -1,6 +1,6 @@
 import L from 'leaflet';
 import localforage from './localforage';
-import { truncate, getStorageLength, storeTiles } from './TileManager';
+import { truncate, getStorageLength, storeTiles, downloadTile } from './TileManager';
 
 /**
  * Status of ControlSaveTiles, keeps info about process during downloading
@@ -177,10 +177,10 @@ const ControlSaveTiles = L.Control.extend(
         this._baseLayer.fire('savestart', this.status);
         const subdlength = this._baseLayer.getSimultaneous();
         // TODO!
-        storeTiles(tiles, subdlength);
-        // for (let i = 0; i < subdlength; i += 1) {
-        //   this._loadTile();
-        // }
+        // storeTiles(tiles, subdlength);
+        for (let i = 0; i < subdlength; i += 1) {
+          this._loadTile();
+        }
       };
       if (this.options.confirm) {
         this.options.confirm(this.status, succescallback);
@@ -205,35 +205,24 @@ const ControlSaveTiles = L.Control.extend(
      * Loop over status._tilesforSave prop till all tiles are downloaded
      * Calls _saveTile for each download
      * @private
-     * @param  {string} tileUrl
      * @return {void}
      */
     _loadTile() {
       const self = this;
-      const tileUrl = self.status._tilesforSave.shift();
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', tileUrl.url);
-      xhr.responseType = 'blob';
-      xhr.send();
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === XMLHttpRequest.DONE && (xhr.status >= 200 && xhr.status <= 300)) {
-          self.status.lengthLoaded += 1;
-          self._saveTile(tileUrl.key, xhr.response);
-          if (self.status._tilesforSave.length > 0) {
-            self._loadTile();
-            self._baseLayer.fire('loadtileend', self.status);
-          } else {
-            self._baseLayer.fire('loadtileend', self.status);
-            if (self.status.lengthLoaded === self.status.lengthToBeSaved) {
-              self._baseLayer.fire('loadend', self.status);
-            }
+      const tile = self.status._tilesforSave.shift();
+      downloadTile(tile.url).then((blob) => {
+        self.status.lengthLoaded += 1;
+        self._saveTile(tile.key, blob);
+        if (self.status._tilesforSave.length > 0) {
+          self._loadTile();
+          self._baseLayer.fire('loadtileend', self.status);
+        } else {
+          self._baseLayer.fire('loadtileend', self.status);
+          if (self.status.lengthLoaded === self.status.lengthToBeSaved) {
+            self._baseLayer.fire('loadend', self.status);
           }
-          return;
         }
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-          throw new Error(`Request failed with status ${xhr.status}`);
-        }
-      };
+      });
     },
     /**
      * [_saveTile description]
