@@ -1,10 +1,23 @@
-import localforage from './localforage';
+import tilestorage, { meta as metastorage } from './localforage';
 /**
  * @return Promise which resolves to int
  */
 export function getStorageLength() {
-  return localforage.length();
+  return tilestorage.length();
 }
+
+/**
+ * TODO get per layer
+ */
+export function getStorageInfo() {
+  const result = [];
+  return metastorage
+    .iterate((value) => {
+      result.push(value);
+    })
+    .then(() => result);
+}
+
 /**
  *
  * @param {string} tileUrl
@@ -15,6 +28,24 @@ export function downloadTile(tileUrl) {
       throw new Error(`Request failed with status ${response.statusText}`);
     }
     return response.blob();
+  });
+}
+/**
+ * TODO!
+ * @param {object} tileInfo
+ * @param {string} tileInfo.key
+ * @param {string} tileInfo.url
+ * @param {string} tileInfo.x
+ * @param {string} tileInfo.y
+ * @param {string} tileInfo.z
+ * @param {blob} blob
+ */
+export function saveTile(tileInfo, blob) {
+  return tilestorage.removeItem(tileInfo.key).then(() => {
+    tilestorage.setItem(tileInfo.key, blob).then(() => {
+      const { z, x, y } = tileInfo;
+      return metastorage.setItem(`${z}_${x}_${y}`, tileInfo);
+    });
   });
 }
 /**
@@ -45,5 +76,5 @@ function removeTile(key) {}
  * @return Promise
  */
 export function truncate() {
-  return localforage.clear();
+  return tilestorage.clear().then(() => metastorage.clear());
 }

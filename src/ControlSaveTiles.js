@@ -1,6 +1,5 @@
 import L from 'leaflet';
-import localforage from './localforage';
-import { truncate, getStorageLength, storeTiles, downloadTile } from './TileManager';
+import { truncate, getStorageLength, downloadTile, saveTile } from './TileManager';
 
 /**
  * Status of ControlSaveTiles, keeps info about process during downloading
@@ -212,7 +211,7 @@ const ControlSaveTiles = L.Control.extend(
       const tile = self.status._tilesforSave.shift();
       downloadTile(tile.url).then((blob) => {
         self.status.lengthLoaded += 1;
-        self._saveTile(tile.key, blob);
+        self._saveTile(tile, blob);
         if (self.status._tilesforSave.length > 0) {
           self._loadTile();
           self._baseLayer.fire('loadtileend', self.status);
@@ -227,28 +226,25 @@ const ControlSaveTiles = L.Control.extend(
     /**
      * [_saveTile description]
      * @private
-     * @param  {string} tileUrl save key
+     * @param  {object} tileInfo save key
+     * @param {string} tileInfo.key
+     * @param {string} tileInfo.url
+     * @param {string} tileInfo.x
+     * @param {string} tileInfo.y
+     * @param {string} tileInfo.z
      * @param  {blob} blob    [description]
      * @return {void}         [description]
      */
-    _saveTile(tileUrl, blob) {
+    _saveTile(tileInfo, blob) {
       const self = this;
-      localforage
-        .removeItem(tileUrl)
+      saveTile(tileInfo, blob)
         .then(() => {
-          localforage
-            .setItem(tileUrl, blob)
-            .then(() => {
-              self.status.lengthSaved += 1;
-              self._baseLayer.fire('savetileend', self.status);
-              if (self.status.lengthSaved === self.status.lengthToBeSaved) {
-                self._baseLayer.fire('saveend', self.status);
-                self.setStorageSize();
-              }
-            })
-            .catch((err) => {
-              throw new Error(err);
-            });
+          self.status.lengthSaved += 1;
+          self._baseLayer.fire('savetileend', self.status);
+          if (self.status.lengthSaved === self.status.lengthToBeSaved) {
+            self._baseLayer.fire('saveend', self.status);
+            self.setStorageSize();
+          }
         })
         .catch((err) => {
           throw new Error(err);

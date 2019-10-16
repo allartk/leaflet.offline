@@ -71,12 +71,24 @@
                 title="Remove tiles"
               ></i>
             </button>
+            <ul id="tileinfo" class="list-group" style="max-height: 50vh; overflow: auto">
+
+            </ul>
           </p>
         </div>
       </div>
     </div>
 
     <script type="text/javascript">
+      function showTileList() {
+          LeafletOffline.getStorageInfo().then(r => {
+            const list = document.getElementById("tileinfo");
+            for (i = 0; i < r.length; i++) {
+              list.insertAdjacentHTML('beforeend',`<li class="list-group-item">${r[i].url}</li>`)
+            } 
+          }); 
+      }
+      showTileList();
       var map = L.map("map");
       //offline baselayer, will use offline source if available
       var baseLayer = L.tileLayer
@@ -112,6 +124,7 @@
         });
       baseLayer.on("storagesize", function(e) {
         document.getElementById("storage").innerHTML = e.storagesize;
+        showTileList();
       });
 
       //events while saving a tile layer
@@ -124,12 +137,10 @@
         progress++;
         document.getElementById("progress").innerHTML = progress;
       });
-      baseLayer.on("loadend", function(e) {
-        alert("Saved all tiles");
+      baseLayer.on("loadend", function(e) {        
+        showTileList();
       });
-      baseLayer.on("tilesremoved", function(e) {
-        alert("Removed all tiles");
-      });
+      
 
       map.setView(
         {
@@ -143,7 +154,9 @@
         .layers({
           "osm (offline)": baseLayer
         })
-        .addTo(map);
+        .addTo(map);  
+
+        
     </script>
   </body>
 </html>
