@@ -1,6 +1,6 @@
 {
   "name": "leaflet.offline",
-  "version": "1.0.4",
+  "version": "2-dev",
   "description": "Offline tilelayer for leaflet",
   "main": "dist/bundle.js",
   "scripts": {
