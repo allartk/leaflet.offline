@@ -1,5 +1,6 @@
 import L from 'leaflet';
 import localforage from './localforage';
+import { getTileUrls } from './TileManager';
 
 /**
  * A layer that uses store tiles when available. Falls back to online.
@@ -80,31 +81,7 @@ const TileLayerOffline = L.TileLayer.extend(
      * @return {object[]} the tile urls, key, url, x, y, z
      */
     getTileUrls(bounds, zoom) {
-      const tiles = [];
-      const origurl = this._url;
-      // getTileUrl uses current zoomlevel, we want to overwrite it
-      this.setUrl(this._url.replace('{z}', zoom), true);
-      const tileBounds = L.bounds(
-        bounds.min.divideBy(this.getTileSize().x).floor(),
-        bounds.max.divideBy(this.getTileSize().x).floor(),
-      );
-      let url;
-      for (let j = tileBounds.min.y; j <= tileBounds.max.y; j += 1) {
-        for (let i = tileBounds.min.x; i <= tileBounds.max.x; i += 1) {
-          const tilePoint = new L.Point(i, j);
-          url = L.TileLayer.prototype.getTileUrl.call(this, tilePoint);
-          tiles.push({
-            key: this._getStorageKey(url),
-            url,
-            z: zoom,
-            x: i,
-            y: j,
-          });
-        }
-      }
-      // restore url
-      this.setUrl(origurl, true);
-      return tiles;
+      return getTileUrls(this, bounds, zoom);
     },
   });
 

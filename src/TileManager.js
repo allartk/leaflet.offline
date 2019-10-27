@@ -1,4 +1,16 @@
+import L from 'leaflet';
 import tilestorage, { meta as metastorage } from './localforage';
+
+/**
+ *
+ * @typedef {Object} tileInfo
+ * @property {string} tileInfo.key
+ * @property {string} tileInfo.url
+ * @property {string} tileInfo.x
+ * @property {string} tileInfo.y
+ * @property {string} tileInfo.z
+ */
+
 /**
  * @return Promise which resolves to int
  */
@@ -31,13 +43,7 @@ export function downloadTile(tileUrl) {
   });
 }
 /**
- * TODO!
- * @param {object} tileInfo
- * @param {string} tileInfo.key
- * @param {string} tileInfo.url
- * @param {string} tileInfo.x
- * @param {string} tileInfo.y
- * @param {string} tileInfo.z
+ * @param {tileInfo}
  * @param {blob} blob
  */
 export function saveTile(tileInfo, blob) {
@@ -48,21 +54,52 @@ export function saveTile(tileInfo, blob) {
     });
   });
 }
-/**
- * TODO replace logic in _saveTiles
- * @param {Object[]} tiles
- * @param {string} tiles[].url url of tile
- * @param {string} tiles[].key unique identifier of tile
- *
- */
-export function storeTiles(tiles, parallel = 2) {
-  console.log(tiles);
-}
 
 /**
- * Get a geojson with stored tiles
+ * TODO key generation shoud be reusable for layer._getStorageKey
+ *
+ * @param {object} layer leaflet tilelayer
+ * @param {object} bounds, leaflet L.latLngBounds
+ * @param {number} zoom zoomlevel 0-19
+ *
+ * @return {Array.<tileInfo>}
  */
-function getStoredTilesAsJson() {}
+export function getTileUrls(layer, bounds, zoom) {
+  const tiles = [];
+  const tileBounds = L.bounds(
+    bounds.min.divideBy(layer.getTileSize().x).floor(),
+    bounds.max.divideBy(layer.getTileSize().x).floor(),
+  );
+  // let url;
+  for (let j = tileBounds.min.y; j <= tileBounds.max.y; j += 1) {
+    for (let i = tileBounds.min.x; i <= tileBounds.max.x; i += 1) {
+      const tilePoint = new L.Point(i, j);
+      // from TileLayer.getTileUrl
+      const data = {
+        r: L.Browser.retina ? '@2x' : '',
+        x: i,
+        y: j,
+        z: zoom,
+      };
+      const keyData = Object.assign({}, data, { s: layer.options.subdomains['0'] });
+      const urlData = Object.assign({}, data, { s: layer._getSubdomain(tilePoint) });
+      tiles.push({
+        key: L.Util.template(layer._url, keyData),
+        url: L.Util.template(layer._url, urlData),
+        z: zoom,
+        x: i,
+        y: j,
+      });
+    }
+  }
+
+  return tiles;
+}
+/**
+ * Get a geojson of tile
+ * TODO
+ */
+function getStoredTileAsJson(tileInfo) {}
 
 /**
  * Remove tile by key
