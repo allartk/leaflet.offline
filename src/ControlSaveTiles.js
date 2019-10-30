@@ -1,5 +1,7 @@
 import L from 'leaflet';
-import { truncate, getStorageLength, downloadTile, saveTile } from './TileManager';
+import {
+  truncate, getStorageLength, downloadTile, saveTile,
+} from './TileManager';
 
 /**
  * Status of ControlSaveTiles, keeps info about process during downloading
@@ -88,32 +90,12 @@ const ControlSaveTiles = L.Control.extend(
       this._baseLayer = layer;
     },
     /**
-     * set the bounds of the area to save
-     * @param {L.latLngBounds} bounds
+     * Update a config option
+     * @param {string} name
+     * @param {mixed} value
      */
-    setBounds(bounds) {
-      this.options.bounds = bounds;
-    },
-    /**
-     * set saveWhatYouSee
-     * @param {boolean} saveWhatYouSee
-     */
-    setSaveWhatYouSee(saveWhatYouSee) {
-      this.options.saveWhatYouSee = saveWhatYouSee;
-    },
-    /**
-     * set the maxZoom
-     * @param {number} zoom
-     */
-    setMaxZoom(zoom) {
-      this.options.maxZoom = zoom;
-    },
-    /**
-     * set the zoomLevels
-     * @param {array} zoomlevels min,max
-     */
-    setZoomlevels(zoomlevels) {
-      this.options.zoomlevels = zoomlevels;
+    setOption(name, value) {
+      this.options[name] = value;
     },
     onAdd() {
       const container = L.DomUtil.create('div', 'savetiles leaflet-bar');
@@ -265,7 +247,8 @@ const ControlSaveTiles = L.Control.extend(
         successCallback();
       }
     },
-  });
+  },
+);
 /**
  * @function L.control.savetiles
  * @param  {object} baseLayer     {@link http://leafletjs.com/reference-1.2.0.html#tilelayer}
