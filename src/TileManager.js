@@ -4,8 +4,9 @@ import tilestorage, { meta as metastorage } from './localforage';
 /**
  *
  * @typedef {Object} tileInfo
- * @property {string} tileInfo.key
- * @property {string} tileInfo.url
+ * @property {string} tileInfo.key storage key
+ * @property {string} tileInfo.url resolved url
+ * @property {string} tileInfo.urlTemplate orig url, used to find tiles per layer
  * @property {string} tileInfo.x
  * @property {string} tileInfo.y
  * @property {string} tileInfo.z
@@ -50,7 +51,8 @@ export function saveTile(tileInfo, blob) {
   return tilestorage.removeItem(tileInfo.key).then(() => {
     tilestorage.setItem(tileInfo.key, blob).then(() => {
       const { z, x, y } = tileInfo;
-      return metastorage.setItem(`${z}_${x}_${y}`, tileInfo);
+      const record = { ...tileInfo, createdAt: Date.now() };
+      return metastorage.setItem(`${z}_${x}_${y}`, record);
     });
   });
 }
@@ -81,14 +83,15 @@ export function getTileUrls(layer, bounds, zoom) {
         y: j,
         z: zoom,
       };
-      const keyData = Object.assign({}, data, { s: layer.options.subdomains['0'] });
-      const urlData = Object.assign({}, data, { s: layer._getSubdomain(tilePoint) });
+      const keyData = { ...data, s: layer.options.subdomains['0'] };
+      const urlData = { ...data, s: layer._getSubdomain(tilePoint) };
       tiles.push({
         key: L.Util.template(layer._url, keyData),
         url: L.Util.template(layer._url, urlData),
         z: zoom,
         x: i,
         y: j,
+        urlTemplate: layer._url,
       });
     }
   }
