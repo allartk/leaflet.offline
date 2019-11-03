@@ -58,6 +58,15 @@ export function saveTile(tileInfo, blob) {
 }
 
 /**
+ *
+ * @param {string} urlTemplate
+ * @param {object} data  x, y, z, s
+ * @param {string} data.s subdomain
+ */
+export function getTileUrl(urlTemplate, data) {
+  return L.Util.template(urlTemplate, { ...data, r: L.Browser.retina ? '@2x' : '' });
+}
+/**
  * TODO key generation shoud be reusable for layer._getStorageKey
  *
  * @param {object} layer leaflet tilelayer
@@ -77,17 +86,10 @@ export function getTileUrls(layer, bounds, zoom) {
     for (let i = tileBounds.min.x; i <= tileBounds.max.x; i += 1) {
       const tilePoint = new L.Point(i, j);
       // from TileLayer.getTileUrl
-      const data = {
-        r: L.Browser.retina ? '@2x' : '',
-        x: i,
-        y: j,
-        z: zoom,
-      };
-      const keyData = { ...data, s: layer.options.subdomains['0'] };
-      const urlData = { ...data, s: layer._getSubdomain(tilePoint) };
+      const data = { x: i, y: j, z: zoom };
       tiles.push({
-        key: L.Util.template(layer._url, keyData),
-        url: L.Util.template(layer._url, urlData),
+        key: getTileUrl(layer._url, { ...data, s: layer.options.subdomains['0'] }),
+        url: getTileUrl(layer._url, { ...data, s: layer._getSubdomain(tilePoint) }),
         z: zoom,
         x: i,
         y: j,

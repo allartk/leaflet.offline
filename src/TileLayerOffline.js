@@ -1,6 +1,6 @@
 import L from 'leaflet';
 import localforage from './localforage';
-import { getTileUrls } from './TileManager';
+import { getTileUrls, getTileUrl } from './TileManager';
 
 /**
  * A layer that uses store tiles when available. Falls back to online.
@@ -12,15 +12,15 @@ const TileLayerOffline = L.TileLayer.extend(
     /**
      * Create tile HTMLElement
      * @private
-     * @param  {array}   coords [description]
-     * @param  {Function} done   [description]
-     * @return {HTMLElement}          [description]
+     * @param  {object}   coords x,y,z
+     * @param  {Function} done
+     * @return {HTMLElement}  img
      */
     createTile(coords, done) {
       const tile = L.TileLayer.prototype.createTile.call(this, coords, done);
       const url = tile.src;
       tile.src = '';
-      this.setDataUrl(tile, url)
+      this.setDataUrl(coords)
         .then((dataurl) => {
           tile.src = dataurl;
         })
@@ -31,14 +31,13 @@ const TileLayerOffline = L.TileLayer.extend(
     },
     /**
      * dataurl from localstorage
-     * @param {DomElement} tile [description]
-     * @param {string} url  [description]
+     * @param {object} coords x,y,z
      * @return {Promise} resolves to base64 url
      */
-    setDataUrl(tile, url) {
+    setDataUrl(coords) {
       return new Promise((resolve, reject) => {
         localforage
-          .getItem(this._getStorageKey(url))
+          .getItem(this._getStorageKey(coords))
           .then((data) => {
             if (data && typeof data === 'object') {
               resolve(URL.createObjectURL(data));
@@ -57,16 +56,8 @@ const TileLayerOffline = L.TileLayer.extend(
      * @param  {string} url url used to load tile
      * @return {string} unique identifier.
      */
-    _getStorageKey(url) {
-      let key;
-      const subdomainpos = this._url.indexOf('{s}');
-      if (subdomainpos > 0) {
-        key =
-          url.substring(0, subdomainpos) +
-          this.options.subdomains['0'] +
-          url.substring(subdomainpos + 1, url.length);
-      }
-      return key || url;
+    _getStorageKey(coords) {
+      return getTileUrl(this._url, { ...coords, s: this.options.subdomains['0'] });
     },
     /**
      * @return {number} Number of simultanous downloads from tile server
@@ -83,7 +74,8 @@ const TileLayerOffline = L.TileLayer.extend(
     getTileUrls(bounds, zoom) {
       return getTileUrls(this, bounds, zoom);
     },
-  });
+  },
+);
 
 /**
  * Tiles removed event
