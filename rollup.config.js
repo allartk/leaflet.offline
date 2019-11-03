@@ -1,4 +1,4 @@
-import buble from 'rollup-plugin-buble';
+import buble from '@rollup/plugin-buble';
 
 export default {
   input: 'src/index.js',
@@ -7,7 +7,9 @@ export default {
     format: 'umd',
     name: 'LeafletOffline',
   },
-  plugins: [buble()],
+  plugins: [buble({
+    objectAssign: true,
+  })],
   external: [
     'leaflet',
     'localforage',
