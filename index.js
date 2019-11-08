@@ -1,17 +1,21 @@
-/* global L,LeafletOffline  */
+/* global L,LeafletOffline, $  */
 function showTileList() {
   LeafletOffline.getStorageInfo().then((r) => {
     const list = document.getElementById('tileinforows');
-    for (i = 0; i < r.length; i++) {
+    list.innerHTML = '';
+    for (let i = 0; i < r.length; i += 1) {
       const createdAt = new Date(r[i].createdAt);
       list.insertAdjacentHTML(
         'beforeend',
-        `<tr><td>${r[i].url}</td><td>${r[i].key}</td><td>${createdAt.toDateString()}</td></tr>`,
+        `<tr><td>${i}</td><td>${r[i].url}</td><td>${r[i].key}</td><td>${createdAt.toDateString()}</td></tr>`,
       );
     }
   });
 }
-showTileList();
+
+$('#storageModal').on('show.bs.modal', () => {
+  showTileList();
+});
 
 
 const map = L.map('map');
@@ -27,11 +31,13 @@ const baseLayer = L.tileLayer
 const control = L.control.savetiles(baseLayer, {
   zoomlevels: [13, 16], // optional zoomlevels to save, default current zoomlevel
   confirm(layer, succescallback) {
+    // eslint-disable-next-line no-alert
     if (window.confirm(`Save ${layer._tilesforSave.length}`)) {
       succescallback();
     }
   },
   confirmRemoval(layer, successCallback) {
+    // eslint-disable-next-line no-alert
     if (window.confirm('Remove all the tiles?')) {
       successCallback();
     }
@@ -49,7 +55,6 @@ document
   });
 baseLayer.on('storagesize', (e) => {
   document.getElementById('storage').innerHTML = e.storagesize;
-  showTileList();
 });
 
 // events while saving a tile layer
@@ -59,12 +64,10 @@ baseLayer.on('savestart', (e) => {
   document.getElementById('total').innerHTML = e._tilesforSave.length;
 });
 baseLayer.on('savetileend', () => {
-  progress++;
+  progress += 1;
   document.getElementById('progress').innerHTML = progress;
 });
-baseLayer.on('loadend', () => {
-  showTileList();
-});
+
 
 map.setView(
   {
