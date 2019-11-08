@@ -7,9 +7,9 @@ import tilestorage, { meta as metastorage } from './localforage';
  * @property {string} tileInfo.key storage key
  * @property {string} tileInfo.url resolved url
  * @property {string} tileInfo.urlTemplate orig url, used to find tiles per layer
- * @property {string} tileInfo.x
- * @property {string} tileInfo.y
- * @property {string} tileInfo.z
+ * @property {string} tileInfo.x x coord of tile
+ * @property {string} tileInfo.y y coord of tile
+ * @property {string} tileInfo.z tile zoomlevel
  */
 
 /**
@@ -20,7 +20,7 @@ export function getStorageLength() {
 }
 
 /**
- * TODO get per layer
+ * Tip: you can filter the result (eg to get tiles from one resource)
  */
 export function getStorageInfo() {
   const result = [];
@@ -32,7 +32,7 @@ export function getStorageInfo() {
 }
 
 /**
- *
+ * resolves to blob
  * @param {string} tileUrl
  */
 export function downloadTile(tileUrl) {
@@ -50,9 +50,8 @@ export function downloadTile(tileUrl) {
 export function saveTile(tileInfo, blob) {
   return tilestorage.removeItem(tileInfo.key).then(() => {
     tilestorage.setItem(tileInfo.key, blob).then(() => {
-      const { z, x, y } = tileInfo;
       const record = { ...tileInfo, createdAt: Date.now() };
-      return metastorage.setItem(`${z}_${x}_${y}`, record);
+      return metastorage.setItem(tileInfo.key, record);
     });
   });
 }
@@ -67,10 +66,8 @@ export function getTileUrl(urlTemplate, data) {
   return L.Util.template(urlTemplate, { ...data, r: L.Browser.retina ? '@2x' : '' });
 }
 /**
- * TODO key generation shoud be reusable for layer._getStorageKey
- *
  * @param {object} layer leaflet tilelayer
- * @param {object} bounds, leaflet L.latLngBounds
+ * @param {object} bounds
  * @param {number} zoom zoomlevel 0-19
  *
  * @return {Array.<tileInfo>}
@@ -81,11 +78,9 @@ export function getTileUrls(layer, bounds, zoom) {
     bounds.min.divideBy(layer.getTileSize().x).floor(),
     bounds.max.divideBy(layer.getTileSize().x).floor(),
   );
-  // let url;
   for (let j = tileBounds.min.y; j <= tileBounds.max.y; j += 1) {
     for (let i = tileBounds.min.x; i <= tileBounds.max.x; i += 1) {
       const tilePoint = new L.Point(i, j);
-      // from TileLayer.getTileUrl
       const data = { x: i, y: j, z: zoom };
       tiles.push({
         key: getTileUrl(layer._url, { ...data, s: layer.options.subdomains['0'] }),
@@ -101,16 +96,60 @@ export function getTileUrls(layer, bounds, zoom) {
   return tiles;
 }
 /**
- * Get a geojson of tile
- * TODO
+ * Get a geojson of tiles from one resource
+ * TODO, polygons instead of points, and per per zoomlevel?
  */
-function getStoredTileAsJson(tileInfo) {}
+export function getStoredTilesAsJson(layer) {
+  const featureCollection = {
+    type: 'FeatureCollection',
+    features: [],
+  };
+  return getStorageInfo().then((results) => {
+    for (let i = 0; i < results.length; i += 1) {
+      if (results[i].urlTemplate !== layer._url) {
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+      const topLeftPoint = new L.Point(
+        results[i].x * layer.getTileSize().x,
+        results[i].y * layer.getTileSize().y,
+      );
+      const bottomRightPoint = new L.Point(
+        topLeftPoint.x + layer.getTileSize().x,
+        topLeftPoint.y + layer.getTileSize().y,
+      );
+
+      const topLeftlatlng = L.CRS.EPSG3857.pointToLatLng(topLeftPoint, results[i].z);
+      const botRightlatlng = L.CRS.EPSG3857.pointToLatLng(bottomRightPoint, results[i].z);
+      featureCollection.features.push({
+        type: 'Feature',
+        properties: results[i],
+        geometry: {
+          type: 'Polygon',
+          coordinates: [
+            [
+              [topLeftlatlng.lng, topLeftlatlng.lat],
+              [botRightlatlng.lng, topLeftlatlng.lat],
+              [botRightlatlng.lng, botRightlatlng.lat],
+              [topLeftlatlng.lng, botRightlatlng.lat],
+              [topLeftlatlng.lng, topLeftlatlng.lat],
+            ],
+          ],
+        },
+      });
+    }
+
+    return featureCollection;
+  });
+}
 
 /**
  * Remove tile by key
- * @param {} key
+ * @param {string} key
  */
-function removeTile(key) {}
+export function removeTile(key) {
+  tilestorage.removeItem(key).then(() => metastorage.removeItem(key));
+}
 
 /**
  * Remove everything

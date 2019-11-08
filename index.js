@@ -77,8 +77,14 @@ map.setView(
   16,
 );
 // layer switcher control
-L.control
+const layerswitcher = L.control
   .layers({
     'osm (offline)': baseLayer,
   })
   .addTo(map);
+
+
+LeafletOffline.getStoredTilesAsJson(baseLayer).then((data) => {
+  const layer = L.geoJSON(data);
+  layerswitcher.addOverlay(layer, 'stored tiles');
+});
