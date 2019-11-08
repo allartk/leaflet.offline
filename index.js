@@ -48,26 +48,6 @@ const control = L.control.savetiles(baseLayer, {
       '<i class="fa fa-trash" aria-hidden="true"  title="Remove tiles"></i>',
 });
 control.addTo(map);
-document
-  .getElementById('remove_tiles')
-  .addEventListener('click', (e) => {
-    control._rmTiles();
-  });
-baseLayer.on('storagesize', (e) => {
-  document.getElementById('storage').innerHTML = e.storagesize;
-});
-
-// events while saving a tile layer
-let progress;
-baseLayer.on('savestart', (e) => {
-  progress = 0;
-  document.getElementById('total').innerHTML = e._tilesforSave.length;
-});
-baseLayer.on('savetileend', () => {
-  progress += 1;
-  document.getElementById('progress').innerHTML = progress;
-});
-
 
 map.setView(
   {
@@ -83,8 +63,36 @@ const layerswitcher = L.control
   })
   .addTo(map);
 
+let storageLayer;
+const addStorageLayer = () => {
+  LeafletOffline.getStoredTilesAsJson(baseLayer).then((data) => {
+    storageLayer = L.geoJSON(data).bindPopup((clickedLayer) => clickedLayer.feature.properties.key);
+    layerswitcher.addOverlay(storageLayer, 'stored tiles');
+  });
+};
 
-LeafletOffline.getStoredTilesAsJson(baseLayer).then((data) => {
-  const layer = L.geoJSON(data);
-  layerswitcher.addOverlay(layer, 'stored tiles');
+addStorageLayer();
+
+document
+  .getElementById('remove_tiles')
+  .addEventListener('click', () => {
+    control._rmTiles();
+  });
+baseLayer.on('storagesize', (e) => {
+  document.getElementById('storage').innerHTML = e.storagesize;
+  if (storageLayer) {
+    storageLayer.clearLayers();
+    LeafletOffline.getStoredTilesAsJson(baseLayer).then((data) => { storageLayer.addData(data); });
+  }
+});
+
+// events while saving a tile layer
+let progress;
+baseLayer.on('savestart', (e) => {
+  progress = 0;
+  document.getElementById('total').innerHTML = e._tilesforSave.length;
+});
+baseLayer.on('savetileend', () => {
+  progress += 1;
+  document.getElementById('progress').innerHTML = progress;
 });
