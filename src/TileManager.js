@@ -34,8 +34,8 @@ export function getStorageInfo() {
 }
 
 /**
- * resolves to blob
- * @param {Promise<blob>} tileUrl
+ * @param {string} tileUrl
+ * @return {Promise<blob>}
  */
 export function downloadTile(tileUrl) {
   return fetch(tileUrl).then((response) => {
