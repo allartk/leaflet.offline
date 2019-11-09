@@ -2,9 +2,9 @@ toc:
   - L.tileLayer.offline
   - L.control.savetiles
   - name: TileManager
-    description: Manages the storage.
+    description: Manages the storage. Only needed for advanced usage.
       Methods are available as import.
-      When you include the script directlt into your page
+      When you include the script directly into your page
       , they are methods of the LeafletOffline global.
     children:
       - tileInfo

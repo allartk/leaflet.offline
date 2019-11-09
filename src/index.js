@@ -1,9 +1,14 @@
 import './TileLayerOffline';
 import './ControlSaveTiles';
 import {
-  getStorageInfo, getStorageLength, truncate, getStoredTilesAsJson, removeTile,
+  getStorageInfo,
+  getStorageLength,
+  getTileUrls,
+  getStoredTilesAsJson,
+  removeTile,
+  truncate,
 } from './TileManager';
 
 export {
-  getStorageInfo, getStorageLength, truncate, getStoredTilesAsJson, removeTile,
+  getStorageInfo, getTileUrls, getStorageLength, truncate, getStoredTilesAsJson, removeTile,
 };
