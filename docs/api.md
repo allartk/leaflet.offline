@@ -2,148 +2,342 @@
 
 ### Table of Contents
 
--   [L.tileLayer.offline](#ltilelayeroffline)
--   [L.control.savetiles](#lcontrolsavetiles)
--   [Types](#types)
--   [ControlSaveTiles](#controlsavetiles)
-    -   [setLayer](#setlayer)
-    -   [setBounds](#setbounds)
-    -   [setSaveWhatYouSee](#setsavewhatyousee)
-    -   [setMaxZoom](#setmaxzoom)
-    -   [setZoomlevels](#setzoomlevels)
--   [ControlStatus](#controlstatus)
--   [TileLayerOffline](#tilelayeroffline)
-    -   [setDataUrl](#setdataurl)
-    -   [getSimultaneous](#getsimultaneous)
-    -   [getTileUrls](#gettileurls)
+-   [L.tileLayer.offline][1]
+    -   [Parameters][2]
+-   [L.control.savetiles][3]
+    -   [Parameters][4]
+    -   [Properties][5]
+-   [TileManager][6]
+    -   [tileInfo][7]
+        -   [Properties][8]
+    -   [getStorageLength][9]
+    -   [getStorageInfo][10]
+    -   [downloadTile][11]
+        -   [Parameters][12]
+    -   [saveTile][13]
+        -   [Parameters][14]
+    -   [getTileUrl][15]
+        -   [Parameters][16]
+    -   [getTileUrls][17]
+        -   [Parameters][18]
+    -   [getStoredTilesAsJson][19]
+        -   [Parameters][20]
+    -   [removeTile][21]
+        -   [Parameters][22]
+    -   [truncate][23]
+-   [Types][24]
+    -   [ControlSaveTiles][25]
+        -   [Properties][26]
+        -   [setLayer][27]
+            -   [Parameters][28]
+        -   [setOption][29]
+            -   [Parameters][30]
+    -   [ControlStatus][31]
+        -   [Properties][32]
+    -   [TileLayerOffline][33]
+        -   [setDataUrl][34]
+            -   [Parameters][35]
+        -   [getSimultaneous][36]
+        -   [getTileUrls][37]
+            -   [Parameters][38]
 
 ## L.tileLayer.offline
 
-**Parameters**
+### Parameters
 
--   `url` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** [description]
--   `options` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** <http://leafletjs.com/reference-1.2.0.html#tilelayer>
+-   `url` **[string][39]** [description]
+-   `options` **[object][40]** [http://leafletjs.com/reference-1.2.0.html#tilelayer][41]
 
-Returns **[TileLayerOffline](#tilelayeroffline)** an instance of TileLayerOffline
+Returns **[TileLayerOffline][42]** an instance of TileLayerOffline
 
 ## L.control.savetiles
 
-**Parameters**
+### Parameters
 
--   `baseLayer` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** <http://leafletjs.com/reference-1.2.0.html#tilelayer>
+-   `baseLayer` **[object][40]** [http://leafletjs.com/reference-1.2.0.html#tilelayer][41]
 
-**Properties**
+### Properties
 
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
-    -   `options.position` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** default topleft
-    -   `options.saveText` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** html for save button, default +
-    -   `options.rmText` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** html for remove button, deflault -
-    -   `options.maxZoom` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** maximum zoom level that will be reached
+-   `options` **[Object][40]** 
+    -   `options.position` **[string][39]?** default topleft
+    -   `options.saveText` **[string][39]?** html for save button, default +
+    -   `options.rmText` **[string][39]?** html for remove button, deflault -
+    -   `options.maxZoom` **[number][43]?** maximum zoom level that will be reached
         when saving tiles with saveWhatYouSee. Default 19
-    -   `options.saveWhatYouSee` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** save the tiles that you see
+    -   `options.saveWhatYouSee` **[boolean][44]?** save the tiles that you see
         on screen plus deeper zooms, ignores zoomLevels options. Default false
-    -   `options.confirm` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** function called before confirm, default null.
+    -   `options.confirm` **[function][45]?** function called before confirm, default null.
         Args of function are ControlStatus and callback.
-    -   `options.confirmRemoval` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)?** function called before confirm, default null
+    -   `options.confirmRemoval` **[function][45]?** function called before confirm, default null
 
-Returns **[ControlSaveTiles](#controlsavetiles)** 
+Returns **[ControlSaveTiles][46]** 
+
+## TileManager
+
+Manages the storage. Methods are available as import. When you include the script directlt into your page , they are methods of the LeafletOffline global.
+
+
+### tileInfo
+
+Type: [Object][40]
+
+#### Properties
+
+-   `key` **[string][39]** storage key
+-   `url` **[string][39]** resolved url
+-   `urlTemplate` **[string][39]** orig url, used to find tiles per layer
+-   `x` **[string][39]** left point of tile
+-   `y` **[string][39]** top point coord of tile
+-   `z` **[string][39]** tile zoomlevel
+
+### getStorageLength
+
+Returns **[Promise][47]&lt;[Number][43]>** which resolves to int
+
+### getStorageInfo
+
+Tip: you can filter the result (eg to get tiles from one resource)
+
+Returns **[Promise][47]&lt;[Array][48]&lt;[tileInfo][49]>>** 
+
+### downloadTile
+
+resolves to blob
+
+#### Parameters
+
+-   `tileUrl` **[Promise][47]&lt;[blob][50]>** 
+
+### saveTile
+
+#### Parameters
+
+-   `tileInfo`  
+-   `blob` **[blob][50]** 
+
+Returns **[Promise][47]** 
+
+### getTileUrl
+
+#### Parameters
+
+-   `urlTemplate` **[string][39]** 
+-   `data` **[object][40]** x, y, z, s
+    -   `data.s` **[string][39]** subdomain
+
+Returns **[string][39]** 
+
+### getTileUrls
+
+#### Parameters
+
+-   `layer` **[object][40]** leaflet tilelayer
+-   `bounds` **[object][40]** 
+-   `zoom` **[number][43]** zoomlevel 0-19
+
+Returns **[Array][48]&lt;[tileInfo][49]>** 
+
+### getStoredTilesAsJson
+
+Get a geojson of tiles from one resource
+TODO, per zoomlevel?
+
+#### Parameters
+
+-   `layer` **[object][40]** 
+
+Returns **[object][40]** geojson
+
+### removeTile
+
+Remove tile by key
+
+#### Parameters
+
+-   `key` **[string][39]** 
+
+Returns **[Promise][47]** 
+
+### truncate
+
+Remove everything
+
+Returns **[Promise][47]** 
 
 ## Types
 
-The factory methods above use the following types.
+The leaflet classes use the following types.
 
 
-## ControlSaveTiles
+### ControlSaveTiles
 
 Shows control on map to save tiles
 
-**Properties**
+#### Properties
 
--   `status` **[ControlStatus](#controlstatus)** 
+-   `status` **[ControlStatus][51]** 
 
-### setLayer
+#### setLayer
 
 Change baseLayer
 
-**Parameters**
+##### Parameters
 
--   `layer` **[TileLayerOffline](#tilelayeroffline)** 
+-   `layer` **[TileLayerOffline][42]** 
 
-### setBounds
+#### setOption
 
-set the bounds of the area to save
+Update a config option
 
-**Parameters**
+##### Parameters
 
--   `bounds` **L.latLngBounds** 
+-   `name` **[string][39]** 
+-   `value` **mixed** 
 
-### setSaveWhatYouSee
-
-set saveWhatYouSee
-
-**Parameters**
-
--   `saveWhatYouSee` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
-
-### setMaxZoom
-
-set the maxZoom
-
-**Parameters**
-
--   `zoom` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
-
-### setZoomlevels
-
-set the zoomLevels
-
-**Parameters**
-
--   `zoomlevels` **[array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** min,max
-
-## ControlStatus
+### ControlStatus
 
 Status of ControlSaveTiles, keeps info about process during downloading
 ans saving tiles. Used internal and as object for events.
 
-Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+Type: [Object][40]
 
-**Properties**
+#### Properties
 
--   `storagesize` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** total number of saved tiles.
--   `lengthToBeSaved` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** number of tiles that will be saved in db
+-   `storagesize` **[number][43]** total number of saved tiles.
+-   `lengthToBeSaved` **[number][43]** number of tiles that will be saved in db
     during current process
--   `lengthSaved` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** number of tiles saved during current process
--   `lengthLoaded` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** number of tiles loaded during current process
--   `_tilesforSave` **[array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** tiles waiting for processing
+-   `lengthSaved` **[number][43]** number of tiles saved during current process
+-   `lengthLoaded` **[number][43]** number of tiles loaded during current process
+-   `_tilesforSave` **[array][48]** tiles waiting for processing
 
-## TileLayerOffline
+### TileLayerOffline
 
 A layer that uses store tiles when available. Falls back to online.
 Use this layer directly or extend it
 
-### setDataUrl
+#### setDataUrl
 
 dataurl from localstorage
 
-**Parameters**
+##### Parameters
 
--   `tile` **DomElement** [description]
--   `url` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** [description]
+-   `coords` **[object][40]** x,y,z
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** resolves to base64 url
+Returns **[Promise][47]** resolves to base64 url
 
-### getSimultaneous
+#### getSimultaneous
 
-Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Number of simultanous downloads from tile server
+Returns **[number][43]** Number of simultanous downloads from tile server
 
-### getTileUrls
+#### getTileUrls
 
 getTileUrls for single zoomlevel
 
-**Parameters**
+##### Parameters
 
 -   `bounds`  
--   `zoom` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `zoom` **[number][43]** 
 
-Returns **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** the tile urls, key, url
+Returns **[Array][48]&lt;[object][40]>** the tile urls, key, url, x, y, z
+
+[1]: #ltilelayeroffline
+
+[2]: #parameters
+
+[3]: #lcontrolsavetiles
+
+[4]: #parameters-1
+
+[5]: #properties
+
+[6]: #tilemanager
+
+[7]: #tileinfo
+
+[8]: #properties-1
+
+[9]: #getstoragelength
+
+[10]: #getstorageinfo
+
+[11]: #downloadtile
+
+[12]: #parameters-2
+
+[13]: #savetile
+
+[14]: #parameters-3
+
+[15]: #gettileurl
+
+[16]: #parameters-4
+
+[17]: #gettileurls
+
+[18]: #parameters-5
+
+[19]: #getstoredtilesasjson
+
+[20]: #parameters-6
+
+[21]: #removetile
+
+[22]: #parameters-7
+
+[23]: #truncate
+
+[24]: #types
+
+[25]: #controlsavetiles
+
+[26]: #properties-2
+
+[27]: #setlayer
+
+[28]: #parameters-8
+
+[29]: #setoption
+
+[30]: #parameters-9
+
+[31]: #controlstatus
+
+[32]: #properties-3
+
+[33]: #tilelayeroffline
+
+[34]: #setdataurl
+
+[35]: #parameters-10
+
+[36]: #getsimultaneous
+
+[37]: #gettileurls-1
+
+[38]: #parameters-11
+
+[39]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+
+[40]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+
+[41]: http://leafletjs.com/reference-1.2.0.html#tilelayer
+
+[42]: #tilelayeroffline
+
+[43]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+
+[44]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+
+[45]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+
+[46]: #controlsavetiles
+
+[47]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+[48]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+
+[49]: #tileinfo
+
+[50]: https://developer.mozilla.org/docs/Web/API/Blob
+
+[51]: #controlstatus
