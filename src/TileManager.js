@@ -4,16 +4,16 @@ import tilestorage, { meta as metastorage } from './localforage';
 /**
  *
  * @typedef {Object} tileInfo
- * @property {string} tileInfo.key storage key
- * @property {string} tileInfo.url resolved url
- * @property {string} tileInfo.urlTemplate orig url, used to find tiles per layer
- * @property {string} tileInfo.x x coord of tile
- * @property {string} tileInfo.y y coord of tile
- * @property {string} tileInfo.z tile zoomlevel
+ * @property {string} key storage key
+ * @property {string} url resolved url
+ * @property {string} urlTemplate orig url, used to find tiles per layer
+ * @property {string} x left point of tile
+ * @property {string} y top point coord of tile
+ * @property {string} z tile zoomlevel
  */
 
 /**
- * @return Promise which resolves to int
+ * @return {Promise<Number>} which resolves to int
  */
 export function getStorageLength() {
   return tilestorage.length();
@@ -21,6 +21,8 @@ export function getStorageLength() {
 
 /**
  * Tip: you can filter the result (eg to get tiles from one resource)
+ *
+ * @return {Promise<tileInfo[]>}
  */
 export function getStorageInfo() {
   const result = [];
@@ -33,7 +35,7 @@ export function getStorageInfo() {
 
 /**
  * resolves to blob
- * @param {string} tileUrl
+ * @param {Promise<blob>} tileUrl
  */
 export function downloadTile(tileUrl) {
   return fetch(tileUrl).then((response) => {
@@ -46,6 +48,8 @@ export function downloadTile(tileUrl) {
 /**
  * @param {tileInfo}
  * @param {blob} blob
+ *
+ * @return {Promise}
  */
 export function saveTile(tileInfo, blob) {
   return tilestorage.removeItem(tileInfo.key).then(() => {
@@ -61,6 +65,8 @@ export function saveTile(tileInfo, blob) {
  * @param {string} urlTemplate
  * @param {object} data  x, y, z, s
  * @param {string} data.s subdomain
+ *
+ * @returns {string}
  */
 export function getTileUrl(urlTemplate, data) {
   return L.Util.template(urlTemplate, { ...data, r: L.Browser.retina ? '@2x' : '' });
@@ -97,7 +103,11 @@ export function getTileUrls(layer, bounds, zoom) {
 }
 /**
  * Get a geojson of tiles from one resource
- * TODO, polygons instead of points, and per per zoomlevel?
+ * TODO, per zoomlevel?
+ *
+ * @param {object} layer
+ *
+ * @return {object} geojson
  */
 export function getStoredTilesAsJson(layer) {
   const featureCollection = {
@@ -146,15 +156,17 @@ export function getStoredTilesAsJson(layer) {
 /**
  * Remove tile by key
  * @param {string} key
+ *
+ * @returns {Promise}
  */
 export function removeTile(key) {
-  tilestorage.removeItem(key).then(() => metastorage.removeItem(key));
+  return tilestorage.removeItem(key).then(() => metastorage.removeItem(key));
 }
 
 /**
  * Remove everything
  *
- * @return Promise
+ * @return {Promise}
  */
 export function truncate() {
   return tilestorage.clear().then(() => metastorage.clear());

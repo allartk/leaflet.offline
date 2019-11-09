@@ -1,9 +1,26 @@
 toc:
   - L.tileLayer.offline
   - L.control.savetiles
+  - name: TileManager
+    description: Manages the storage.
+      Methods are available as import.
+      When you include the script directlt into your page
+      , they are methods of the LeafletOffline global.
+    children:
+      - tileInfo
+      - getStorageLength
+      - getStorageInfo
+      - downloadTile
+      - saveTile
+      - getTileUrl
+      - getTileUrls
+      - getStoredTilesAsJson
+      - removeTile
+      - truncate
   - name: Types
     description: |
-      The factory methods above use the following types.
-  - ControlSaveTiles
-  - ControlStatus
-  - TileLayerOffline
+      The leaflet classes use the following types.
+    children:
+      - ControlSaveTiles
+      - ControlStatus
+      - TileLayerOffline
