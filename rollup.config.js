@@ -6,16 +6,18 @@ export default {
     file: 'dist/bundle.js',
     format: 'umd',
     name: 'LeafletOffline',
+    globals: {
+      leaflet: 'L',
+      idb: 'idb',
+    },
   },
-  plugins: [buble({
-    objectAssign: true,
-  })],
-  external: [
-    'leaflet',
-    'localforage',
+  plugins: [
+    buble({
+      objectAssign: true,
+      transforms: {
+        asyncAwait: false,
+      },
+    }),
   ],
-  globals: {
-    localforage: 'localforage',
-    leaflet: 'L',
-  },
+  external: ['leaflet', 'idb'],
 };

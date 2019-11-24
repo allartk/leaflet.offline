@@ -1,5 +1,18 @@
 import L from 'leaflet';
-import tilestorage, { meta as metastorage } from './localforage';
+import { openDB } from 'idb';
+
+const tileStoreName = 'tileStore';
+const urlTemplateIndex = 'urlTemplate';
+
+const dbPromise = openDB('leaflet.offline', 1, {
+  upgrade(db) {
+    const tileStore = db.createObjectStore(tileStoreName, {
+      keyPath: 'key',
+    });
+    tileStore.createIndex(urlTemplateIndex, 'urlTemplate');
+    tileStore.createIndex('z', 'z');
+  },
+});
 
 /**
  *
@@ -15,22 +28,22 @@ import tilestorage, { meta as metastorage } from './localforage';
 /**
  * @return {Promise<Number>} which resolves to int
  */
-export function getStorageLength() {
-  return tilestorage.length();
+export async function getStorageLength() {
+  return (await dbPromise).count(tileStoreName);
 }
 
 /**
- * Tip: you can filter the result (eg to get tiles from one resource)
+ * @param {string} urlTemplate
  *
  * @return {Promise<tileInfo[]>}
  */
-export function getStorageInfo() {
-  const result = [];
-  return metastorage
-    .iterate((value) => {
-      result.push(value);
-    })
-    .then(() => result);
+export async function getStorageInfo(urlTemplate) {
+  const range = IDBKeyRange.only(urlTemplate);
+  return (await dbPromise).getAllFromIndex(
+    tileStoreName,
+    urlTemplateIndex,
+    range,
+  );
 }
 
 /**
@@ -51,12 +64,10 @@ export function downloadTile(tileUrl) {
  *
  * @return {Promise}
  */
-export function saveTile(tileInfo, blob) {
-  return tilestorage.removeItem(tileInfo.key).then(() => {
-    tilestorage.setItem(tileInfo.key, blob).then(() => {
-      const record = { ...tileInfo, createdAt: Date.now() };
-      return metastorage.setItem(tileInfo.key, record);
-    });
+export async function saveTile(tileInfo, blob) {
+  return (await dbPromise).put(tileStoreName, {
+    blob,
+    ...tileInfo,
   });
 }
 
@@ -69,7 +80,10 @@ export function saveTile(tileInfo, blob) {
  * @returns {string}
  */
 export function getTileUrl(urlTemplate, data) {
-  return L.Util.template(urlTemplate, { ...data, r: L.Browser.retina ? '@2x' : '' });
+  return L.Util.template(urlTemplate, {
+    ...data,
+    r: L.Browser.retina ? '@2x' : '',
+  });
 }
 /**
  * @param {object} layer leaflet tilelayer
@@ -89,8 +103,14 @@ export function getTileUrls(layer, bounds, zoom) {
       const tilePoint = new L.Point(i, j);
       const data = { x: i, y: j, z: zoom };
       tiles.push({
-        key: getTileUrl(layer._url, { ...data, s: layer.options.subdomains['0'] }),
-        url: getTileUrl(layer._url, { ...data, s: layer._getSubdomain(tilePoint) }),
+        key: getTileUrl(layer._url, {
+          ...data,
+          s: layer.options.subdomains['0'],
+        }),
+        url: getTileUrl(layer._url, {
+          ...data,
+          s: layer._getSubdomain(tilePoint),
+        }),
         z: zoom,
         x: i,
         y: j,
@@ -114,7 +134,7 @@ export function getStoredTilesAsJson(layer) {
     type: 'FeatureCollection',
     features: [],
   };
-  return getStorageInfo().then((results) => {
+  return getStorageInfo(layer._url).then((results) => {
     for (let i = 0; i < results.length; i += 1) {
       if (results[i].urlTemplate !== layer._url) {
         // eslint-disable-next-line no-continue
@@ -129,8 +149,14 @@ export function getStoredTilesAsJson(layer) {
         topLeftPoint.y + layer.getTileSize().y,
       );
 
-      const topLeftlatlng = L.CRS.EPSG3857.pointToLatLng(topLeftPoint, results[i].z);
-      const botRightlatlng = L.CRS.EPSG3857.pointToLatLng(bottomRightPoint, results[i].z);
+      const topLeftlatlng = L.CRS.EPSG3857.pointToLatLng(
+        topLeftPoint,
+        results[i].z,
+      );
+      const botRightlatlng = L.CRS.EPSG3857.pointToLatLng(
+        bottomRightPoint,
+        results[i].z,
+      );
       featureCollection.features.push({
         type: 'Feature',
         properties: results[i],
@@ -159,8 +185,17 @@ export function getStoredTilesAsJson(layer) {
  *
  * @returns {Promise}
  */
-export function removeTile(key) {
-  return tilestorage.removeItem(key).then(() => metastorage.removeItem(key));
+export async function removeTile(key) {
+  return (await dbPromise).delete(tileStoreName, key);
+}
+
+/**
+ * @param {string} key
+ *
+ * @returns {Promise<blob>}
+ */
+export async function getTile(key) {
+  return (await dbPromise).get(tileStoreName, key).then((result) => result.blob);
 }
 
 /**
@@ -168,6 +203,6 @@ export function removeTile(key) {
  *
  * @return {Promise}
  */
-export function truncate() {
-  return tilestorage.clear().then(() => metastorage.clear());
+export async function truncate() {
+  return (await dbPromise).clear(tileStoreName);
 }

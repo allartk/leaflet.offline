@@ -1,6 +1,5 @@
 import L from 'leaflet';
-import localforage from './localforage';
-import { getTileUrls, getTileUrl } from './TileManager';
+import { getTileUrls, getTileUrl, getTile } from './TileManager';
 
 /**
  * A layer that uses store tiles when available. Falls back to online.
@@ -40,8 +39,7 @@ const TileLayerOffline = L.TileLayer.extend(
      */
     setDataUrl(coords) {
       return new Promise((resolve, reject) => {
-        localforage
-          .getItem(this._getStorageKey(coords))
+        getTile(this._getStorageKey(coords))
           .then((data) => {
             if (data && typeof data === 'object') {
               resolve(URL.createObjectURL(data));
@@ -61,7 +59,10 @@ const TileLayerOffline = L.TileLayer.extend(
      * @return {string} unique identifier.
      */
     _getStorageKey(coords) {
-      return getTileUrl(this._url, { ...coords, s: this.options.subdomains['0'] });
+      return getTileUrl(this._url, {
+        ...coords,
+        s: this.options.subdomains['0'],
+      });
     },
     /**
      * @return {number} Number of simultanous downloads from tile server
