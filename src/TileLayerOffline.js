@@ -34,8 +34,9 @@ const TileLayerOffline = L.TileLayer.extend(
     },
     /**
      * dataurl from localstorage
+     * @private
      * @param {object} coords x,y,z
-     * @return {Promise} resolves to base64 url
+     * @return {Promise<string>} objecturl
      */
     setDataUrl(coords) {
       return new Promise((resolve, reject) => {
@@ -70,6 +71,7 @@ const TileLayerOffline = L.TileLayer.extend(
     },
     /**
      * getTileUrls for single zoomlevel
+     * @private
      * @param  {object} L.latLngBounds
      * @param  {number} zoom
      * @return {object[]} the tile urls, key, url, x, y, z
@@ -84,7 +86,7 @@ const TileLayerOffline = L.TileLayer.extend(
  * Tiles removed event
  * @event storagesize
  * @memberof TileLayerOffline
- * @type {object}
+ * @instance
  */
 
 /**

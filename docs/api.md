@@ -35,107 +35,103 @@
     -   [ControlStatus][31]
         -   [Properties][32]
     -   [TileLayerOffline][33]
-        -   [setDataUrl][34]
-            -   [Parameters][35]
-        -   [getSimultaneous][36]
-        -   [getTileUrls][37]
-            -   [Parameters][38]
+        -   [getSimultaneous][34]
 
 ## L.tileLayer.offline
 
 ### Parameters
 
--   `url` **[string][39]** [description]
--   `options` **[object][40]** [http://leafletjs.com/reference-1.2.0.html#tilelayer][41]
+-   `url` **[string][35]** [description]
+-   `options` **[object][36]** [http://leafletjs.com/reference-1.2.0.html#tilelayer][37]
 
-Returns **[TileLayerOffline][42]** an instance of TileLayerOffline
+Returns **[TileLayerOffline][38]** an instance of TileLayerOffline
 
 ## L.control.savetiles
 
 ### Parameters
 
--   `baseLayer` **[object][40]** [http://leafletjs.com/reference-1.2.0.html#tilelayer][41]
+-   `baseLayer` **[object][36]** [http://leafletjs.com/reference-1.2.0.html#tilelayer][37]
 
 ### Properties
 
--   `options` **[Object][40]** 
-    -   `options.position` **[string][39]?** default topleft
-    -   `options.saveText` **[string][39]?** html for save button, default +
-    -   `options.rmText` **[string][39]?** html for remove button, deflault -
-    -   `options.maxZoom` **[number][43]?** maximum zoom level that will be reached
+-   `options` **[Object][36]** 
+    -   `options.position` **[string][35]?** default topleft
+    -   `options.saveText` **[string][35]?** html for save button, default +
+    -   `options.rmText` **[string][35]?** html for remove button, deflault -
+    -   `options.maxZoom` **[number][39]?** maximum zoom level that will be reached
         when saving tiles with saveWhatYouSee. Default 19
-    -   `options.saveWhatYouSee` **[boolean][44]?** save the tiles that you see
+    -   `options.saveWhatYouSee` **[boolean][40]?** save the tiles that you see
         on screen plus deeper zooms, ignores zoomLevels options. Default false
-    -   `options.confirm` **[function][45]?** function called before confirm, default null.
+    -   `options.confirm` **[function][41]?** function called before confirm, default null.
         Args of function are ControlStatus and callback.
-    -   `options.confirmRemoval` **[function][45]?** function called before confirm, default null
+    -   `options.confirmRemoval` **[function][41]?** function called before confirm, default null
 
-Returns **[ControlSaveTiles][46]** 
+Returns **[ControlSaveTiles][42]** 
 
 ## TileManager
 
-Manages the storage. Methods are available as import. When you include the script directlt into your page , they are methods of the LeafletOffline global.
+Manages the storage. Only needed for advanced usage. Methods are available as import. When you include the script directly into your page , they are methods of the LeafletOffline global.
 
 
 ### tileInfo
 
-Type: [Object][40]
+Type: [Object][36]
 
 #### Properties
 
--   `key` **[string][39]** storage key
--   `url` **[string][39]** resolved url
--   `urlTemplate` **[string][39]** orig url, used to find tiles per layer
--   `x` **[string][39]** left point of tile
--   `y` **[string][39]** top point coord of tile
--   `z` **[string][39]** tile zoomlevel
+-   `key` **[string][35]** storage key
+-   `url` **[string][35]** resolved url
+-   `urlTemplate` **[string][35]** orig url, used to find tiles per layer
+-   `x` **[string][35]** left point of tile
+-   `y` **[string][35]** top point coord of tile
+-   `z` **[string][35]** tile zoomlevel
 
 ### getStorageLength
 
-Returns **[Promise][47]&lt;[Number][43]>** which resolves to int
+Returns **[Promise][43]&lt;[Number][39]>** which resolves to int
 
 ### getStorageInfo
 
 Tip: you can filter the result (eg to get tiles from one resource)
 
-Returns **[Promise][47]&lt;[Array][48]&lt;[tileInfo][49]>>** 
+Returns **[Promise][43]&lt;[Array][44]&lt;[tileInfo][45]>>** 
 
 ### downloadTile
 
-resolves to blob
-
 #### Parameters
 
--   `tileUrl` **[Promise][47]&lt;[blob][50]>** 
+-   `tileUrl` **[string][35]** 
+
+Returns **[Promise][43]&lt;[blob][46]>** 
 
 ### saveTile
 
 #### Parameters
 
 -   `tileInfo`  
--   `blob` **[blob][50]** 
+-   `blob` **[blob][46]** 
 
-Returns **[Promise][47]** 
+Returns **[Promise][43]** 
 
 ### getTileUrl
 
 #### Parameters
 
--   `urlTemplate` **[string][39]** 
--   `data` **[object][40]** x, y, z, s
-    -   `data.s` **[string][39]** subdomain
+-   `urlTemplate` **[string][35]** 
+-   `data` **[object][36]** x, y, z, s
+    -   `data.s` **[string][35]** subdomain
 
-Returns **[string][39]** 
+Returns **[string][35]** 
 
 ### getTileUrls
 
 #### Parameters
 
--   `layer` **[object][40]** leaflet tilelayer
--   `bounds` **[object][40]** 
--   `zoom` **[number][43]** zoomlevel 0-19
+-   `layer` **[object][36]** leaflet tilelayer
+-   `bounds` **[object][36]** 
+-   `zoom` **[number][39]** zoomlevel 0-19
 
-Returns **[Array][48]&lt;[tileInfo][49]>** 
+Returns **[Array][44]&lt;[tileInfo][45]>** 
 
 ### getStoredTilesAsJson
 
@@ -144,9 +140,9 @@ TODO, per zoomlevel?
 
 #### Parameters
 
--   `layer` **[object][40]** 
+-   `layer` **[object][36]** 
 
-Returns **[object][40]** geojson
+Returns **[object][36]** geojson
 
 ### removeTile
 
@@ -154,15 +150,15 @@ Remove tile by key
 
 #### Parameters
 
--   `key` **[string][39]** 
+-   `key` **[string][35]** 
 
-Returns **[Promise][47]** 
+Returns **[Promise][43]** 
 
 ### truncate
 
 Remove everything
 
-Returns **[Promise][47]** 
+Returns **[Promise][43]** 
 
 ## Types
 
@@ -175,7 +171,7 @@ Shows control on map to save tiles
 
 #### Properties
 
--   `status` **[ControlStatus][51]** 
+-   `status` **[ControlStatus][47]** 
 
 #### setLayer
 
@@ -183,7 +179,7 @@ Change baseLayer
 
 ##### Parameters
 
--   `layer` **[TileLayerOffline][42]** 
+-   `layer` **[TileLayerOffline][38]** 
 
 #### setOption
 
@@ -191,7 +187,7 @@ Update a config option
 
 ##### Parameters
 
--   `name` **[string][39]** 
+-   `name` **[string][35]** 
 -   `value` **mixed** 
 
 ### ControlStatus
@@ -199,46 +195,25 @@ Update a config option
 Status of ControlSaveTiles, keeps info about process during downloading
 ans saving tiles. Used internal and as object for events.
 
-Type: [Object][40]
+Type: [Object][36]
 
 #### Properties
 
--   `storagesize` **[number][43]** total number of saved tiles.
--   `lengthToBeSaved` **[number][43]** number of tiles that will be saved in db
+-   `storagesize` **[number][39]** total number of saved tiles.
+-   `lengthToBeSaved` **[number][39]** number of tiles that will be saved in db
     during current process
--   `lengthSaved` **[number][43]** number of tiles saved during current process
--   `lengthLoaded` **[number][43]** number of tiles loaded during current process
--   `_tilesforSave` **[array][48]** tiles waiting for processing
+-   `lengthSaved` **[number][39]** number of tiles saved during current process
+-   `lengthLoaded` **[number][39]** number of tiles loaded during current process
+-   `_tilesforSave` **[array][44]** tiles waiting for processing
 
 ### TileLayerOffline
 
 A layer that uses store tiles when available. Falls back to online.
 Use this layer directly or extend it
 
-#### setDataUrl
-
-dataurl from localstorage
-
-##### Parameters
-
--   `coords` **[object][40]** x,y,z
-
-Returns **[Promise][47]** resolves to base64 url
-
 #### getSimultaneous
 
-Returns **[number][43]** Number of simultanous downloads from tile server
-
-#### getTileUrls
-
-getTileUrls for single zoomlevel
-
-##### Parameters
-
--   `bounds`  
--   `zoom` **[number][43]** 
-
-Returns **[Array][48]&lt;[object][40]>** the tile urls, key, url, x, y, z
+Returns **[number][39]** Number of simultanous downloads from tile server
 
 [1]: #ltilelayeroffline
 
@@ -306,38 +281,30 @@ Returns **[Array][48]&lt;[object][40]>** the tile urls, key, url, x, y, z
 
 [33]: #tilelayeroffline
 
-[34]: #setdataurl
+[34]: #getsimultaneous
 
-[35]: #parameters-10
+[35]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[36]: #getsimultaneous
+[36]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[37]: #gettileurls-1
+[37]: http://leafletjs.com/reference-1.2.0.html#tilelayer
 
-[38]: #parameters-11
+[38]: #tilelayeroffline
 
-[39]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[39]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[40]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[40]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[41]: http://leafletjs.com/reference-1.2.0.html#tilelayer
+[41]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[42]: #tilelayeroffline
+[42]: #controlsavetiles
 
-[43]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[43]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[44]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[44]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[45]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[45]: #tileinfo
 
-[46]: #controlsavetiles
+[46]: https://developer.mozilla.org/docs/Web/API/Blob
 
-[47]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
-
-[48]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
-
-[49]: #tileinfo
-
-[50]: https://developer.mozilla.org/docs/Web/API/Blob
-
-[51]: #controlstatus
+[47]: #controlstatus
