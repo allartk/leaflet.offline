@@ -53,7 +53,7 @@
     "sinon": "^7.5.0"
   },
   "dependencies": {
-    "leaflet": "^1.5.1",
-    "localforage": "^1.7.3"
+    "idb": "^4.0.5",
+    "leaflet": "^1.5.1"
   }
 }
