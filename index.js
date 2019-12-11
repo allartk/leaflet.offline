@@ -62,13 +62,17 @@ map.setView(
 const layerswitcher = L.control
   .layers({
     'osm (offline)': baseLayer,
-  })
+  }, null, { collapsed: false })
   .addTo(map);
 
 let storageLayer;
+
+const getGeoJsonData = () => LeafletOffline.getStorageInfo(urlTemplate)
+  .then((data) => LeafletOffline.getStoredTilesAsJson(baseLayer, data));
+
 const addStorageLayer = () => {
-  LeafletOffline.getStoredTilesAsJson(baseLayer).then((data) => {
-    storageLayer = L.geoJSON(data).bindPopup(
+  getGeoJsonData().then((geojson) => {
+    storageLayer = L.geoJSON(geojson).bindPopup(
       (clickedLayer) => clickedLayer.feature.properties.key,
     );
     layerswitcher.addOverlay(storageLayer, 'stored tiles');
@@ -84,7 +88,7 @@ baseLayer.on('storagesize', (e) => {
   document.getElementById('storage').innerHTML = e.storagesize;
   if (storageLayer) {
     storageLayer.clearLayers();
-    LeafletOffline.getStoredTilesAsJson(baseLayer).then((data) => {
+    getGeoJsonData().then((data) => {
       storageLayer.addData(data);
     });
   }

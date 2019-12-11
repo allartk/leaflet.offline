@@ -123,60 +123,54 @@ export function getTileUrls(layer, bounds, zoom) {
 }
 /**
  * Get a geojson of tiles from one resource
- * TODO, per zoomlevel?
  *
  * @param {object} layer
+ * @param {tileInfo[]} tiles
  *
  * @return {object} geojson
  */
-export function getStoredTilesAsJson(layer) {
+export function getStoredTilesAsJson(layer, tiles) {
   const featureCollection = {
     type: 'FeatureCollection',
     features: [],
   };
-  return getStorageInfo(layer._url).then((results) => {
-    for (let i = 0; i < results.length; i += 1) {
-      if (results[i].urlTemplate !== layer._url) {
-        // eslint-disable-next-line no-continue
-        continue;
-      }
-      const topLeftPoint = new L.Point(
-        results[i].x * layer.getTileSize().x,
-        results[i].y * layer.getTileSize().y,
-      );
-      const bottomRightPoint = new L.Point(
-        topLeftPoint.x + layer.getTileSize().x,
-        topLeftPoint.y + layer.getTileSize().y,
-      );
+  for (let i = 0; i < tiles.length; i += 1) {
+    const topLeftPoint = new L.Point(
+      tiles[i].x * layer.getTileSize().x,
+      tiles[i].y * layer.getTileSize().y,
+    );
+    const bottomRightPoint = new L.Point(
+      topLeftPoint.x + layer.getTileSize().x,
+      topLeftPoint.y + layer.getTileSize().y,
+    );
 
-      const topLeftlatlng = L.CRS.EPSG3857.pointToLatLng(
-        topLeftPoint,
-        results[i].z,
-      );
-      const botRightlatlng = L.CRS.EPSG3857.pointToLatLng(
-        bottomRightPoint,
-        results[i].z,
-      );
-      featureCollection.features.push({
-        type: 'Feature',
-        properties: results[i],
-        geometry: {
-          type: 'Polygon',
-          coordinates: [
-            [
-              [topLeftlatlng.lng, topLeftlatlng.lat],
-              [botRightlatlng.lng, topLeftlatlng.lat],
-              [botRightlatlng.lng, botRightlatlng.lat],
-              [topLeftlatlng.lng, botRightlatlng.lat],
-              [topLeftlatlng.lng, topLeftlatlng.lat],
-            ],
+    const topLeftlatlng = L.CRS.EPSG3857.pointToLatLng(
+      topLeftPoint,
+      tiles[i].z,
+    );
+    const botRightlatlng = L.CRS.EPSG3857.pointToLatLng(
+      bottomRightPoint,
+      tiles[i].z,
+    );
+    featureCollection.features.push({
+      type: 'Feature',
+      properties: tiles[i],
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [topLeftlatlng.lng, topLeftlatlng.lat],
+            [botRightlatlng.lng, topLeftlatlng.lat],
+            [botRightlatlng.lng, botRightlatlng.lat],
+            [topLeftlatlng.lng, botRightlatlng.lat],
+            [topLeftlatlng.lng, topLeftlatlng.lat],
           ],
-        },
-      });
-    }
+        ],
+      },
+    });
+  }
 
-    return featureCollection;
-  });
+  return featureCollection;
 }
 
 /**
