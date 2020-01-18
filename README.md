@@ -1,7 +1,7 @@
 # leaflet.offline version 2.x
 
 [![npm version](https://badge.fury.io/js/leaflet.offline.svg)](https://badge.fury.io/js/leaflet.offline)
-[![Build Status](https://travis-ci.org/allartk/leaflet.offline.svg?branch=travis)](https://travis-ci.org/allartk/leaflet.offline)
+[![Build Status](https://travis-ci.org/helgasoft/leaflet.offline.svg?branch=travis)](https://travis-ci.org/helgasoft/leaflet.offline)
 
 Just a modern and slim library to store tiles offline.
 
