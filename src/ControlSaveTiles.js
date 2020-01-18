@@ -160,8 +160,8 @@ const ControlSaveTiles = L.Control.extend(
         // TODO!
         // storeTiles(tiles, subdlength);
         // using the non-recursive async version for all tiles
-        for (var j = 0; j < this$1.status._tilesforSave.length; j += 1) {
-        	this$1._loadTileNR(j);
+        for (var j = 0; j < this.status._tilesforSave.length; j += 1) {
+        	this._loadTileNR(j);
         }
       };
       if (this.options.confirm) {
