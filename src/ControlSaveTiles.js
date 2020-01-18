@@ -159,8 +159,9 @@ const ControlSaveTiles = L.Control.extend(
         const subdlength = this._baseLayer.getSimultaneous();
         // TODO!
         // storeTiles(tiles, subdlength);
-        for (let i = 0; i < subdlength; i += 1) {
-          this._loadTile();
+        // using the non-recursive async version for all tiles
+        for (var j = 0; j < this$1.status._tilesforSave.length; j += 1) {
+        	this$1._loadTileNR(j);
         }
       };
       if (this.options.confirm) {
@@ -205,6 +206,20 @@ const ControlSaveTiles = L.Control.extend(
         }
       });
     },
+    // non-recursive async version of _loadTile
+    _loadTileNR: async function _loadTileNR(j) {
+        var self = this;
+        var tile = self.status._tilesforSave[j];
+        downloadTile(tile.url).then(function (blob) {
+          self.status.lengthLoaded += 1;
+          self._saveTile(tile, blob);
+          self._baseLayer.fire('loadtileend', self.status);
+          if (self.status.lengthLoaded === self.status.lengthToBeSaved) {
+            self._baseLayer.fire('loadend', self.status);
+          }
+        });
+    },
+
     /**
      * [_saveTile description]
      * @private
@@ -217,7 +232,8 @@ const ControlSaveTiles = L.Control.extend(
      * @param  {blob} blob    [description]
      * @return {void}         [description]
      */
-    _saveTile(tileInfo, blob) {
+//  _saveTile(tileInfo, blob) {    // original is synchronous
+    _saveTile: async function _saveTile(tileInfo, blob) {	// new is async
       const self = this;
       saveTile(tileInfo, blob)
         .then(() => {
