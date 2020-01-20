@@ -33,12 +33,10 @@ describe('control with defaults', () => {
     });
   });
   it('_saveTiles sets status', () => {
-    const stub = sinon.stub(c, '_loadTile');
     c._saveTiles();
     assert.isObject(c.status);
     assert.isArray(c.status._tilesforSave);
     assert.lengthOf(c.status._tilesforSave, 1);
-    stub.resetBehavior();
   });
   it('_saveTiles fires savestart with _tilesforSave prop', (done) => {
     const stub = sinon.stub(c, '_loadTile');
@@ -50,12 +48,12 @@ describe('control with defaults', () => {
     c._saveTiles();
   });
 
-  it('_saveTiles calls loadTile for each subdomain', () => {
-    const stub = sinon.stub(c, '_loadTile');
-    c._saveTiles();
-    //assert(stub.calledThrice, '_loadTile has not been called');
-    assert.isAtLeast(stub.callCount,3);
-    stub.resetBehavior();
+  it('_saveTiles calls loadTile for each tile', () => {
+	const stub = sinon.stub(c, '_loadTile');
+   	c._saveTiles();
+	assert.equal(stub.callCount,1, '_loadTile has been called '+stub.callCount+' times');
+	//assert(stub.calledThrice, '_loadTile has not been called');  //for domains abc
+	stub.resetBehavior();
   });
 });
 
@@ -84,6 +82,8 @@ describe('control with different options', () => {
     assert.isObject(c.status);
     assert.isArray(c.status._tilesforSave);
     assert.lengthOf(c.status._tilesforSave, 2);
+    //console.log('   tiles='+JSON.stringify(c.status._tilesforSave));
+    assert.equal(stub.callCount,2, '_loadTile has been called '+stub.callCount+' times');
     stub.resetBehavior();
   });
   it('_saveTiles calcs tiles for saveWhatYouSee', () => {
@@ -97,6 +97,7 @@ describe('control with different options', () => {
     assert.isObject(c.status);
     assert.isArray(c.status._tilesforSave);
     assert.lengthOf(c.status._tilesforSave, 4);
+    assert.equal(stub.callCount,4, '_loadTile has been called '+stub.callCount+' times');
     stub.resetBehavior();
   });
   it('calls confirm', () => {

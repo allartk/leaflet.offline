@@ -19,7 +19,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'node_modules/leaflet/dist/leaflet.js',
-      'node_modules/localforage/dist/localforage.js',
+      //'node_modules/localforage/dist/localforage.js',
       'node_modules/sinon/pkg/sinon.js',
       'test/*.js'
     ],
@@ -41,14 +41,14 @@ module.exports = function(config) {
         name: 'LeafletOffline',
         sourcemap: 'inline',
         globals: {
-          localforage: 'localforage',
+          //localforage: 'localforage',
           leaflet: 'L',
           sinon: 'sinon'
         },
       },
      external: [
        'leaflet',
-       'localforage',
+       //'localforage',
        'sinon'
      ],
      plugins: [
