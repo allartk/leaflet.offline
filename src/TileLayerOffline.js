@@ -38,19 +38,13 @@ const TileLayerOffline = L.TileLayer.extend(
      * @return {Promise<string>} objecturl
      */
     setDataUrl(coords) {
-      return new Promise((resolve, reject) => {
-        getTile(this._getStorageKey(coords))
-          .then((data) => {
-            if (data && typeof data === 'object') {
-              resolve(URL.createObjectURL(data));
-            } else {
-              reject();
-            }
-          })
-          .catch((e) => {
-            reject(e);
-          });
-      });
+      return getTile(this._getStorageKey(coords))
+        .then((data) => {
+          if (data && typeof data === 'object') {
+            return URL.createObjectURL(data);
+          }
+          throw new Error('tile not found in storage');
+        });
     },
     /**
      * get key to use for storage

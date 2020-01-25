@@ -8,16 +8,15 @@ describe('TileLayer.Offline', () => {
   });
   it('get getTileUrl', () => {
     const layer = L.tileLayer.offline('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png');
-    layer._tileZoom = 16;
     assert.instanceOf(
-      layer.setDataUrl({ x: 123456, y: 456789 }, 'http://exampletile.nl/'),
+      layer.setDataUrl({ x: 123456, y: 456789, z: 16 }, 'http://exampletile.nl/'),
       Promise,
     );
   });
   it('createTile', () => {
     const url = 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
     const layer = L.tileLayer.offline(url);
-    const tile = layer.createTile({ x: 123456, y: 456789 }, () => {});
+    const tile = layer.createTile({ x: 123456, y: 456789, z: 16 }, () => {});
     assert.instanceOf(tile, HTMLElement);
   });
   it('get storagekey openstreetmap', () => {
