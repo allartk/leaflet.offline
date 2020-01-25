@@ -12,8 +12,7 @@
     "serve": "browser-sync start --server -f ./dist index.html",
     "start": "npm-run-all -p serve watch",
     "preversion": "./node_modules/karma/bin/karma  start  karma.conf.js --single-run",
-    "version": "npm run build && git add -Af dist",
-    "postversion": "git push --tags && git rm -r dist && git commit -m 'remove dist' && git push"
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
