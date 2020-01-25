@@ -40,14 +40,14 @@ module.exports = function(config) {
         name: 'LeafletOffline',
         sourcemap: 'inline',
         globals: {
-          localforage: 'localforage',
+          //localforage: 'localforage',
           leaflet: 'L',
           sinon: 'sinon'
         },
       },
      external: [
        'leaflet',
-       'localforage',
+       //'localforage',
        'sinon'
      ],
      plugins: [

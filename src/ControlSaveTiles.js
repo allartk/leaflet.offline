@@ -154,14 +154,15 @@ const ControlSaveTiles = L.Control.extend(
         tiles = tiles.concat(this._baseLayer.getTileUrls(bounds, zoomlevels[i]));
       }
       this._resetStatus(tiles);
-      const succescallback = () => {
+      const succescallback = async () => {
         this._baseLayer.fire('savestart', this.status);
-        const subdlength = this._baseLayer.getSimultaneous();
+        //const subdlength = this._baseLayer.getSimultaneous();
         // TODO!
         // storeTiles(tiles, subdlength);
-        for (let i = 0; i < subdlength; i += 1) {
-          this._loadTile();
-        }
+        // using the non-recursive async version for all tiles
+	await Promise.all(tiles.map(async (tile) => {
+		await this._loadTile(tile)
+	}));
       };
       if (this.options.confirm) {
         this.options.confirm(this.status, succescallback);
@@ -188,23 +189,20 @@ const ControlSaveTiles = L.Control.extend(
      * @private
      * @return {void}
      */
-    _loadTile() {
-      const self = this;
-      const tile = self.status._tilesforSave.shift();
-      downloadTile(tile.url).then((blob) => {
-        self.status.lengthLoaded += 1;
-        self._saveTile(tile, blob);
-        if (self.status._tilesforSave.length > 0) {
-          self._loadTile();
-          self._baseLayer.fire('loadtileend', self.status);
-        } else {
+    // non-recursive async version of _loadTile
+    _loadTile: async function _loadTile(jtile) {
+        var self = this;
+        var tile = jtile;
+        downloadTile(tile.url).then(function (blob) {
+          self.status.lengthLoaded += 1;
+          self._saveTile(tile, blob);
           self._baseLayer.fire('loadtileend', self.status);
           if (self.status.lengthLoaded === self.status.lengthToBeSaved) {
             self._baseLayer.fire('loadend', self.status);
           }
-        }
-      });
+        });
     },
+
     /**
      * [_saveTile description]
      * @private
@@ -217,7 +215,7 @@ const ControlSaveTiles = L.Control.extend(
      * @param  {blob} blob    [description]
      * @return {void}         [description]
      */
-    _saveTile(tileInfo, blob) {
+    _saveTile(tileInfo, blob) {    // original is synchronous
       const self = this;
       saveTile(tileInfo, blob)
         .then(() => {
