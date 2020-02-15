@@ -156,13 +156,13 @@ const ControlSaveTiles = L.Control.extend(
       this._resetStatus(tiles);
       const succescallback = async () => {
         this._baseLayer.fire('savestart', this.status);
-        //const subdlength = this._baseLayer.getSimultaneous();
+        // const subdlength = this._baseLayer.getSimultaneous();
         // TODO!
         // storeTiles(tiles, subdlength);
         // using the non-recursive async version for all tiles
-	await Promise.all(tiles.map(async (tile) => {
-		await this._loadTile(tile)
-	}));
+        await Promise.all(tiles.map(async (tile) => {
+          await this._loadTile(tile);
+        }));
       };
       if (this.options.confirm) {
         this.options.confirm(this.status, succescallback);
@@ -191,16 +191,16 @@ const ControlSaveTiles = L.Control.extend(
      */
     // non-recursive async version of _loadTile
     _loadTile: async function _loadTile(jtile) {
-        var self = this;
-        var tile = jtile;
-        downloadTile(tile.url).then(function (blob) {
-          self.status.lengthLoaded += 1;
-          self._saveTile(tile, blob);
-          self._baseLayer.fire('loadtileend', self.status);
-          if (self.status.lengthLoaded === self.status.lengthToBeSaved) {
-            self._baseLayer.fire('loadend', self.status);
-          }
-        });
+      const self = this;
+      const tile = jtile;
+      downloadTile(tile.url).then((blob) => {
+        self.status.lengthLoaded += 1;
+        self._saveTile(tile, blob);
+        self._baseLayer.fire('loadtileend', self.status);
+        if (self.status.lengthLoaded === self.status.lengthToBeSaved) {
+          self._baseLayer.fire('loadend', self.status);
+        }
+      });
     },
 
     /**
@@ -215,7 +215,7 @@ const ControlSaveTiles = L.Control.extend(
      * @param  {blob} blob    [description]
      * @return {void}         [description]
      */
-    _saveTile(tileInfo, blob) {    // original is synchronous
+    _saveTile(tileInfo, blob) { // original is synchronous
       const self = this;
       saveTile(tileInfo, blob)
         .then(() => {
@@ -247,8 +247,21 @@ const ControlSaveTiles = L.Control.extend(
     },
   },
 );
+
+
 /**
- * @function L.control.savetiles
+ * Leaflet namespace.
+ * @namespace L
+ */
+/**
+ * Control namespace.
+ * @namespace L.control
+ */
+
+
+/**
+ * @function savetiles
+ * @memberof L.control
  * @param  {object} baseLayer     {@link http://leafletjs.com/reference-1.2.0.html#tilelayer}
  * @property {Object} options
  * @property {string} [options.position] default topleft
