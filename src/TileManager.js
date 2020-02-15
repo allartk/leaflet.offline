@@ -1,3 +1,7 @@
+/**
+ * @module TileManager
+ */
+
 import L from 'leaflet';
 import { openDB } from 'idb';
 
