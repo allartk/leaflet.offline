@@ -254,7 +254,7 @@ const ControlSaveTiles = L.Control.extend(
  * @namespace L
  */
 /**
- * Leaflet namespace.
+ * Control namespace.
  * @namespace L.control
  */
 

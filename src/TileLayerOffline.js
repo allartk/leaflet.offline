@@ -78,10 +78,10 @@ const TileLayerOffline = L.TileLayer.extend(
 );
 
 /**
- * Tiles removed event
+ * Control finished calculating storage size
  * @event storagesize
  * @memberof TileLayerOffline
- * @instance
+ * @type {ControlStatus}
  */
 
 /**

@@ -213,16 +213,14 @@ Update a config option
 
 * [TileLayerOffline](#TileLayerOffline)
     * [new TileLayerOffline()](#new_TileLayerOffline_new)
-    * _instance_
-        * ["storagesize"](#TileLayerOffline+event_storagesize)
-    * _static_
-        * [.getSimultaneous()](#TileLayerOffline.getSimultaneous) ⇒ <code>number</code>
-        * ["savestart"](#TileLayerOffline.event_savestart)
-        * ["loadtileend"](#TileLayerOffline.event_loadtileend)
-        * ["loadend"](#TileLayerOffline.event_loadend)
-        * ["savetileend"](#TileLayerOffline.event_savetileend)
-        * ["saveend"](#TileLayerOffline.event_saveend)
-        * ["tilesremoved"](#TileLayerOffline.event_tilesremoved)
+    * [.getSimultaneous()](#TileLayerOffline.getSimultaneous) ⇒ <code>number</code>
+    * ["storagesize"](#TileLayerOffline.event_storagesize)
+    * ["savestart"](#TileLayerOffline.event_savestart)
+    * ["loadtileend"](#TileLayerOffline.event_loadtileend)
+    * ["loadend"](#TileLayerOffline.event_loadend)
+    * ["savetileend"](#TileLayerOffline.event_savetileend)
+    * ["saveend"](#TileLayerOffline.event_saveend)
+    * ["tilesremoved"](#TileLayerOffline.event_tilesremoved)
 
 <a name="new_TileLayerOffline_new"></a>
 
@@ -230,17 +228,17 @@ Update a config option
 A layer that uses store tiles when available. Falls back to online.
 Use this layer directly or extend it
 
-<a name="TileLayerOffline+event_storagesize"></a>
-
-### "storagesize"
-Tiles removed event
-
-**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)  
 <a name="TileLayerOffline.getSimultaneous"></a>
 
 ### TileLayerOffline.getSimultaneous() ⇒ <code>number</code>
 **Kind**: static method of [<code>TileLayerOffline</code>](#TileLayerOffline)  
 **Returns**: <code>number</code> - Number of simultanous downloads from tile server  
+<a name="TileLayerOffline.event_storagesize"></a>
+
+### "storagesize"
+Control finished calculating storage size
+
+**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)  
 <a name="TileLayerOffline.event_savestart"></a>
 
 ### "savestart"
@@ -293,7 +291,7 @@ Leaflet namespace.
 <a name="L.control"></a>
 
 ### L.control : <code>object</code>
-Leaflet namespace.
+Control namespace.
 
 **Kind**: static namespace of [<code>L</code>](#L)  
 <a name="L.control.savetiles"></a>
@@ -351,7 +349,7 @@ Leaflet namespace.
 <a name="L.control"></a>
 
 ### L.control : <code>object</code>
-Leaflet namespace.
+Control namespace.
 
 **Kind**: static namespace of [<code>L</code>](#L)  
 <a name="L.control.savetiles"></a>
