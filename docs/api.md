@@ -2,7 +2,10 @@
 
 <dl>
 <dt><a href="#module_TileManager">TileManager</a></dt>
-<dd></dd>
+<dd><p>Api methods used in control and layer
+For advanced usage</p>
+<pre><code class="language-js">import * from &#39;leaflet.offline/TileManager&#39;;</code></pre>
+</dd>
 </dl>
 
 ## Classes
@@ -37,6 +40,12 @@ ans saving tiles. Used internal and as object for events.</p>
 <a name="module_TileManager"></a>
 
 ## TileManager
+Api methods used in control and layer
+For advanced usage
+```js
+import * from 'leaflet.offline/TileManager';
+```
+
 
 * [TileManager](#module_TileManager)
     * _static_

@@ -1,5 +1,11 @@
 /**
+ * Api methods used in control and layer
+ * For advanced usage
+ * ```js
+ * import * from 'leaflet.offline/TileManager';
+ * ```
  * @module TileManager
+ *
  */
 
 import L from 'leaflet';
