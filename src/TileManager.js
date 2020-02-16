@@ -30,13 +30,16 @@ const dbPromise = openDB('leaflet.offline', 1, {
  */
 
 /**
- * @return {Promise<Number>} which resolves to int
+ * @return {Promise<Number>} get number of store tiles
  */
 export async function getStorageLength() {
   return (await dbPromise).count(tileStoreName);
 }
 
 /**
+ * @example
+ * getStorageInfo('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+ *
  * @param {string} urlTemplate
  *
  * @return {Promise<tileInfo[]>}
@@ -51,6 +54,9 @@ export async function getStorageInfo(urlTemplate) {
 }
 
 /**
+ * @example
+ * downloadTile(tileInfo.url).then(blob => saveTile(tileInfo, blob))
+ *
  * @param {string} tileUrl
  * @return {Promise<blob>}
  */
@@ -63,8 +69,11 @@ export async function downloadTile(tileUrl) {
   });
 }
 /**
- * @param {tileInfo}
- * @param {blob} blob
+ * @example
+ * saveTile(tileInfo, blob).then(() => console.log(`saved tile from ${tileInfo.url}`))
+ *
+ * @param {tileInfo} tileInfo
+ * @param {Blob} blob
  *
  * @return {Promise}
  */
@@ -90,8 +99,13 @@ export function getTileUrl(urlTemplate, data) {
   });
 }
 /**
+ * @example
+ * const p1 = L.point(10, 10)
+ * const p2 = L.point(40, 60)
+ * getTileUrls(layer, L.bounds(p1,p2), 12)
+ *
  * @param {object} layer leaflet tilelayer
- * @param {object} bounds
+ * @param {object} bounds L.bounds
  * @param {number} zoom zoomlevel 0-19
  *
  * @return {Array.<tileInfo>}
@@ -127,6 +141,16 @@ export function getTileUrls(layer, bounds, zoom) {
 }
 /**
  * Get a geojson of tiles from one resource
+ *
+ * @example
+ * const baseLayer = L.tileLayer
+ * .offline(urlTemplate, {
+ *   attribution: 'Map data {attribution.OpenStreetMap}',
+ *   subdomains: 'abc',
+ *   minZoom: 13,
+ * })
+ * .addTo(map);
+ * getStorageInfo(urlTemplate).then((data) => LeafletOffline.getStoredTilesAsJson(baseLayer, data));
  *
  * @param {object} layer
  * @param {tileInfo[]} tiles

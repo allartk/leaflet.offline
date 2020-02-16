@@ -57,7 +57,7 @@ ans saving tiles. Used internal and as object for events.</p>
 
 ### TileManager.getStorageLength() ⇒ <code>Promise.&lt;Number&gt;</code>
 **Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
-**Returns**: <code>Promise.&lt;Number&gt;</code> - which resolves to int  
+**Returns**: <code>Promise.&lt;Number&gt;</code> - get number of store tiles  
 <a name="module_TileManager.getStorageInfo"></a>
 
 ### TileManager.getStorageInfo(urlTemplate) ⇒ <code>Promise.&lt;Array.&lt;tileInfo&gt;&gt;</code>
@@ -67,6 +67,10 @@ ans saving tiles. Used internal and as object for events.</p>
 | --- | --- |
 | urlTemplate | <code>string</code> | 
 
+**Example**  
+```js
+getStorageInfo('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+```
 <a name="module_TileManager.downloadTile"></a>
 
 ### TileManager.downloadTile(tileUrl) ⇒ <code>Promise.&lt;blob&gt;</code>
@@ -76,6 +80,10 @@ ans saving tiles. Used internal and as object for events.</p>
 | --- | --- |
 | tileUrl | <code>string</code> | 
 
+**Example**  
+```js
+downloadTile(tileInfo.url).then(blob => saveTile(tileInfo, blob))
+```
 <a name="module_TileManager.saveTile"></a>
 
 ### TileManager.saveTile(tileInfo, blob) ⇒ <code>Promise</code>
@@ -84,8 +92,12 @@ ans saving tiles. Used internal and as object for events.</p>
 | Param | Type |
 | --- | --- |
 | tileInfo | <code>tileInfo</code> | 
-| blob | <code>blob</code> | 
+| blob | <code>Blob</code> | 
 
+**Example**  
+```js
+saveTile(tileInfo, blob).then(() => console.log(`saved tile from ${tileInfo.url}`))
+```
 <a name="module_TileManager.getTileUrl"></a>
 
 ### TileManager.getTileUrl(urlTemplate, data) ⇒ <code>string</code>
@@ -105,9 +117,15 @@ ans saving tiles. Used internal and as object for events.</p>
 | Param | Type | Description |
 | --- | --- | --- |
 | layer | <code>object</code> | leaflet tilelayer |
-| bounds | <code>object</code> |  |
+| bounds | <code>object</code> | L.bounds |
 | zoom | <code>number</code> | zoomlevel 0-19 |
 
+**Example**  
+```js
+const p1 = L.point(10, 10)
+const p2 = L.point(40, 60)
+getTileUrls(layer, L.bounds(p1,p2), 12)
+```
 <a name="module_TileManager.getStoredTilesAsJson"></a>
 
 ### TileManager.getStoredTilesAsJson(layer, tiles) ⇒ <code>object</code>
@@ -121,6 +139,17 @@ Get a geojson of tiles from one resource
 | layer | <code>object</code> | 
 | tiles | <code>Array.&lt;tileInfo&gt;</code> | 
 
+**Example**  
+```js
+const baseLayer = L.tileLayer
+.offline(urlTemplate, {
+  attribution: 'Map data {attribution.OpenStreetMap}',
+  subdomains: 'abc',
+  minZoom: 13,
+})
+.addTo(map);
+getStorageInfo(urlTemplate).then((data) => LeafletOffline.getStoredTilesAsJson(baseLayer, data));
+```
 <a name="module_TileManager.removeTile"></a>
 
 ### TileManager.removeTile(key) ⇒ <code>Promise</code>
