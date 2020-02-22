@@ -113,6 +113,9 @@ const ControlSaveTiles = L.Control.extend(
      * @param {mixed} value
      */
     setOption(name, value) {
+      if (this.options[name] === undefined) {
+        throw new Error(`Option ${name} doe not exist`);
+      }
       this.options[name] = value;
     },
     onAdd() {
@@ -131,7 +134,6 @@ const ControlSaveTiles = L.Control.extend(
         .on(link, 'click', L.DomEvent.stop)
         .on(link, 'click', fn, this)
         .on(link, 'click', this._refocusOnMap, this);
-      // TODO enable disable on layer change map
 
       return link;
     },

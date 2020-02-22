@@ -50,7 +50,7 @@ describe('control with defaults', () => {
 
   it('_saveTiles calls loadTile for each tile', () => {
     const stub = sinon.stub(c, '_loadTile');
-   	c._saveTiles();
+    c._saveTiles();
     assert.equal(stub.callCount, 1, `_loadTile has been called ${stub.callCount} times`);
     // assert(stub.calledThrice, '_loadTile has not been called');  //for domains abc
     stub.resetBehavior();
@@ -108,5 +108,13 @@ describe('control with different options', () => {
     c._rmTiles();
     c._saveTiles();
     assert(callback.calledOnce);
+  });
+  it('does not set unkown option', () => {
+    const c = L.control.savetiles(baseLayer);
+    assert.throws(() => c.setOption('aslkdjnvssdfkjn', 'lkjnsdfkvljsnsdfv'));
+  });
+  it('does set  option', () => {
+    const c = L.control.savetiles(baseLayer);
+    assert.doesNotThrow(() => c.setOption('saveWhatYouSee', true));
   });
 });
