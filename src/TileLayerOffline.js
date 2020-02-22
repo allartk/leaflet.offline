@@ -68,12 +68,6 @@ const TileLayerOffline = L.TileLayer.extend(
       });
     },
     /**
-     * @return {number} Number of simultanous downloads from tile server
-     */
-    getSimultaneous() {
-      return this.options.subdomains.length;
-    },
-    /**
      * getTileUrls for single zoomlevel
      * @private
      * @param  {object} L.latLngBounds

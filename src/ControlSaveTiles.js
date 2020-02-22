@@ -174,9 +174,6 @@ const ControlSaveTiles = L.Control.extend(
       this._resetStatus(tiles);
       const succescallback = async () => {
         this._baseLayer.fire('savestart', this.status);
-        // const subdlength = this._baseLayer.getSimultaneous();
-        // TODO!
-        // storeTiles(tiles, subdlength);
         // using the non-recursive async version for all tiles
         await Promise.all(tiles.map(async (tile) => {
           await this._loadTile(tile);
@@ -207,7 +204,6 @@ const ControlSaveTiles = L.Control.extend(
      * @private
      * @return {void}
      */
-    // non-recursive async version of _loadTile
     _loadTile: async function _loadTile(jtile) {
       const self = this;
       const tile = jtile;
@@ -222,7 +218,6 @@ const ControlSaveTiles = L.Control.extend(
     },
 
     /**
-     * [_saveTile description]
      * @private
      * @param  {object} tileInfo save key
      * @param {string} tileInfo.key
