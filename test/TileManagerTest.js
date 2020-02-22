@@ -11,9 +11,9 @@ describe('TileManager', () => {
     );
     const tiles = getTileUrls(layer, bounds, 16);
     assert.lengthOf(tiles, 16);
-    const urls = tiles.map(t => t.url);
+    const urls = tiles.map((t) => t.url);
     assert.include(urls, 'http://a.tile.openstreetmap.org/16/33677/21651.png');
-    const keys = tiles.map(t => t.key);
+    const keys = tiles.map((t) => t.key);
     assert.include(keys, 'http://a.tile.openstreetmap.org/16/33677/21651.png');
   });
 });
