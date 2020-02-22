@@ -19,7 +19,25 @@ import {
  * Shows control on map to save tiles
  * @class ControlSaveTiles
  *
+ *
  * @property {ControlStatus} status
+ *
+ * @example
+ * const controlSaveTiles = L.control.savetiles(baseLayer, {
+ * zoomlevels: [13, 16], // optional zoomlevels to save, default current zoomlevel
+ * confirm(layer, succescallback) {
+ *   if (window.confirm(`Save ${layer._tilesforSave.length}`)) {
+ *     succescallback();
+ *   }
+ * },
+ * confirmRemoval(layer, successCallback) {
+ *   if (window.confirm('Remove all the tiles?')) {
+ *     successCallback();
+ *   }
+ * },
+ * saveText: '<i class="fa fa-download" aria-hidden="true" title="Save tiles"></i>',
+ * rmText: '<i class="fa fa-trash" aria-hidden="true"  title="Remove tiles"></i>',
+ * });
  */
 const ControlSaveTiles = L.Control.extend(
   /** @lends ControlSaveTiles */ {
@@ -250,18 +268,14 @@ const ControlSaveTiles = L.Control.extend(
 
 
 /**
- * Leaflet namespace.
- * @namespace L
- */
-/**
- * Control namespace.
- * @namespace L.control
+ * Leaflet control
+ * @external "L.control"
+ * @see {@link https://leafletjs.com/reference-1.6.0.html#control|Control}
  */
 
 
 /**
- * @function savetiles
- * @memberof L.control
+ * @function external:"L.control".savetiles
  * @param  {object} baseLayer     {@link http://leafletjs.com/reference-1.2.0.html#tilelayer}
  * @property {Object} options
  * @property {string} [options.position] default topleft

@@ -75,6 +75,8 @@ export async function downloadTile(tileUrl) {
   });
 }
 /**
+ * TODO validate tileinfo props?
+ *
  * @example
  * saveTile(tileInfo, blob).then(() => console.log(`saved tile from ${tileInfo.url}`))
  *
@@ -149,14 +151,15 @@ export function getTileUrls(layer, bounds, zoom) {
  * Get a geojson of tiles from one resource
  *
  * @example
- * const baseLayer = L.tileLayer
- * .offline(urlTemplate, {
- *   attribution: 'Map data {attribution.OpenStreetMap}',
- *   subdomains: 'abc',
- *   minZoom: 13,
- * })
- * .addTo(map);
- * getStorageInfo(urlTemplate).then((data) => LeafletOffline.getStoredTilesAsJson(baseLayer, data));
+ * const urlTemplate = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+ * const getGeoJsonData = () => LeafletOffline.getStorageInfo(urlTemplate)
+ *  .then((data) => LeafletOffline.getStoredTilesAsJson(baseLayer, data));
+ *
+ * getGeoJsonData().then((geojson) => {
+ *   storageLayer = L.geoJSON(geojson).bindPopup(
+ *     (clickedLayer) => clickedLayer.feature.properties.key,
+ *   );
+ * });
  *
  * @param {object} layer
  * @param {tileInfo[]} tiles

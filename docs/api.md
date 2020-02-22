@@ -17,23 +17,23 @@ For advanced usage</p>
 <dd></dd>
 </dl>
 
-## Objects
-
-<dl>
-<dt><a href="#L">L</a> : <code>object</code></dt>
-<dd><p>Leaflet namespace.</p>
-</dd>
-<dt><a href="#L">L</a> : <code>object</code></dt>
-<dd><p>Leaflet namespace.</p>
-</dd>
-</dl>
-
 ## Typedefs
 
 <dl>
 <dt><a href="#ControlStatus">ControlStatus</a> : <code>Object</code></dt>
 <dd><p>Status of ControlSaveTiles, keeps info about process during downloading
 ans saving tiles. Used internal and as object for events.</p>
+</dd>
+</dl>
+
+## External
+
+<dl>
+<dt><a href="#external_L.control">L.control</a></dt>
+<dd><p>Leaflet control</p>
+</dd>
+<dt><a href="#external_L.tileLayer">L.tileLayer</a></dt>
+<dd><p>Leaflet tilelayer</p>
 </dd>
 </dl>
 
@@ -96,6 +96,8 @@ downloadTile(tileInfo.url).then(blob => saveTile(tileInfo, blob))
 <a name="module_TileManager.saveTile"></a>
 
 ### TileManager.saveTile(tileInfo, blob) ⇒ <code>Promise</code>
+TODO validate tileinfo props?
+
 **Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
 
 | Param | Type |
@@ -150,14 +152,15 @@ Get a geojson of tiles from one resource
 
 **Example**  
 ```js
-const baseLayer = L.tileLayer
-.offline(urlTemplate, {
-  attribution: 'Map data {attribution.OpenStreetMap}',
-  subdomains: 'abc',
-  minZoom: 13,
-})
-.addTo(map);
-getStorageInfo(urlTemplate).then((data) => LeafletOffline.getStoredTilesAsJson(baseLayer, data));
+const urlTemplate = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+const getGeoJsonData = () => LeafletOffline.getStorageInfo(urlTemplate)
+ .then((data) => LeafletOffline.getStoredTilesAsJson(baseLayer, data));
+
+getGeoJsonData().then((geojson) => {
+  storageLayer = L.geoJSON(geojson).bindPopup(
+    (clickedLayer) => clickedLayer.feature.properties.key,
+  );
+});
 ```
 <a name="module_TileManager.removeTile"></a>
 
@@ -221,6 +224,24 @@ Remove everything
 ### new ControlSaveTiles()
 Shows control on map to save tiles
 
+**Example**  
+```js
+const controlSaveTiles = L.control.savetiles(baseLayer, {
+zoomlevels: [13, 16], // optional zoomlevels to save, default current zoomlevel
+confirm(layer, succescallback) {
+  if (window.confirm(`Save ${layer._tilesforSave.length}`)) {
+    succescallback();
+  }
+},
+confirmRemoval(layer, successCallback) {
+  if (window.confirm('Remove all the tiles?')) {
+    successCallback();
+  }
+},
+saveText: '<i class="fa fa-download" aria-hidden="true" title="Save tiles"></i>',
+rmText: '<i class="fa fa-trash" aria-hidden="true"  title="Remove tiles"></i>',
+});
+```
 <a name="ControlSaveTiles.setLayer"></a>
 
 ### ControlSaveTiles.setLayer(layer)
@@ -263,9 +284,18 @@ Update a config option
 <a name="new_TileLayerOffline_new"></a>
 
 ### new TileLayerOffline()
-A layer that uses store tiles when available. Falls back to online.
-Use this layer directly or extend it
+A layer that uses stored tiles when available. Falls back to online.
 
+**Example**  
+```js
+const tileLayerOffline = L.tileLayer
+.offline('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: 'Map data {attribution.OpenStreetMap}',
+  subdomains: 'abc',
+  minZoom: 13,
+})
+.addTo(map);
+```
 <a name="TileLayerOffline.getSimultaneous"></a>
 
 ### TileLayerOffline.getSimultaneous() ⇒ <code>number</code>
@@ -313,122 +343,6 @@ All tiles saved
 Tile removed
 
 **Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)  
-<a name="L"></a>
-
-## L : <code>object</code>
-Leaflet namespace.
-
-**Kind**: global namespace  
-
-* [L](#L) : <code>object</code>
-    * [.control](#L.control) : <code>object</code>
-        * [.savetiles(baseLayer)](#L.control.savetiles) ⇒ [<code>ControlSaveTiles</code>](#ControlSaveTiles)
-    * [.tileLayer](#L.tileLayer) : <code>object</code>
-        * [.offline(url, options)](#L.tileLayer.offline) ⇒ [<code>TileLayerOffline</code>](#TileLayerOffline)
-
-<a name="L.control"></a>
-
-### L.control : <code>object</code>
-Control namespace.
-
-**Kind**: static namespace of [<code>L</code>](#L)  
-<a name="L.control.savetiles"></a>
-
-#### control.savetiles(baseLayer) ⇒ [<code>ControlSaveTiles</code>](#ControlSaveTiles)
-**Kind**: static method of [<code>control</code>](#L.control)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| baseLayer | <code>object</code> | [http://leafletjs.com/reference-1.2.0.html#tilelayer](http://leafletjs.com/reference-1.2.0.html#tilelayer) |
-
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| options | <code>Object</code> |  |
-| [options.position] | <code>string</code> | default topleft |
-| [options.saveText] | <code>string</code> | html for save button, default + |
-| [options.rmText] | <code>string</code> | html for remove button, deflault - |
-| [options.maxZoom] | <code>number</code> | maximum zoom level that will be reached when saving tiles with saveWhatYouSee. Default 19 |
-| [options.saveWhatYouSee] | <code>boolean</code> | save the tiles that you see on screen plus deeper zooms, ignores zoomLevels options. Default false |
-| [options.confirm] | <code>function</code> | function called before confirm, default null. Args of function are ControlStatus and callback. |
-| [options.confirmRemoval] | <code>function</code> | function called before confirm, default null |
-
-<a name="L.tileLayer"></a>
-
-### L.tileLayer : <code>object</code>
-Tilelayer namespace.
-
-**Kind**: static namespace of [<code>L</code>](#L)  
-<a name="L.tileLayer.offline"></a>
-
-#### tileLayer.offline(url, options) ⇒ [<code>TileLayerOffline</code>](#TileLayerOffline)
-**Kind**: static method of [<code>tileLayer</code>](#L.tileLayer)  
-**Returns**: [<code>TileLayerOffline</code>](#TileLayerOffline) - an instance of TileLayerOffline  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| url | <code>string</code> | [description] |
-| options | <code>object</code> | [http://leafletjs.com/reference-1.2.0.html#tilelayer](http://leafletjs.com/reference-1.2.0.html#tilelayer) |
-
-<a name="L"></a>
-
-## L : <code>object</code>
-Leaflet namespace.
-
-**Kind**: global namespace  
-
-* [L](#L) : <code>object</code>
-    * [.control](#L.control) : <code>object</code>
-        * [.savetiles(baseLayer)](#L.control.savetiles) ⇒ [<code>ControlSaveTiles</code>](#ControlSaveTiles)
-    * [.tileLayer](#L.tileLayer) : <code>object</code>
-        * [.offline(url, options)](#L.tileLayer.offline) ⇒ [<code>TileLayerOffline</code>](#TileLayerOffline)
-
-<a name="L.control"></a>
-
-### L.control : <code>object</code>
-Control namespace.
-
-**Kind**: static namespace of [<code>L</code>](#L)  
-<a name="L.control.savetiles"></a>
-
-#### control.savetiles(baseLayer) ⇒ [<code>ControlSaveTiles</code>](#ControlSaveTiles)
-**Kind**: static method of [<code>control</code>](#L.control)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| baseLayer | <code>object</code> | [http://leafletjs.com/reference-1.2.0.html#tilelayer](http://leafletjs.com/reference-1.2.0.html#tilelayer) |
-
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| options | <code>Object</code> |  |
-| [options.position] | <code>string</code> | default topleft |
-| [options.saveText] | <code>string</code> | html for save button, default + |
-| [options.rmText] | <code>string</code> | html for remove button, deflault - |
-| [options.maxZoom] | <code>number</code> | maximum zoom level that will be reached when saving tiles with saveWhatYouSee. Default 19 |
-| [options.saveWhatYouSee] | <code>boolean</code> | save the tiles that you see on screen plus deeper zooms, ignores zoomLevels options. Default false |
-| [options.confirm] | <code>function</code> | function called before confirm, default null. Args of function are ControlStatus and callback. |
-| [options.confirmRemoval] | <code>function</code> | function called before confirm, default null |
-
-<a name="L.tileLayer"></a>
-
-### L.tileLayer : <code>object</code>
-Tilelayer namespace.
-
-**Kind**: static namespace of [<code>L</code>](#L)  
-<a name="L.tileLayer.offline"></a>
-
-#### tileLayer.offline(url, options) ⇒ [<code>TileLayerOffline</code>](#TileLayerOffline)
-**Kind**: static method of [<code>tileLayer</code>](#L.tileLayer)  
-**Returns**: [<code>TileLayerOffline</code>](#TileLayerOffline) - an instance of TileLayerOffline  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| url | <code>string</code> | [description] |
-| options | <code>object</code> | [http://leafletjs.com/reference-1.2.0.html#tilelayer](http://leafletjs.com/reference-1.2.0.html#tilelayer) |
-
 <a name="ControlStatus"></a>
 
 ## ControlStatus : <code>Object</code>
@@ -445,4 +359,51 @@ ans saving tiles. Used internal and as object for events.
 | lengthSaved | <code>number</code> | number of tiles saved during current process |
 | lengthLoaded | <code>number</code> | number of tiles loaded during current process |
 | _tilesforSave | <code>array</code> | tiles waiting for processing |
+
+<a name="external_L.control"></a>
+
+## L.control
+Leaflet control
+
+**Kind**: global external  
+**See**: [Control](https://leafletjs.com/reference-1.6.0.html#control)  
+<a name="external_L.control.savetiles"></a>
+
+### L.control.savetiles(baseLayer) ⇒ [<code>ControlSaveTiles</code>](#ControlSaveTiles)
+**Kind**: static method of [<code>L.control</code>](#external_L.control)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| baseLayer | <code>object</code> | [http://leafletjs.com/reference-1.2.0.html#tilelayer](http://leafletjs.com/reference-1.2.0.html#tilelayer) |
+
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| options | <code>Object</code> |  |
+| [options.position] | <code>string</code> | default topleft |
+| [options.saveText] | <code>string</code> | html for save button, default + |
+| [options.rmText] | <code>string</code> | html for remove button, deflault - |
+| [options.maxZoom] | <code>number</code> | maximum zoom level that will be reached when saving tiles with saveWhatYouSee. Default 19 |
+| [options.saveWhatYouSee] | <code>boolean</code> | save the tiles that you see on screen plus deeper zooms, ignores zoomLevels options. Default false |
+| [options.confirm] | <code>function</code> | function called before confirm, default null. Args of function are ControlStatus and callback. |
+| [options.confirmRemoval] | <code>function</code> | function called before confirm, default null |
+
+<a name="external_L.tileLayer"></a>
+
+## L.tileLayer
+Leaflet tilelayer
+
+**Kind**: global external  
+**See**: [TileLayer](https://leafletjs.com/reference-1.6.0.html#tilelayer)  
+<a name="external_L.tileLayer.offline"></a>
+
+### L.tileLayer.offline(url, options) ⇒ [<code>TileLayerOffline</code>](#TileLayerOffline)
+**Kind**: static method of [<code>L.tileLayer</code>](#external_L.tileLayer)  
+**Returns**: [<code>TileLayerOffline</code>](#TileLayerOffline) - an instance of TileLayerOffline  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| url | <code>string</code> | [description] |
+| options | <code>object</code> | [http://leafletjs.com/reference-1.2.0.html#tilelayer](http://leafletjs.com/reference-1.2.0.html#tilelayer) |
 

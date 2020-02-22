@@ -2,9 +2,18 @@ import L from 'leaflet';
 import { getTileUrls, getTileUrl, getTile } from './TileManager';
 
 /**
- * A layer that uses store tiles when available. Falls back to online.
- * Use this layer directly or extend it
+ * A layer that uses stored tiles when available. Falls back to online.
+ *
  * @class TileLayerOffline
+ * @hideconstructor
+ * @example
+ * const tileLayerOffline = L.tileLayer
+ * .offline('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+ *   attribution: 'Map data {attribution.OpenStreetMap}',
+ *   subdomains: 'abc',
+ *   minZoom: 13,
+ * })
+ * .addTo(map);
  */
 const TileLayerOffline = L.TileLayer.extend(
   /** @lends  TileLayerOffline */ {
@@ -127,17 +136,13 @@ const TileLayerOffline = L.TileLayer.extend(
  */
 
 /**
- * Leaflet namespace.
- * @namespace L
- */
-/**
- * Tilelayer namespace.
- * @namespace L.tileLayer
+ * Leaflet tilelayer
+ * @external "L.tileLayer"
+ * @see {@link https://leafletjs.com/reference-1.6.0.html#tilelayer|TileLayer}
  */
 
 /**
- * @function offline
- * @memberof L.tileLayer
+ * @function external:"L.tileLayer".offline
  * @param  {string} url     [description]
  * @param  {object} options {@link http://leafletjs.com/reference-1.2.0.html#tilelayer}
  * @return {TileLayerOffline}      an instance of TileLayerOffline
