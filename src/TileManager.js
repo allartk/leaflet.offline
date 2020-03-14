@@ -127,7 +127,9 @@ export function getTileUrls(layer, bounds, zoom) {
   for (let j = tileBounds.min.y; j <= tileBounds.max.y; j += 1) {
     for (let i = tileBounds.min.x; i <= tileBounds.max.x; i += 1) {
       const tilePoint = new L.Point(i, j);
-      const data = { x: i, y: j, z: zoom };
+      const data = {
+        ...layer.options, x: i, y: j, z: zoom,
+      };
       tiles.push({
         key: getTileUrl(layer._url, {
           ...data,
