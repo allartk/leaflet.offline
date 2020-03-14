@@ -64,6 +64,7 @@ const TileLayerOffline = L.TileLayer.extend(
     _getStorageKey(coords) {
       return getTileUrl(this._url, {
         ...coords,
+        ...this.options,
         s: this.options.subdomains['0'],
       });
     },

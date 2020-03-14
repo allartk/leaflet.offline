@@ -32,6 +32,18 @@ describe('TileLayer.Offline', () => {
       'https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/16/123456/456789.png',
     );
   });
+  it('get storagekey mapbox with accessToken', () => {
+    const layer = L.tileLayer.offline('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
+      {
+        id: 'mapbox.streets',
+        accessToken: 'xyz',
+      });
+    const key = layer._getStorageKey({ z: 16, x: 123456, y: 456789 });
+    assert.equal(
+      key,
+      'https://api.tiles.mapbox.com/v4/mapbox.streets/16/123456/456789.png?access_token=xyz',
+    );
+  });
   it('calculates tiles at level 16', () => {
     const layer = L.tileLayer.offline('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png');
     const bounds = new L.Bounds(
