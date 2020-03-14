@@ -272,7 +272,6 @@ Update a config option
 
 * [TileLayerOffline](#TileLayerOffline)
     * [new TileLayerOffline()](#new_TileLayerOffline_new)
-    * [.getSimultaneous()](#TileLayerOffline.getSimultaneous) ⇒ <code>number</code>
     * ["storagesize"](#TileLayerOffline.event_storagesize)
     * ["savestart"](#TileLayerOffline.event_savestart)
     * ["loadtileend"](#TileLayerOffline.event_loadtileend)
@@ -296,11 +295,6 @@ const tileLayerOffline = L.tileLayer
 })
 .addTo(map);
 ```
-<a name="TileLayerOffline.getSimultaneous"></a>
-
-### TileLayerOffline.getSimultaneous() ⇒ <code>number</code>
-**Kind**: static method of [<code>TileLayerOffline</code>](#TileLayerOffline)  
-**Returns**: <code>number</code> - Number of simultanous downloads from tile server  
 <a name="TileLayerOffline.event_storagesize"></a>
 
 ### "storagesize"
