@@ -6,6 +6,8 @@
   "scripts": {
     "docs": "jsdoc2md src/*.js > docs/api.md",
     "build": "rollup -c",
+    "lint": "eslint src test",
+    "lint:fix": "eslint --fix src test",
     "test": "karma  start karma.conf.js",
     "test:watch": "karma start --no-single-run karma.conf.js",
     "watch": "rollup -c -w",
