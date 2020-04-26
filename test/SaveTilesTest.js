@@ -26,12 +26,9 @@ describe('control with defaults', () => {
     assert.ok(div);
     assert.lengthOf(div.querySelectorAll('a'), 2);
   });
-  it('calculates storagesize', (done) => {
-    c.setStorageSize((n) => {
-      assert.equal(n, 0);
-      done();
-    });
-  });
+  it('calculates storagesize', () => c.setStorageSize().then((n) => {
+    assert.equal(n, 0);
+  }));
   it('_saveTiles sets status', () => {
     c._saveTiles();
     assert.isObject(c.status);

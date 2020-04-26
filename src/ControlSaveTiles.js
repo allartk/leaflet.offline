@@ -71,26 +71,20 @@ const ControlSaveTiles = L.Control.extend(
     },
     /**
      * Set storagesize prop on object init
-     * @param {Function} [callback] receives arg number of saved files
+     * @return {Promise<Number>}
      * @private
      */
-    setStorageSize(callback) {
+    setStorageSize() {
       if (this.status.storagesize) {
-        callback(this.status.storagesize);
-        return;
+        return Promise.resolve(this.status.storagesize);
       }
-      getStorageLength()
+      return getStorageLength()
         .then((numberOfKeys) => {
           this.status.storagesize = numberOfKeys;
           this._baseLayer.fire('storagesize', this.status);
-          if (callback) {
-            callback(numberOfKeys);
-          }
+          return numberOfKeys;
         })
-        .catch((err) => {
-          callback(0);
-          throw err;
-        });
+        .catch(() => 0);
     },
     /**
      * get number of saved files
@@ -98,7 +92,11 @@ const ControlSaveTiles = L.Control.extend(
      * @private
      */
     getStorageSize(callback) {
-      this.setStorageSize(callback);
+      this.setStorageSize().then((result) => {
+        if (callback) {
+          callback(result);
+        }
+      });
     },
     /**
      * Change baseLayer
