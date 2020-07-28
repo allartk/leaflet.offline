@@ -26,7 +26,7 @@ const TileLayerOffline = L.TileLayer.extend(
      */
     createTile(coords, done) {
       let error;
-      const tile = L.TileLayer.prototype.createTile.call(this, coords, done);
+      const tile = L.TileLayer.prototype.createTile.call(this, coords, () => {});
       const url = tile.src;
       tile.src = '';
       this.setDataUrl(coords)
