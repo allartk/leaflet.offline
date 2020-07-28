@@ -26,7 +26,7 @@ const TileLayerOffline = L.TileLayer.extend(
      */
     createTile(coords, done) {
       let error;
-      const tile = L.TileLayer.prototype.createTile.call(this, coords, done);
+      const tile = L.TileLayer.prototype.createTile.call(this, coords, () => {});
       const url = tile.src;
       tile.src = '';
       this.setDataUrl(coords)
@@ -36,7 +36,8 @@ const TileLayerOffline = L.TileLayer.extend(
         })
         .catch(() => {
           tile.src = url;
-          done(error, tile);
+          L.DomEvent.on(tile, 'load', L.Util.bind(this._tileOnLoad, this, done, tile));
+          L.DomEvent.on(tile, 'error', L.Util.bind(this._tileOnError, this, done, tile));
         });
       return tile;
     },
