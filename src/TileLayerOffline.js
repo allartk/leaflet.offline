@@ -36,7 +36,8 @@ const TileLayerOffline = L.TileLayer.extend(
         })
         .catch(() => {
           tile.src = url;
-          done(error, tile);
+          L.DomEvent.on(tile, 'load', L.Util.bind(this._tileOnLoad, this, done, tile));
+          L.DomEvent.on(tile, 'error', L.Util.bind(this._tileOnError, this, done, tile));
         });
       return tile;
     },
