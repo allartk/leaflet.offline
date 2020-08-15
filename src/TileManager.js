@@ -9,13 +9,18 @@
  */
 
 import L from 'leaflet';
-import { openDB } from 'idb';
+import { openDB, deleteDB } from 'idb';
 
 const tileStoreName = 'tileStore';
 const urlTemplateIndex = 'urlTemplate';
 
-const dbPromise = openDB('leaflet.offline', 1, {
-  upgrade(db) {
+const dbPromise = openDB('leaflet.offline', 2, {
+  upgrade(db, oldVersion) {
+    if (oldVersion === 1) {
+      deleteDB('leaflet_offline');
+      deleteDB('leaflet_offline_areas');
+      return;
+    }
     const tileStore = db.createObjectStore(tileStoreName, {
       keyPath: 'key',
     });
@@ -223,9 +228,11 @@ export async function removeTile(key) {
 }
 
 /**
+ * Get single tile blob
+ *
  * @param {string} key
  *
- * @returns {Promise<blob>}
+ * @returns {Promise<Blob>}
  */
 export async function getTile(key) {
   return (await dbPromise).get(tileStoreName, key).then((result) => result.blob);
