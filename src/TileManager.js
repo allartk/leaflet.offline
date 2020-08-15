@@ -16,16 +16,16 @@ const urlTemplateIndex = 'urlTemplate';
 
 const dbPromise = openDB('leaflet.offline', 2, {
   upgrade(db, oldVersion) {
-    if (oldVersion === 1) {
-      deleteDB('leaflet_offline');
-      deleteDB('leaflet_offline_areas');
-      return;
+    deleteDB('leaflet_offline');
+    deleteDB('leaflet_offline_areas');
+
+    if (oldVersion < 1) {
+      const tileStore = db.createObjectStore(tileStoreName, {
+        keyPath: 'key',
+      });
+      tileStore.createIndex(urlTemplateIndex, 'urlTemplate');
+      tileStore.createIndex('z', 'z');
     }
-    const tileStore = db.createObjectStore(tileStoreName, {
-      keyPath: 'key',
-    });
-    tileStore.createIndex(urlTemplateIndex, 'urlTemplate');
-    tileStore.createIndex('z', 'z');
   },
 });
 
