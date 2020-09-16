@@ -30,13 +30,16 @@ describe('control with defaults', () => {
     assert.equal(n, 0);
   }));
   it('_saveTiles sets status', () => {
+    const stub = sinon.stub(c, '_loadTile').returns(Promise.resolve());
+    const resetstub = sinon.stub(c, '_resetStatus');
     c._saveTiles();
     assert.isObject(c.status);
-    assert.isArray(c.status._tilesforSave);
-    assert.lengthOf(c.status._tilesforSave, 1);
+    assert.isTrue(resetstub.calledOnce);
+    stub.resetBehavior();
+    resetstub.resetBehavior();
   });
   it('_saveTiles fires savestart with _tilesforSave prop', (done) => {
-    const stub = sinon.stub(c, '_loadTile');
+    const stub = sinon.stub(c, '_loadTile').returns(Promise.resolve());
     baseLayer.on('savestart', (status) => {
       assert.lengthOf(status._tilesforSave, 1);
       stub.resetBehavior();
@@ -46,10 +49,9 @@ describe('control with defaults', () => {
   });
 
   it('_saveTiles calls loadTile for each tile', () => {
-    const stub = sinon.stub(c, '_loadTile');
+    const stub = sinon.stub(c, '_loadTile').returns(Promise.resolve());
     c._saveTiles();
     assert.equal(stub.callCount, 1, `_loadTile has been called ${stub.callCount} times`);
-    // assert(stub.calledThrice, '_loadTile has not been called');  //for domains abc
     stub.resetBehavior();
   });
 });
@@ -68,18 +70,17 @@ describe('control with different options', () => {
       subdomains: 'abc',
     }).addTo(map);
   });
-  it('_saveTiles calcs tiles for 2 zoomlevels', () => {
+  it('_saveTiles calculates tiles for 2 zoomlevels', () => {
     const c = L.control.savetiles(baseLayer, {
       zoomlevels: [16, 17],
     });
     c.addTo(map);
     c._rmTiles();
-    const stub = sinon.stub(c, '_loadTile');
+    const stub = sinon.stub(c, '_loadTile').returns(Promise.resolve());
     c._saveTiles();
     assert.isObject(c.status);
     assert.isArray(c.status._tilesforSave);
-    assert.lengthOf(c.status._tilesforSave, 2);
-    assert.equal(stub.callCount, 2, `_loadTile has been called ${stub.callCount} times`);
+    assert.isAbove(stub.callCount, 1);
     stub.resetBehavior();
   });
   it('_saveTiles calcs tiles for saveWhatYouSee', () => {
@@ -88,11 +89,10 @@ describe('control with different options', () => {
     });
     c.addTo(map);
     c._rmTiles();
-    const stub = sinon.stub(c, '_loadTile');
+    const stub = sinon.stub(c, '_loadTile').returns(Promise.resolve());
     c._saveTiles();
     assert.isObject(c.status);
     assert.isArray(c.status._tilesforSave);
-    assert.lengthOf(c.status._tilesforSave, 4);
     assert.equal(stub.callCount, 4, `_loadTile has been called ${stub.callCount} times`);
     stub.resetBehavior();
   });

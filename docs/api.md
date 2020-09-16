@@ -57,7 +57,7 @@ import * from 'leaflet.offline/TileManager';
         * [.getTileUrls(layer, bounds, zoom)](#module_TileManager.getTileUrls) ⇒ <code>Array.&lt;tileInfo&gt;</code>
         * [.getStoredTilesAsJson(layer, tiles)](#module_TileManager.getStoredTilesAsJson) ⇒ <code>object</code>
         * [.removeTile(key)](#module_TileManager.removeTile) ⇒ <code>Promise</code>
-        * [.getTile(key)](#module_TileManager.getTile) ⇒ <code>Promise.&lt;blob&gt;</code>
+        * [.getTile(key)](#module_TileManager.getTile) ⇒ <code>Promise.&lt;Blob&gt;</code>
         * [.truncate()](#module_TileManager.truncate) ⇒ <code>Promise</code>
     * _inner_
         * [~tileInfo](#module_TileManager..tileInfo) : <code>Object</code>
@@ -175,7 +175,9 @@ Remove tile by key
 
 <a name="module_TileManager.getTile"></a>
 
-### TileManager.getTile(key) ⇒ <code>Promise.&lt;blob&gt;</code>
+### TileManager.getTile(key) ⇒ <code>Promise.&lt;Blob&gt;</code>
+Get single tile blob
+
 **Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
 
 | Param | Type |
@@ -379,6 +381,7 @@ Leaflet control
 | [options.saveText] | <code>string</code> | html for save button, default + |
 | [options.rmText] | <code>string</code> | html for remove button, deflault - |
 | [options.maxZoom] | <code>number</code> | maximum zoom level that will be reached when saving tiles with saveWhatYouSee. Default 19 |
+| [options.parallel] | <code>number</code> | parralel downloads (default 50) |
 | [options.saveWhatYouSee] | <code>boolean</code> | save the tiles that you see on screen plus deeper zooms, ignores zoomLevels options. Default false |
 | [options.confirm] | <code>function</code> | function called before confirm, default null. Args of function are ControlStatus and callback. |
 | [options.confirmRemoval] | <code>function</code> | function called before confirm, default null |
