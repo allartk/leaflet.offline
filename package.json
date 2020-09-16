@@ -1,6 +1,6 @@
 {
   "name": "leaflet.offline",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0-beta.4",
   "description": "Offline tilelayer for leaflet",
   "main": "dist/bundle.js",
   "scripts": {
@@ -56,7 +56,7 @@
     "sinon": "^7.5.0"
   },
   "dependencies": {
-    "idb": "^4.0.5"    
+    "idb": "^4.0.5"
   },
   "peerDependencies": {
     "leaflet": "^1.6.0"
