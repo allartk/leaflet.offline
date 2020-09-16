@@ -50,6 +50,7 @@ const ControlSaveTiles = L.Control.extend(
       bounds: null,
       confirm: null,
       confirmRemoval: null,
+      parallel: 50,
     },
     status: {
       storagesize: null,
@@ -174,10 +175,17 @@ const ControlSaveTiles = L.Control.extend(
       this._resetStatus(tiles);
       const succescallback = async () => {
         this._baseLayer.fire('savestart', this.status);
-        // using the non-recursive async version for all tiles
-        await Promise.all(tiles.map(async (tile) => {
-          await this._loadTile(tile);
-        }));
+        const loader = () => {
+          if (tiles.length === 0) {
+            return Promise.resolve();
+          }
+          const tile = tiles.shift();
+          return this._loadTile(tile).then(loader);
+        };
+        const parallel = Math.min(tiles.length, this.options.parallel);
+        for (let i = 0; i < parallel; i += 1) {
+          loader();
+        }
       };
       if (this.options.confirm) {
         this.options.confirm(this.status, succescallback);
@@ -278,6 +286,7 @@ const ControlSaveTiles = L.Control.extend(
  * @property {string} [options.rmText] html for remove button, deflault -
  * @property {number} [options.maxZoom] maximum zoom level that will be reached
  * when saving tiles with saveWhatYouSee. Default 19
+ * @property {number} [options.parallel] parralel downloads (default 50)
  * @property {boolean} [options.saveWhatYouSee] save the tiles that you see
  * on screen plus deeper zooms, ignores zoomLevels options. Default false
  * @property {function} [options.confirm] function called before confirm, default null.
