@@ -131,9 +131,16 @@ export function getTileUrls(layer, bounds, zoom) {
   );
   for (let j = tileBounds.min.y; j <= tileBounds.max.y; j += 1) {
     for (let i = tileBounds.min.x; i <= tileBounds.max.x; i += 1) {
-      const tilePoint = new L.Point(i, j);
+      const x = i;
+      let y = j;
+      // invert y coordinate for TMS tile schemes
+      const invertedY = this._globalTileRange.max.y - y;
+      if (layer.options.tms) {
+        y = invertedY;
+      }
+      const tilePoint = new L.Point(i, y);
       const data = {
-        ...layer.options, x: i, y: j, z: zoom,
+        ...layer.options, x, y, z: zoom,
       };
       tiles.push({
         key: getTileUrl(layer._url, {
@@ -145,9 +152,10 @@ export function getTileUrls(layer, bounds, zoom) {
           s: layer._getSubdomain(tilePoint),
         }),
         z: zoom,
-        x: i,
-        y: j,
+        x,
+        y,
         urlTemplate: layer._url,
+        '-y': invertedY,
       });
     }
   }
