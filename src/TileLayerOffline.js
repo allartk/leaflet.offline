@@ -1,6 +1,8 @@
 import L from 'leaflet';
 import { getTileUrls, getTileUrl, getTile } from './TileManager';
 
+const noop = () => { };
+
 /**
  * A layer that uses stored tiles when available. Falls back to online.
  *
@@ -26,7 +28,7 @@ const TileLayerOffline = L.TileLayer.extend(
      */
     createTile(coords, done) {
       let error;
-      const tile = L.TileLayer.prototype.createTile.call(this, coords, () => {});
+      const tile = L.TileLayer.prototype.createTile.call(this, coords, noop);
       const url = tile.src;
       tile.src = '';
       this.setDataUrl(coords)

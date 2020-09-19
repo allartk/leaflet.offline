@@ -170,7 +170,9 @@ const ControlSaveTiles = L.Control.extend(
           this._map.project(latlngBounds.getNorthWest(), zoomlevels[i]),
           this._map.project(latlngBounds.getSouthEast(), zoomlevels[i]),
         );
-        tiles = tiles.concat(this._baseLayer.getTileUrls(bounds, zoomlevels[i]));
+        tiles = tiles.concat(
+          this._baseLayer.getTileUrls(bounds, zoomlevels[i], this._map.options.crs),
+        );
       }
       this._resetStatus(tiles);
       const successCallback = async () => {

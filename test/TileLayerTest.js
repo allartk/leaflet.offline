@@ -16,7 +16,7 @@ describe('TileLayer.Offline', () => {
   it('createTile', () => {
     const url = 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
     const layer = L.tileLayer.offline(url);
-    const tile = layer.createTile({ x: 123456, y: 456789, z: 16 }, () => {});
+    const tile = layer.createTile({ x: 123456, y: 456789, z: 16 }, () => { });
     assert.instanceOf(tile, HTMLElement);
   });
   it('get storagekey openstreetmap', () => {
@@ -56,6 +56,20 @@ describe('TileLayer.Offline', () => {
     assert.include(urls, 'http://a.tile.openstreetmap.org/16/33677/21651.png');
     const keys = tiles.map((t) => t.key);
     assert.include(keys, 'http://a.tile.openstreetmap.org/16/33677/21651.png');
+  });
+
+  it('takes into account TMS option', () => {
+    const layer = L.tileLayer.offline('http://a.tile.openstreetmap.org/{z}/{x}/{y}.png', { tms: true });
+    const bounds = new L.Bounds(
+      new L.Point(8621975, 5543267.999999999),
+      new L.Point(8621275, 5542538),
+    );
+    const tiles = layer.getTileUrls(bounds, 16);
+    assert.lengthOf(tiles, 16);
+    const urls = tiles.map((t) => t.url);
+    assert.include(urls, 'http://a.tile.openstreetmap.org/16/33676/43885.png');
+    const keys = tiles.map((t) => t.key);
+    assert.include(keys, 'http://a.tile.openstreetmap.org/16/33676/43885.png');
   });
 
   it('calculates tile urls,keys at level 16 with subdomains', () => {

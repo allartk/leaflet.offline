@@ -120,21 +120,23 @@ export function getTileUrl(urlTemplate, data) {
  * @param {object} layer leaflet tilelayer
  * @param {object} bounds L.bounds
  * @param {number} zoom zoomlevel 0-19
+ * @param {L.CRS} [crs] to calculate the world pixel bounds for TMS scheme
  *
  * @return {Array.<tileInfo>}
  */
-export function getTileUrls(layer, bounds, zoom) {
+export function getTileUrls(layer, bounds, zoom, crs = L.CRS.EPSG3857) {
   const tiles = [];
   const tileBounds = L.bounds(
     bounds.min.divideBy(layer.getTileSize().x).floor(),
     bounds.max.divideBy(layer.getTileSize().x).floor(),
   );
+  const worldTileBounds = layer._pxBoundsToTileRange(crs.getProjectedBounds(zoom));
   for (let j = tileBounds.min.y; j <= tileBounds.max.y; j += 1) {
     for (let i = tileBounds.min.x; i <= tileBounds.max.x; i += 1) {
       const x = i;
       let y = j;
       // invert y coordinate for TMS tile schemes
-      const invertedY = this._globalTileRange.max.y - y;
+      const invertedY = worldTileBounds.max.y - y;
       if (layer.options.tms) {
         y = invertedY;
       }
