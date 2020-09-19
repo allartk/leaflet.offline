@@ -54,7 +54,7 @@ import * from 'leaflet.offline/TileManager';
         * [.downloadTile(tileUrl)](#module_TileManager.downloadTile) ⇒ <code>Promise.&lt;blob&gt;</code>
         * [.saveTile(tileInfo, blob)](#module_TileManager.saveTile) ⇒ <code>Promise</code>
         * [.getTileUrl(urlTemplate, data)](#module_TileManager.getTileUrl) ⇒ <code>string</code>
-        * [.getTileUrls(layer, bounds, zoom)](#module_TileManager.getTileUrls) ⇒ <code>Array.&lt;tileInfo&gt;</code>
+        * [.getTileUrls(layer, bounds, zoom[, crs])](#module_TileManager.getTileUrls) ⇒ <code>Array.&lt;tileInfo&gt;</code>
         * [.getStoredTilesAsJson(layer, tiles)](#module_TileManager.getStoredTilesAsJson) ⇒ <code>object</code>
         * [.removeTile(key)](#module_TileManager.removeTile) ⇒ <code>Promise</code>
         * [.getTile(key)](#module_TileManager.getTile) ⇒ <code>Promise.&lt;Blob&gt;</code>
@@ -65,31 +65,31 @@ import * from 'leaflet.offline/TileManager';
 <a name="module_TileManager.getStorageLength"></a>
 
 ### TileManager.getStorageLength() ⇒ <code>Promise.&lt;Number&gt;</code>
-**Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
-**Returns**: <code>Promise.&lt;Number&gt;</code> - get number of store tiles  
+**Kind**: static method of [<code>TileManager</code>](#module_TileManager)
+**Returns**: <code>Promise.&lt;Number&gt;</code> - get number of store tiles
 <a name="module_TileManager.getStorageInfo"></a>
 
 ### TileManager.getStorageInfo(urlTemplate) ⇒ <code>Promise.&lt;Array.&lt;tileInfo&gt;&gt;</code>
-**Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
+**Kind**: static method of [<code>TileManager</code>](#module_TileManager)
 
 | Param | Type |
 | --- | --- |
-| urlTemplate | <code>string</code> | 
+| urlTemplate | <code>string</code> |
 
-**Example**  
+**Example**
 ```js
 getStorageInfo('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
 ```
 <a name="module_TileManager.downloadTile"></a>
 
 ### TileManager.downloadTile(tileUrl) ⇒ <code>Promise.&lt;blob&gt;</code>
-**Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
+**Kind**: static method of [<code>TileManager</code>](#module_TileManager)
 
 | Param | Type |
 | --- | --- |
-| tileUrl | <code>string</code> | 
+| tileUrl | <code>string</code> |
 
-**Example**  
+**Example**
 ```js
 downloadTile(tileInfo.url).then(blob => saveTile(tileInfo, blob))
 ```
@@ -98,21 +98,21 @@ downloadTile(tileInfo.url).then(blob => saveTile(tileInfo, blob))
 ### TileManager.saveTile(tileInfo, blob) ⇒ <code>Promise</code>
 TODO validate tileinfo props?
 
-**Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
+**Kind**: static method of [<code>TileManager</code>](#module_TileManager)
 
 | Param | Type |
 | --- | --- |
-| tileInfo | <code>tileInfo</code> | 
-| blob | <code>Blob</code> | 
+| tileInfo | <code>tileInfo</code> |
+| blob | <code>Blob</code> |
 
-**Example**  
+**Example**
 ```js
 saveTile(tileInfo, blob).then(() => console.log(`saved tile from ${tileInfo.url}`))
 ```
 <a name="module_TileManager.getTileUrl"></a>
 
 ### TileManager.getTileUrl(urlTemplate, data) ⇒ <code>string</code>
-**Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
+**Kind**: static method of [<code>TileManager</code>](#module_TileManager)
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -122,16 +122,17 @@ saveTile(tileInfo, blob).then(() => console.log(`saved tile from ${tileInfo.url}
 
 <a name="module_TileManager.getTileUrls"></a>
 
-### TileManager.getTileUrls(layer, bounds, zoom) ⇒ <code>Array.&lt;tileInfo&gt;</code>
-**Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
+### TileManager.getTileUrls(layer, bounds, zoom[, crs = L.CRS.3857]) ⇒ <code>Array.&lt;tileInfo&gt;</code>
+**Kind**: static method of [<code>TileManager</code>](#module_TileManager)
 
 | Param | Type | Description |
 | --- | --- | --- |
 | layer | <code>object</code> | leaflet tilelayer |
 | bounds | <code>object</code> | L.bounds |
 | zoom | <code>number</code> | zoomlevel 0-19 |
+| [crs] | <code>L.CRS</code> | Map CRS to calculate world tile bounds (needed for TMS schemes). Optional, defaults to `L.CRS.3857` |
 
-**Example**  
+**Example**
 ```js
 const p1 = L.point(10, 10)
 const p2 = L.point(40, 60)
@@ -142,15 +143,15 @@ getTileUrls(layer, L.bounds(p1,p2), 12)
 ### TileManager.getStoredTilesAsJson(layer, tiles) ⇒ <code>object</code>
 Get a geojson of tiles from one resource
 
-**Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
-**Returns**: <code>object</code> - geojson  
+**Kind**: static method of [<code>TileManager</code>](#module_TileManager)
+**Returns**: <code>object</code> - geojson
 
 | Param | Type |
 | --- | --- |
-| layer | <code>object</code> | 
-| tiles | <code>Array.&lt;tileInfo&gt;</code> | 
+| layer | <code>object</code> |
+| tiles | <code>Array.&lt;tileInfo&gt;</code> |
 
-**Example**  
+**Example**
 ```js
 const urlTemplate = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const getGeoJsonData = () => LeafletOffline.getStorageInfo(urlTemplate)
@@ -167,33 +168,33 @@ getGeoJsonData().then((geojson) => {
 ### TileManager.removeTile(key) ⇒ <code>Promise</code>
 Remove tile by key
 
-**Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
+**Kind**: static method of [<code>TileManager</code>](#module_TileManager)
 
 | Param | Type |
 | --- | --- |
-| key | <code>string</code> | 
+| key | <code>string</code> |
 
 <a name="module_TileManager.getTile"></a>
 
 ### TileManager.getTile(key) ⇒ <code>Promise.&lt;Blob&gt;</code>
 Get single tile blob
 
-**Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
+**Kind**: static method of [<code>TileManager</code>](#module_TileManager)
 
 | Param | Type |
 | --- | --- |
-| key | <code>string</code> | 
+| key | <code>string</code> |
 
 <a name="module_TileManager.truncate"></a>
 
 ### TileManager.truncate() ⇒ <code>Promise</code>
 Remove everything
 
-**Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
+**Kind**: static method of [<code>TileManager</code>](#module_TileManager)
 <a name="module_TileManager..tileInfo"></a>
 
 ### TileManager~tileInfo : <code>Object</code>
-**Kind**: inner typedef of [<code>TileManager</code>](#module_TileManager)  
+**Kind**: inner typedef of [<code>TileManager</code>](#module_TileManager)
 **Properties**
 
 | Name | Type | Description |
@@ -208,12 +209,12 @@ Remove everything
 <a name="ControlSaveTiles"></a>
 
 ## ControlSaveTiles
-**Kind**: global class  
+**Kind**: global class
 **Properties**
 
 | Name | Type |
 | --- | --- |
-| status | [<code>ControlStatus</code>](#ControlStatus) | 
+| status | [<code>ControlStatus</code>](#ControlStatus) |
 
 
 * [ControlSaveTiles](#ControlSaveTiles)
@@ -226,7 +227,7 @@ Remove everything
 ### new ControlSaveTiles()
 Shows control on map to save tiles
 
-**Example**  
+**Example**
 ```js
 const controlSaveTiles = L.control.savetiles(baseLayer, {
 zoomlevels: [13, 16], // optional zoomlevels to save, default current zoomlevel
@@ -249,28 +250,28 @@ rmText: '<i class="fa fa-trash" aria-hidden="true"  title="Remove tiles"></i>',
 ### ControlSaveTiles.setLayer(layer)
 Change baseLayer
 
-**Kind**: static method of [<code>ControlSaveTiles</code>](#ControlSaveTiles)  
+**Kind**: static method of [<code>ControlSaveTiles</code>](#ControlSaveTiles)
 
 | Param | Type |
 | --- | --- |
-| layer | [<code>TileLayerOffline</code>](#TileLayerOffline) | 
+| layer | [<code>TileLayerOffline</code>](#TileLayerOffline) |
 
 <a name="ControlSaveTiles.setOption"></a>
 
 ### ControlSaveTiles.setOption(name, value)
 Update a config option
 
-**Kind**: static method of [<code>ControlSaveTiles</code>](#ControlSaveTiles)  
+**Kind**: static method of [<code>ControlSaveTiles</code>](#ControlSaveTiles)
 
 | Param | Type |
 | --- | --- |
-| name | <code>string</code> | 
-| value | <code>mixed</code> | 
+| name | <code>string</code> |
+| value | <code>mixed</code> |
 
 <a name="TileLayerOffline"></a>
 
 ## TileLayerOffline
-**Kind**: global class  
+**Kind**: global class
 
 * [TileLayerOffline](#TileLayerOffline)
     * [new TileLayerOffline()](#new_TileLayerOffline_new)
@@ -287,7 +288,7 @@ Update a config option
 ### new TileLayerOffline()
 A layer that uses stored tiles when available. Falls back to online.
 
-**Example**  
+**Example**
 ```js
 const tileLayerOffline = L.tileLayer
 .offline('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -302,50 +303,50 @@ const tileLayerOffline = L.tileLayer
 ### "storagesize"
 Control finished calculating storage size
 
-**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)  
+**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)
 <a name="TileLayerOffline.event_savestart"></a>
 
 ### "savestart"
 Start saving tiles
 
-**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)  
+**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)
 <a name="TileLayerOffline.event_loadtileend"></a>
 
 ### "loadtileend"
 Tile fetched
 
-**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)  
+**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)
 <a name="TileLayerOffline.event_loadend"></a>
 
 ### "loadend"
 All tiles fetched
 
-**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)  
+**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)
 <a name="TileLayerOffline.event_savetileend"></a>
 
 ### "savetileend"
 Tile saved
 
-**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)  
+**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)
 <a name="TileLayerOffline.event_saveend"></a>
 
 ### "saveend"
 All tiles saved
 
-**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)  
+**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)
 <a name="TileLayerOffline.event_tilesremoved"></a>
 
 ### "tilesremoved"
 Tile removed
 
-**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)  
+**Kind**: event emitted by [<code>TileLayerOffline</code>](#TileLayerOffline)
 <a name="ControlStatus"></a>
 
 ## ControlStatus : <code>Object</code>
 Status of ControlSaveTiles, keeps info about process during downloading
 ans saving tiles. Used internal and as object for events.
 
-**Kind**: global typedef  
+**Kind**: global typedef
 **Properties**
 
 | Name | Type | Description |
@@ -361,12 +362,12 @@ ans saving tiles. Used internal and as object for events.
 ## L.control
 Leaflet control
 
-**Kind**: global external  
-**See**: [Control](https://leafletjs.com/reference-1.6.0.html#control)  
+**Kind**: global external
+**See**: [Control](https://leafletjs.com/reference-1.6.0.html#control)
 <a name="external_L.control.savetiles"></a>
 
 ### L.control.savetiles(baseLayer) ⇒ [<code>ControlSaveTiles</code>](#ControlSaveTiles)
-**Kind**: static method of [<code>L.control</code>](#external_L.control)  
+**Kind**: static method of [<code>L.control</code>](#external_L.control)
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -391,13 +392,13 @@ Leaflet control
 ## L.tileLayer
 Leaflet tilelayer
 
-**Kind**: global external  
-**See**: [TileLayer](https://leafletjs.com/reference-1.6.0.html#tilelayer)  
+**Kind**: global external
+**See**: [TileLayer](https://leafletjs.com/reference-1.6.0.html#tilelayer)
 <a name="external_L.tileLayer.offline"></a>
 
 ### L.tileLayer.offline(url, options) ⇒ [<code>TileLayerOffline</code>](#TileLayerOffline)
-**Kind**: static method of [<code>L.tileLayer</code>](#external_L.tileLayer)  
-**Returns**: [<code>TileLayerOffline</code>](#TileLayerOffline) - an instance of TileLayerOffline  
+**Kind**: static method of [<code>L.tileLayer</code>](#external_L.tileLayer)
+**Returns**: [<code>TileLayerOffline</code>](#TileLayerOffline) - an instance of TileLayerOffline
 
 | Param | Type | Description |
 | --- | --- | --- |
