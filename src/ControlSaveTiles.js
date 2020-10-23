@@ -217,7 +217,7 @@ const ControlSaveTiles = L.Control.extend(
     _loadTile: async function _loadTile(jtile) {
       const self = this;
       const tile = jtile;
-      downloadTile(tile.url).then((blob) => {
+      await downloadTile(tile.url).then((blob) => {
         self.status.lengthLoaded += 1;
         self._saveTile(tile, blob);
         self._baseLayer.fire('loadtileend', self.status);
@@ -286,7 +286,7 @@ const ControlSaveTiles = L.Control.extend(
  * @property {string} [options.rmText] html for remove button, deflault -
  * @property {number} [options.maxZoom] maximum zoom level that will be reached
  * when saving tiles with saveWhatYouSee. Default 19
- * @property {number} [options.parallel] parralel downloads (default 50)
+ * @property {number} [options.parallel] parallel downloads (default 50)
  * @property {boolean} [options.saveWhatYouSee] save the tiles that you see
  * on screen plus deeper zooms, ignores zoomLevels options. Default false
  * @property {function} [options.confirm] function called before confirm, default null.
