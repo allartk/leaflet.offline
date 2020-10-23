@@ -1,6 +1,8 @@
 import L from 'leaflet';
 import { getTileUrls, getTileUrl, getTile } from './TileManager';
 
+const noop = () => { };
+
 /**
  * A layer that uses stored tiles when available. Falls back to online.
  *
@@ -26,7 +28,7 @@ const TileLayerOffline = L.TileLayer.extend(
      */
     createTile(coords, done) {
       let error;
-      const tile = L.TileLayer.prototype.createTile.call(this, coords, () => {});
+      const tile = L.TileLayer.prototype.createTile.call(this, coords, noop);
       const url = tile.src;
       tile.src = '';
       this.setDataUrl(coords)
@@ -63,8 +65,16 @@ const TileLayerOffline = L.TileLayer.extend(
      * @return {string} unique identifier.
      */
     _getStorageKey(coords) {
+      let { y } = coords;
+      if (this._map) {
+        const invertedY = this._globalTileRange.max.y - coords.y;
+        y = this.options.tms ? invertedY : coords.y;
+      }
       return getTileUrl(this._url, {
         ...coords,
+        // TMS compliance
+        y,
+        '-y': y,
         ...this.options,
         s: this.options.subdomains['0'],
       });
@@ -76,8 +86,9 @@ const TileLayerOffline = L.TileLayer.extend(
      * @param  {number} zoom
      * @return {object[]} the tile urls, key, url, x, y, z
      */
-    getTileUrls(bounds, zoom) {
-      return getTileUrls(this, bounds, zoom);
+    getTileUrls(bounds, zoom, crs) {
+      const currentCrs = this._map ? this._map.options.crs : crs;
+      return getTileUrls(this, bounds, zoom, currentCrs);
     },
   },
 );

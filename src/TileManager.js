@@ -120,20 +120,29 @@ export function getTileUrl(urlTemplate, data) {
  * @param {object} layer leaflet tilelayer
  * @param {object} bounds L.bounds
  * @param {number} zoom zoomlevel 0-19
+ * @param {L.CRS} [crs] to calculate the world pixel bounds for TMS scheme
  *
  * @return {Array.<tileInfo>}
  */
-export function getTileUrls(layer, bounds, zoom) {
+export function getTileUrls(layer, bounds, zoom, crs = L.CRS.EPSG3857) {
   const tiles = [];
   const tileBounds = L.bounds(
     bounds.min.divideBy(layer.getTileSize().x).floor(),
     bounds.max.divideBy(layer.getTileSize().x).floor(),
   );
+  const worldTileBounds = layer._pxBoundsToTileRange(crs.getProjectedBounds(zoom));
   for (let j = tileBounds.min.y; j <= tileBounds.max.y; j += 1) {
     for (let i = tileBounds.min.x; i <= tileBounds.max.x; i += 1) {
-      const tilePoint = new L.Point(i, j);
+      const x = i;
+      let y = j;
+      // invert y coordinate for TMS tile schemes
+      const invertedY = worldTileBounds.max.y - y;
+      if (layer.options.tms) {
+        y = invertedY;
+      }
+      const tilePoint = new L.Point(i, y);
       const data = {
-        ...layer.options, x: i, y: j, z: zoom,
+        ...layer.options, x, y, z: zoom,
       };
       tiles.push({
         key: getTileUrl(layer._url, {
@@ -145,9 +154,10 @@ export function getTileUrls(layer, bounds, zoom) {
           s: layer._getSubdomain(tilePoint),
         }),
         z: zoom,
-        x: i,
-        y: j,
+        x,
+        y,
         urlTemplate: layer._url,
+        '-y': invertedY,
       });
     }
   }
@@ -173,32 +183,35 @@ export function getTileUrls(layer, bounds, zoom) {
  *
  * @return {object} geojson
  */
-export function getStoredTilesAsJson(layer, tiles) {
+export function getStoredTilesAsJson(layer, tiles, crs = L.CRS.EPSG3857) {
   const featureCollection = {
     type: 'FeatureCollection',
     features: [],
   };
+  const tileSize = layer.getTileSize();
   for (let i = 0; i < tiles.length; i += 1) {
-    const topLeftPoint = new L.Point(
-      tiles[i].x * layer.getTileSize().x,
-      tiles[i].y * layer.getTileSize().y,
+    const tile = tiles[i];
+    let { y } = tile;
+    const { x, z: zoom } = tile;
+    const worldTileBounds = layer._pxBoundsToTileRange(
+      crs.getProjectedBounds(zoom),
     );
+    if (layer.options.tms) {
+      const invertedY = worldTileBounds.max.y - y;
+      y = invertedY;
+    }
+
+    const topLeftPoint = new L.Point(x * tileSize.x, y * tileSize.y);
     const bottomRightPoint = new L.Point(
-      topLeftPoint.x + layer.getTileSize().x,
-      topLeftPoint.y + layer.getTileSize().y,
+      topLeftPoint.x + tileSize.x,
+      topLeftPoint.y + tileSize.y,
     );
 
-    const topLeftlatlng = L.CRS.EPSG3857.pointToLatLng(
-      topLeftPoint,
-      tiles[i].z,
-    );
-    const botRightlatlng = L.CRS.EPSG3857.pointToLatLng(
-      bottomRightPoint,
-      tiles[i].z,
-    );
+    const topLeftlatlng = crs.pointToLatLng(topLeftPoint, zoom);
+    const botRightlatlng = crs.pointToLatLng(bottomRightPoint, zoom);
     featureCollection.features.push({
       type: 'Feature',
-      properties: tiles[i],
+      properties: tile,
       geometry: {
         type: 'Polygon',
         coordinates: [
