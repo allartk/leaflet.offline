@@ -183,32 +183,35 @@ export function getTileUrls(layer, bounds, zoom, crs = L.CRS.EPSG3857) {
  *
  * @return {object} geojson
  */
-export function getStoredTilesAsJson(layer, tiles) {
+export function getStoredTilesAsJson(layer, tiles, crs = L.CRS.EPSG3857) {
   const featureCollection = {
     type: 'FeatureCollection',
     features: [],
   };
+  const tileSize = layer.getTileSize();
   for (let i = 0; i < tiles.length; i += 1) {
-    const topLeftPoint = new L.Point(
-      tiles[i].x * layer.getTileSize().x,
-      tiles[i].y * layer.getTileSize().y,
+    const tile = tiles[i];
+    let { y } = tile;
+    const { x, z: zoom } = tile;
+    const worldTileBounds = layer._pxBoundsToTileRange(
+      crs.getProjectedBounds(zoom),
     );
+    if (layer.options.tms) {
+      const invertedY = worldTileBounds.max.y - y;
+      y = invertedY;
+    }
+
+    const topLeftPoint = new L.Point(x * tileSize.x, y * tileSize.y);
     const bottomRightPoint = new L.Point(
-      topLeftPoint.x + layer.getTileSize().x,
-      topLeftPoint.y + layer.getTileSize().y,
+      topLeftPoint.x + tileSize.x,
+      topLeftPoint.y + tileSize.y,
     );
 
-    const topLeftlatlng = L.CRS.EPSG3857.pointToLatLng(
-      topLeftPoint,
-      tiles[i].z,
-    );
-    const botRightlatlng = L.CRS.EPSG3857.pointToLatLng(
-      bottomRightPoint,
-      tiles[i].z,
-    );
+    const topLeftlatlng = crs.pointToLatLng(topLeftPoint, zoom);
+    const botRightlatlng = crs.pointToLatLng(bottomRightPoint, zoom);
     featureCollection.features.push({
       type: 'Feature',
-      properties: tiles[i],
+      properties: tile,
       geometry: {
         type: 'Polygon',
         coordinates: [

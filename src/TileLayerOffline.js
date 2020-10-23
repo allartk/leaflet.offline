@@ -65,8 +65,16 @@ const TileLayerOffline = L.TileLayer.extend(
      * @return {string} unique identifier.
      */
     _getStorageKey(coords) {
+      let { y } = coords;
+      if (this._map) {
+        const invertedY = this._globalTileRange.max.y - coords.y;
+        y = this.options.tms ? invertedY : coords.y;
+      }
       return getTileUrl(this._url, {
         ...coords,
+        // TMS compliance
+        y,
+        '-y': y,
         ...this.options,
         s: this.options.subdomains['0'],
       });
@@ -78,8 +86,9 @@ const TileLayerOffline = L.TileLayer.extend(
      * @param  {number} zoom
      * @return {object[]} the tile urls, key, url, x, y, z
      */
-    getTileUrls(bounds, zoom) {
-      return getTileUrls(this, bounds, zoom);
+    getTileUrls(bounds, zoom, crs) {
+      const currentCrs = this._map ? this._map.options.crs : crs;
+      return getTileUrls(this, bounds, zoom, currentCrs);
     },
   },
 );
