@@ -1,9 +1,7 @@
 /**
  * Api methods used in control and layer
  * For advanced usage
- * ```js
- * import * from 'leaflet.offline/TileManager';
- * ```
+ *
  * @module TileManager
  *
  */
@@ -31,6 +29,11 @@ const dbPromise = openDB('leaflet.offline', 2, {
 
 /**
  *
+ * @example
+ * ```js
+ * import { getStorageLength } from 'leaflet.offline'
+ * getStorageLength().then(i => console.log(i + 'tiles in storage'))
+ * ```
  * @typedef {Object} tileInfo
  * @property {string} key storage key
  * @property {string} url resolved url
@@ -38,9 +41,6 @@ const dbPromise = openDB('leaflet.offline', 2, {
  * @property {string} x left point of tile
  * @property {string} y top point coord of tile
  * @property {string} z tile zoomlevel
- */
-
-/**
  * @return {Promise<Number>} get number of store tiles
  */
 export async function getStorageLength() {
@@ -49,8 +49,10 @@ export async function getStorageLength() {
 
 /**
  * @example
+ * ```js
+ * import { getStorageInfo } from 'leaflet.offline'
  * getStorageInfo('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
- *
+ * ```
  * @param {string} urlTemplate
  *
  * @return {Promise<tileInfo[]>}
@@ -66,8 +68,10 @@ export async function getStorageInfo(urlTemplate) {
 
 /**
  * @example
+ * ```js
+ * import { downloadTile } from 'leaflet.offline'
  * downloadTile(tileInfo.url).then(blob => saveTile(tileInfo, blob))
- *
+ * ```
  * @param {string} tileUrl
  * @return {Promise<blob>}
  */
@@ -83,7 +87,9 @@ export async function downloadTile(tileUrl) {
  * TODO validate tileinfo props?
  *
  * @example
+ * ```js
  * saveTile(tileInfo, blob).then(() => console.log(`saved tile from ${tileInfo.url}`))
+ * ```
  *
  * @param {tileInfo} tileInfo
  * @param {Blob} blob

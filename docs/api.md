@@ -4,7 +4,6 @@
 <dt><a href="#module_TileManager">TileManager</a></dt>
 <dd><p>Api methods used in control and layer
 For advanced usage</p>
-<pre><code class="language-js">import * from &#39;leaflet.offline/TileManager&#39;;</code></pre>
 </dd>
 </dl>
 
@@ -42,14 +41,10 @@ ans saving tiles. Used internal and as object for events.</p>
 ## TileManager
 Api methods used in control and layer
 For advanced usage
-```js
-import * from 'leaflet.offline/TileManager';
-```
 
 
 * [TileManager](#module_TileManager)
     * _static_
-        * [.getStorageLength()](#module_TileManager.getStorageLength) ⇒ <code>Promise.&lt;Number&gt;</code>
         * [.getStorageInfo(urlTemplate)](#module_TileManager.getStorageInfo) ⇒ <code>Promise.&lt;Array.&lt;tileInfo&gt;&gt;</code>
         * [.downloadTile(tileUrl)](#module_TileManager.downloadTile) ⇒ <code>Promise.&lt;blob&gt;</code>
         * [.saveTile(tileInfo, blob)](#module_TileManager.saveTile) ⇒ <code>Promise</code>
@@ -60,13 +55,8 @@ import * from 'leaflet.offline/TileManager';
         * [.getTile(key)](#module_TileManager.getTile) ⇒ <code>Promise.&lt;Blob&gt;</code>
         * [.truncate()](#module_TileManager.truncate) ⇒ <code>Promise</code>
     * _inner_
-        * [~tileInfo](#module_TileManager..tileInfo) : <code>Object</code>
+        * [~tileInfo](#module_TileManager..tileInfo) ⇒ <code>Promise.&lt;Number&gt;</code>
 
-<a name="module_TileManager.getStorageLength"></a>
-
-### TileManager.getStorageLength() ⇒ <code>Promise.&lt;Number&gt;</code>
-**Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
-**Returns**: <code>Promise.&lt;Number&gt;</code> - get number of store tiles  
 <a name="module_TileManager.getStorageInfo"></a>
 
 ### TileManager.getStorageInfo(urlTemplate) ⇒ <code>Promise.&lt;Array.&lt;tileInfo&gt;&gt;</code>
@@ -78,6 +68,7 @@ import * from 'leaflet.offline/TileManager';
 
 **Example**  
 ```js
+import { getStorageInfo } from 'leaflet.offline'
 getStorageInfo('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
 ```
 <a name="module_TileManager.downloadTile"></a>
@@ -91,6 +82,7 @@ getStorageInfo('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
 
 **Example**  
 ```js
+import { downloadTile } from 'leaflet.offline'
 downloadTile(tileInfo.url).then(blob => saveTile(tileInfo, blob))
 ```
 <a name="module_TileManager.saveTile"></a>
@@ -192,8 +184,9 @@ Remove everything
 **Kind**: static method of [<code>TileManager</code>](#module_TileManager)  
 <a name="module_TileManager..tileInfo"></a>
 
-### TileManager~tileInfo : <code>Object</code>
+### TileManager~tileInfo ⇒ <code>Promise.&lt;Number&gt;</code>
 **Kind**: inner typedef of [<code>TileManager</code>](#module_TileManager)  
+**Returns**: <code>Promise.&lt;Number&gt;</code> - get number of store tiles  
 **Properties**
 
 | Name | Type | Description |
@@ -205,6 +198,11 @@ Remove everything
 | y | <code>string</code> | top point coord of tile |
 | z | <code>string</code> | tile zoomlevel |
 
+**Example**  
+```js
+import { getStorageLength } from 'leaflet.offline'
+getStorageLength().then(i => console.log(i + 'tiles in storage'))
+```
 <a name="ControlSaveTiles"></a>
 
 ## ControlSaveTiles
