@@ -7,8 +7,17 @@ import {
   getStoredTilesAsJson,
   removeTile,
   truncate,
+  downloadTile,
+  saveTile,
 } from './TileManager';
 
 export {
-  getStorageInfo, getTileUrls, getStorageLength, truncate, getStoredTilesAsJson, removeTile,
+  downloadTile,
+  getStorageInfo,
+  getTileUrls,
+  getStorageLength,
+  truncate,
+  getStoredTilesAsJson,
+  removeTile,
+  saveTile,
 };
