@@ -97,6 +97,8 @@ export async function downloadTile(tileUrl) {
  * @return {Promise}
  */
 export async function saveTile(tileInfo, blob) {
+  // console.log('Saving Tile'); // eslint-disable-line no-console
+  // console.log(tileInfo); // eslint-disable-line no-console
   return (await dbPromise).put(tileStoreName, {
     blob,
     ...tileInfo,
@@ -241,7 +243,9 @@ export async function removeTile(key) {
  * @returns {Promise<Blob>}
  */
 export async function getTile(key) {
-  return (await dbPromise).get(tileStoreName, key).then((result) => result.blob);
+  return (await dbPromise)
+    .get(tileStoreName, key)
+    .then((result) => (result === undefined ? undefined : result.blob));
 }
 
 /**
