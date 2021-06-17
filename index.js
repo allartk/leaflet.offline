@@ -28,6 +28,8 @@ const baseLayer = L.tileLayer
     attribution: 'Map data {attribution.OpenStreetMap}',
     subdomains: 'abc',
     minZoom: 13,
+    saveOnLoad: true,
+    downsample: true
   })
   .addTo(map);
 // add buttons to save tiles in area viewed
@@ -55,6 +57,7 @@ map.setView(
   {
     lat: 51.985,
     lng: 5,
+    zoom: 16,
   },
   16,
 );
