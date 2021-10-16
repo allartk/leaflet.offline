@@ -66,5 +66,8 @@
   },
   "lint-staged": {
     "src/**/*.js": "eslint --cache --fix"
+  },
+  "dependencies": {
+    "idb": "^6.1.4"
   }
 }
