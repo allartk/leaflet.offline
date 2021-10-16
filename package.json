@@ -55,11 +55,9 @@
     "rollup": "^2.58.0",
     "sinon": "^7.5.0"
   },
-  "dependencies": {
-    "idb": "^6.1.4"
-  },
   "peerDependencies": {
-    "leaflet": "^1.6.0"
+    "leaflet": "^1.6.0",
+    "idb": "^6.1.4"
   },
   "husky": {
     "hooks": {

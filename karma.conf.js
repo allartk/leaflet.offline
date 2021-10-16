@@ -1,10 +1,6 @@
-/* eslint-disable*/
-// Karma configuration
-// Generated on Wed Dec 28 2016 13:40:25 GMT+0100 (CET)
-var resolve = require('rollup-plugin-node-resolve');
-var commonjs = require('rollup-plugin-commonjs');
+const { babel } = require('@rollup/plugin-babel');
 
-module.exports = function(config) {
+module.exports = (config) => {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -13,14 +9,15 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha','chai'],
+    frameworks: ['mocha', 'chai'],
 
 
     // list of files / patterns to load in the browser
     files: [
       'node_modules/leaflet/dist/leaflet.js',
       'node_modules/sinon/pkg/sinon.js',
-      'test/*.js'
+      'node_modules/idb/build/iife/index-min.js',
+      'test/*.js',
     ],
 
 
@@ -40,27 +37,22 @@ module.exports = function(config) {
         name: 'LeafletOffline',
         sourcemap: 'inline',
         globals: {
-          //localforage: 'localforage',
           leaflet: 'L',
-          sinon: 'sinon'
+          sinon: 'sinon',
         },
       },
-     external: [
-       'leaflet',
-       //'localforage',
-       'sinon'
-     ],
-     plugins: [
-       resolve(),
-       commonjs()
-   ]
+      external: [
+        'leaflet',
+        'sinon',
+      ],
+      plugins: [babel({ babelHelpers: 'bundled' })],
     },
 
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['mocha','progress'],
+    reporters: ['mocha', 'progress'],
 
 
     // web server port
@@ -91,6 +83,6 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
-  })
-}
+    concurrency: Infinity,
+  });
+};
