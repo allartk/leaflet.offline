@@ -1,4 +1,4 @@
-import buble from '@rollup/plugin-buble';
+import { babel } from '@rollup/plugin-babel';
 
 export default {
   input: 'src/index.js',
@@ -11,13 +11,6 @@ export default {
       idb: 'idb',
     },
   },
-  plugins: [
-    buble({
-      objectAssign: true,
-      transforms: {
-        asyncAwait: false,
-      },
-    }),
-  ],
+  plugins: [babel({ babelHelpers: 'bundled' })],
   external: ['leaflet', 'idb'],
 };
