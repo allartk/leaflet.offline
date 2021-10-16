@@ -60,7 +60,11 @@ Visit http://localhost:3000/ and watch the page reload when you change.
 
 You can test your code with `npm test`. Please configure eslint in your editor if you wish to contribute.
 
-**pull requests welcome**
+**pull requests welcome** 
+
+Please one feature at a time, if you can split your PR, please do so.
+
+Also, do not mix a feature with package updates.
 
 ## Api
 
