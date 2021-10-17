@@ -1,4 +1,5 @@
 /* global L */
+import 'leaflet.offline';
 import { urlTemplate } from './const';
 import storageLayer from './storageLayer';
 

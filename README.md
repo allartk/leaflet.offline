@@ -52,11 +52,10 @@ import 'leaflet.offline'
 For running the example locally, you'll need to clone the project and run:
 
 ```
-npm install
-npm start
+npm i && npm run build
+cd docs
+npm install && npm run serve
 ```
-
-Visit http://localhost:3000/ and watch the page reload when you change.
 
 You can test your code with `npm test`. Please configure eslint in your editor if you wish to contribute.
 
