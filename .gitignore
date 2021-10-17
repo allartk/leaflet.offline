@@ -1,6 +1,6 @@
 /nbproject
 /bower_components
 node_modules
-dist
+/dist
 npm-debug.log
 .eslintcache

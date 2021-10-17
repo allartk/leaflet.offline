@@ -11,8 +11,6 @@
     "test": "karma  start karma.conf.js",
     "test:watch": "karma start --no-single-run karma.conf.js",
     "watch": "rollup -c -w",
-    "serve": "browser-sync start --server -f ./dist index.html",
-    "start": "npm-run-all -p serve watch",
     "preversion": "./node_modules/karma/bin/karma  start  karma.conf.js --single-run",
     "prepublish": "npm run build"
   },
@@ -34,7 +32,6 @@
     "@babel/core": "^7.15.8",
     "@babel/preset-env": "^7.15.8",
     "@rollup/plugin-babel": "^5.3.0",
-    "browser-sync": "^2.26.7",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
