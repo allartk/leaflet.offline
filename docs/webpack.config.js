@@ -5,6 +5,9 @@ module.exports = {
     index: path.join(__dirname, 'src', 'index.js'),
     list: path.join(__dirname, 'src', 'list.js'),
   },
+  output: {
+    publicPath: '/dist/',
+  },
   devServer: {
     static: {
       directory: path.join(__dirname),
