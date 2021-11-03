@@ -56,7 +56,8 @@
     "sinon": "^7.5.0"
   },
   "dependencies": {
-    "idb": "^4.0.5"
+    "idb": "^4.0.5",
+    "leaflet": "^1.7.1"
   },
   "peerDependencies": {
     "leaflet": "^1.6.0"
