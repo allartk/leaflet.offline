@@ -12,7 +12,7 @@
     "test:watch": "karma start --no-single-run karma.conf.js",
     "watch": "rollup -c -w",
     "preversion": "./node_modules/karma/bin/karma  start  karma.conf.js --single-run",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
