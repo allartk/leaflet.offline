@@ -38,7 +38,7 @@ The package and it's dependencies can also be downloaded into
 your existing project with [npm](http://npmjs.com):
 
 ```
-npm install leaflet.offline@next
+npm install leaflet.offline
 ```
 
 In your script add:
