@@ -228,9 +228,9 @@ Shows control on map to save tiles
 ```js
 const controlSaveTiles = L.control.savetiles(baseLayer, {
 zoomlevels: [13, 16], // optional zoomlevels to save, default current zoomlevel
-confirm(layer, succescallback) {
+confirm(layer, successCallback) {
   if (window.confirm(`Save ${layer._tilesforSave.length}`)) {
-    succescallback();
+    successCallback();
   }
 },
 confirmRemoval(layer, successCallback) {
@@ -379,7 +379,7 @@ Leaflet control
 | [options.saveText] | <code>string</code> | html for save button, default + |
 | [options.rmText] | <code>string</code> | html for remove button, deflault - |
 | [options.maxZoom] | <code>number</code> | maximum zoom level that will be reached when saving tiles with saveWhatYouSee. Default 19 |
-| [options.parallel] | <code>number</code> | parralel downloads (default 50) |
+| [options.parallel] | <code>number</code> | parallel downloads (default 50) |
 | [options.saveWhatYouSee] | <code>boolean</code> | save the tiles that you see on screen plus deeper zooms, ignores zoomLevels options. Default false |
 | [options.confirm] | <code>function</code> | function called before confirm, default null. Args of function are ControlStatus and callback. |
 | [options.confirmRemoval] | <code>function</code> | function called before confirm, default null |

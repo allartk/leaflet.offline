@@ -25,9 +25,9 @@ import {
  * @example
  * const controlSaveTiles = L.control.savetiles(baseLayer, {
  * zoomlevels: [13, 16], // optional zoomlevels to save, default current zoomlevel
- * confirm(layer, succescallback) {
+ * confirm(layer, successCallback) {
  *   if (window.confirm(`Save ${layer._tilesforSave.length}`)) {
- *     succescallback();
+ *     successCallback();
  *   }
  * },
  * confirmRemoval(layer, successCallback) {
@@ -173,7 +173,7 @@ const ControlSaveTiles = L.Control.extend(
         tiles = tiles.concat(this._baseLayer.getTileUrls(bounds, zoomlevels[i]));
       }
       this._resetStatus(tiles);
-      const succescallback = async () => {
+      const successCallback = async () => {
         this._baseLayer.fire('savestart', this.status);
         const loader = () => {
           if (tiles.length === 0) {
@@ -188,9 +188,9 @@ const ControlSaveTiles = L.Control.extend(
         }
       };
       if (this.options.confirm) {
-        this.options.confirm(this.status, succescallback);
+        this.options.confirm(this.status, successCallback);
       } else {
-        succescallback();
+        successCallback();
       }
     },
     /**
@@ -215,7 +215,7 @@ const ControlSaveTiles = L.Control.extend(
     _loadTile: async function _loadTile(jtile) {
       const self = this;
       const tile = jtile;
-      downloadTile(tile.url).then((blob) => {
+      await downloadTile(tile.url).then((blob) => {
         self.status.lengthLoaded += 1;
         self._saveTile(tile, blob);
         self._baseLayer.fire('loadtileend', self.status);
@@ -269,13 +269,11 @@ const ControlSaveTiles = L.Control.extend(
   },
 );
 
-
 /**
  * Leaflet control
  * @external "L.control"
  * @see {@link https://leafletjs.com/reference-1.6.0.html#control|Control}
  */
-
 
 /**
  * @function external:"L.control".savetiles
@@ -286,7 +284,7 @@ const ControlSaveTiles = L.Control.extend(
  * @property {string} [options.rmText] html for remove button, deflault -
  * @property {number} [options.maxZoom] maximum zoom level that will be reached
  * when saving tiles with saveWhatYouSee. Default 19
- * @property {number} [options.parallel] parralel downloads (default 50)
+ * @property {number} [options.parallel] parallel downloads (default 50)
  * @property {boolean} [options.saveWhatYouSee] save the tiles that you see
  * on screen plus deeper zooms, ignores zoomLevels options. Default false
  * @property {function} [options.confirm] function called before confirm, default null.
