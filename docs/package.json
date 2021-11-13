@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "jekyll": "docker run --rm --volume=\"$PWD:/srv/jekyll\" --publish [::1]:4000:4000 jekyll/minimal:stable jekyll serve --config _config.yml,_config.dev.yml",
     "build": "webpack --mode production",
+    "start": "concurrently 'npm run serve' 'npm run jekyll'",
     "serve": "webpack serve --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
