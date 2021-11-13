@@ -12,7 +12,7 @@
     "test:watch": "karma start --no-single-run karma.conf.js",
     "watch": "rollup -c -w",
     "preversion": "./node_modules/karma/bin/karma  start  karma.conf.js --single-run",
-    "prepare": "npm run build"
+    "prepare": "npm run build && husky install"
   },
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
-    "husky": "^4.2.5",
+    "husky": "^7.0.4",
     "jsdoc-to-markdown": "^7.1.0",
     "karma": "^6.3.8",
     "karma-chai": "^0.1.0",
@@ -55,11 +55,6 @@
   "peerDependencies": {
     "leaflet": "^1.6.0",
     "idb": "^6.1.4"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "src/**/*.js": "eslint --cache --fix"
