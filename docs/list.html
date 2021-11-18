@@ -1,35 +1,29 @@
 ---
 layout: default
 script: list.js
+page.title: Storage
 ---
-<div class="row">
-    <div class="col-md-12">
-        <h1>Storage</h1>
-        <p>
-            <a href="https://github.com/allartk/leaflet.offline/blob/master/docs/src/list.js">Script</a>
-        </p>
-        <p>
-            Total <span id="storage"></span>
-            <button class="btn btn-danger" id="remove_tiles">
-                <i class="fa fa-trash" aria-hidden="true" title="Remove tiles"></i>
-            </button>
-        </p>
-        <table class="table table-striped table-sm">
-            <colgroup>
-                <col>
-                <col>
-                <col>
-                <col>
-            </colgroup>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Source url</th>
-                    <th>Storage key</th>
-                    <th>Bytes</th>
-                </tr>
-            </thead>
-            <tbody id="tileinforows"></tbody>
-        </table>
-    </div>
-</div>
+
+<p>
+    Total <span id="storage"></span>
+    <button class="btn btn-danger" id="remove_tiles">
+        <i class="fa fa-trash" aria-hidden="true" title="Remove tiles"></i>
+    </button>
+</p>
+<table class="table table-striped table-sm">
+    <colgroup>
+        <col>
+        <col>
+        <col>
+        <col>
+    </colgroup>
+    <thead>
+        <tr>
+            <th></th>
+            <th>Source url</th>
+            <th>Storage key</th>
+            <th>Bytes</th>
+        </tr>
+    </thead>
+    <tbody id="tileinforows"></tbody>
+</table>
