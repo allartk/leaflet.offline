@@ -5,10 +5,10 @@
             Leaflet.offline
         </a>
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item {% if active == 'index' %}active{% endif %}">
+            <li class="nav-item {% if page.url == '/' %}active{% endif %}">
                 <a class="nav-link" href="index.html">Map</a>
             </li>
-            <li class="nav-item {% if active == 'list' %}active{% endif %}">
+            <li class="nav-item {% if page.url == '/list.html' %}active{% endif %}">
                 <a class="nav-link" href="list.html">Storage</a>
             </li>
             <li class="nav-item">

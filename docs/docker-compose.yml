@@ -1,0 +1,9 @@
+version: "3"
+services:
+  jekyll:
+    image: jekyll/minimal:stable
+    volumes: 
+      - .:/srv/jekyll
+    command: jekyll serve --config _config.yml,_config.dev.yml --force_polling      
+    ports:
+      - 4000:4000
