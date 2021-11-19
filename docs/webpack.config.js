@@ -4,7 +4,7 @@ module.exports = {
   entry: {
     index: path.join(__dirname, 'src', 'index.js'),
     list: path.join(__dirname, 'src', 'list.js'),
-    gridlayer: path.join(__dirname, 'src', 'gridlayer.js'),
+    apilayer: path.join(__dirname, 'src', 'apilayer.js'),
   },
   output: {
     publicPath: '/dist/',
