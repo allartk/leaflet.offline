@@ -1,4 +1,4 @@
-assets_base_url: '/'
+assets_base_url: ''
 exclude:
   - node_modules
   - package.json
