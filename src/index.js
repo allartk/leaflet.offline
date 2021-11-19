@@ -9,9 +9,11 @@ import {
   truncate,
   downloadTile,
   saveTile,
+  getTile,
 } from './TileManager';
 
 export {
+  getTile,
   downloadTile,
   getStorageInfo,
   getTileUrls,
