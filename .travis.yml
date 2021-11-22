@@ -1,8 +1,0 @@
-sudo: false
-language: node_js
-node_js:
-  - "12"
-script:
-  - npx eslint src test
-  - npm test
-  
