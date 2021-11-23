@@ -97,6 +97,10 @@ export async function downloadTile(tileUrl) {
  * @return {Promise}
  */
 export async function saveTile(tileInfo, blob) {
+  ['urlTemplate', 'z', 'x', 'y', 'key', 'url', 'createdAt'].forEach((key) => {
+    if (tileInfo[key] === undefined) { throw Error(`Missing ${key} prop`); }
+  });
+
   return (await dbPromise).put(tileStoreName, {
     blob,
     ...tileInfo,
@@ -154,6 +158,7 @@ export function getTileUrls(layer, bounds, zoom) {
         x: i,
         y: j,
         urlTemplate: layer._url,
+        createdAt: Date.now(),
       });
     }
   }

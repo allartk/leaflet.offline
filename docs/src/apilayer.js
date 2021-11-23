@@ -20,7 +20,7 @@ brtLayer.on('tileloadstart', (event) => {
     .then((blob) => {
       if (blob) {
         tile.src = URL.createObjectURL(blob);
-        console.log(`Loaded ${tile.src} from idb`);
+        console.debug(`Loaded ${tile.src} from idb`);
         return;
       }
       // create helper function for it?
