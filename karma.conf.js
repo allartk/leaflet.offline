@@ -1,3 +1,4 @@
+const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const { babel } = require('@rollup/plugin-babel');
 
 module.exports = (config) => {
@@ -45,7 +46,7 @@ module.exports = (config) => {
         'leaflet',
         'sinon',
       ],
-      plugins: [babel({ babelHelpers: 'bundled' })],
+      plugins: [nodeResolve(), babel({ babelHelpers: 'bundled' })],
     },
 
 
