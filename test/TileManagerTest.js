@@ -1,6 +1,4 @@
-/* global describe, it, assert L, beforeEach, afterEach */
-import { deleteDB } from 'idb';
-import sinon from 'sinon';
+/* global describe, it, assert L, beforeEach */
 import { getTileUrls, saveTile, truncate } from '../src/TileManager';
 
 describe('TileManager', () => {
