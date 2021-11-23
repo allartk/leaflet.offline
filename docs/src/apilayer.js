@@ -16,28 +16,32 @@ brtLayer.addTo(map);
 
 brtLayer.on('tileloadstart', (event) => {
   const { tile } = event;
-  getTile(tile.src)
+  const url = tile.src;
+  // reset tile.src, to not start download yet
+  tile.src = '';
+  getTile(url)
     .then((blob) => {
       if (blob) {
         tile.src = URL.createObjectURL(blob);
-        console.log(`Loaded ${tile.src} from idb`);
+        console.debug(`Loaded ${url} from idb`);
         return;
       }
+      tile.src = url;
       // create helper function for it?
       const { x, y, z } = event.coords;
       const { _url: urlTemplate } = event.target;
       const tileInfo = {
-        key: tile.src,
-        url: tile.src,
+        key: url,
+        url,
         x,
         y,
         z,
         urlTemplate,
         createdAt: Date.now(),
       };
-      downloadTile(tile.src)
+      downloadTile(url)
         .then((dl) => saveTile(tileInfo, dl))
-        .then(() => console.log(`Saved ${tile.src} in idb`));
+        .then(() => console.debug(`Saved ${url} in idb`));
     });
 });
 
