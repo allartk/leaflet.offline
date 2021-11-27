@@ -6,23 +6,23 @@
  *
  */
 
-import L from "leaflet";
-import { openDB, deleteDB } from "idb";
+import L from 'leaflet';
+import { openDB, deleteDB } from 'idb';
 
-const tileStoreName = "tileStore";
-const urlTemplateIndex = "urlTemplate";
+const tileStoreName = 'tileStore';
+const urlTemplateIndex = 'urlTemplate';
 
-const dbPromise = openDB("leaflet.offline", 2, {
+const dbPromise = openDB('leaflet.offline', 2, {
   upgrade(db, oldVersion) {
-    deleteDB("leaflet_offline");
-    deleteDB("leaflet_offline_areas");
+    deleteDB('leaflet_offline');
+    deleteDB('leaflet_offline_areas');
 
     if (oldVersion < 1) {
       const tileStore = db.createObjectStore(tileStoreName, {
-        keyPath: "key",
+        keyPath: 'key',
       });
-      tileStore.createIndex(urlTemplateIndex, "urlTemplate");
-      tileStore.createIndex("z", "z");
+      tileStore.createIndex(urlTemplateIndex, 'urlTemplate');
+      tileStore.createIndex('z', 'z');
     }
   },
 });
@@ -100,7 +100,7 @@ export async function downloadTile(tileUrl) {
  * @return {Promise}
  */
 export async function saveTile(tileInfo, blob) {
-  ["urlTemplate", "z", "x", "y", "key", "url", "createdAt"].forEach((key) => {
+  ['urlTemplate', 'z', 'x', 'y', 'key', 'url', 'createdAt'].forEach((key) => {
     if (tileInfo[key] === undefined) {
       throw Error(`Missing ${key} prop`);
     }
@@ -123,7 +123,7 @@ export async function saveTile(tileInfo, blob) {
 export function getTileUrl(urlTemplate, data) {
   return L.Util.template(urlTemplate, {
     ...data,
-    r: L.Browser.retina ? "@2x" : "",
+    r: L.Browser.retina ? '@2x' : '',
   });
 }
 /**
@@ -156,7 +156,7 @@ export function getTileUrls(layer, bounds, zoom) {
       tiles.push({
         key: getTileUrl(layer._url, {
           ...data,
-          s: layer.options.subdomains["0"],
+          s: layer.options.subdomains['0'],
         }),
         url: getTileUrl(layer._url, {
           ...data,
@@ -194,7 +194,7 @@ export function getTileUrls(layer, bounds, zoom) {
  */
 export function getStoredTilesAsJson(layer, tiles) {
   const featureCollection = {
-    type: "FeatureCollection",
+    type: 'FeatureCollection',
     features: [],
   };
   for (let i = 0; i < tiles.length; i += 1) {
@@ -216,10 +216,10 @@ export function getStoredTilesAsJson(layer, tiles) {
       tiles[i].z
     );
     featureCollection.features.push({
-      type: "Feature",
+      type: 'Feature',
       properties: tiles[i],
       geometry: {
-        type: "Polygon",
+        type: 'Polygon',
         coordinates: [
           [
             [topLeftlatlng.lng, topLeftlatlng.lat],
