@@ -60,7 +60,10 @@
     "idb": "^6.1.4"
   },
   "lint-staged": {
-    "src/**/*.js": "eslint --cache --fix"
+    "src/**/*.js": [
+      "eslint --cache --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "idb": "^6.1.4"
