@@ -2,3 +2,6 @@
 /bower_components
 node_modules
 npm-debug.log
+docs
+.vscode
+.eslintcache

@@ -12,7 +12,7 @@
     "test:watch": "karma start --no-single-run karma.conf.js",
     "watch": "rollup -c -w",
     "preversion": "./node_modules/karma/bin/karma  start  karma.conf.js --single-run",
-    "prepare": "npm run build && husky install"
+    "prepare": "npm run build && npx husky install"
   },
   "repository": {
     "type": "git",
