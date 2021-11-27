@@ -1,9 +1,22 @@
 import { getStorageInfo, truncate } from 'leaflet.offline';
-import { urlTemplate } from './const';
+import { urlTemplate, wmtsUrlTemplate } from './const';
 
+const layerSelector = document.getElementById('selectlayer');
 
-const createTable = () => getStorageInfo(urlTemplate)
-  .then((r) => {
+function createLayerOpts() {
+  const xyzOpt = document.createElement('option');
+  xyzOpt.value = urlTemplate;
+  xyzOpt.text = 'osm';
+  const wmtsOpt = document.createElement('option');
+  wmtsOpt.value = wmtsUrlTemplate;
+  wmtsOpt.text = 'wmts api layer';
+  layerSelector.add(xyzOpt);
+  layerSelector.add(wmtsOpt);
+  layerSelector.value = urlTemplate;
+}
+
+const createTable = (url) =>
+  getStorageInfo(url).then((r) => {
     document.getElementById('storage').innerHTML = r.length;
     const list = document.getElementById('tileinforows');
     list.innerHTML = '';
@@ -13,16 +26,23 @@ const createTable = () => getStorageInfo(urlTemplate)
         'beforeend',
         `<tr>
                 <td>${i}</td>
-                <td><span class="d-inline-block text-truncate">${tileInfo.url}</span></td>
-                <td><span class="d-inline-block text-truncate">${r[i].key}</span></td>
+                <td class="text-truncate">${tileInfo.url}</td>
+                <td class="text-truncate">${r[i].key}</td>
                 <td>${tileInfo.blob.size}</td>
-          </tr>`,
+          </tr>`
       );
     }
   });
-createTable();
 
-document.getElementById('remove_tiles').addEventListener(
-  'click',
-  () => truncate().then(() => createTable()),
-);
+createLayerOpts();
+createTable(layerSelector.value);
+
+document
+  .getElementById('remove_tiles')
+  .addEventListener('click', () =>
+    truncate().then(() => createTable(layerSelector.value))
+  );
+
+layerSelector.addEventListener('change', (e) => {
+  createTable(e.target.value);
+});
