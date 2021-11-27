@@ -26,7 +26,11 @@ const TileLayerOffline = L.TileLayer.extend(
      */
     createTile(coords, done) {
       let error;
-      const tile = L.TileLayer.prototype.createTile.call(this, coords, () => {});
+      const tile = L.TileLayer.prototype.createTile.call(
+        this,
+        coords,
+        () => {}
+      );
       const url = tile.src;
       tile.src = '';
       this.setDataUrl(coords)
@@ -36,8 +40,16 @@ const TileLayerOffline = L.TileLayer.extend(
         })
         .catch(() => {
           tile.src = url;
-          L.DomEvent.on(tile, 'load', L.Util.bind(this._tileOnLoad, this, done, tile));
-          L.DomEvent.on(tile, 'error', L.Util.bind(this._tileOnError, this, done, tile));
+          L.DomEvent.on(
+            tile,
+            'load',
+            L.Util.bind(this._tileOnLoad, this, done, tile)
+          );
+          L.DomEvent.on(
+            tile,
+            'error',
+            L.Util.bind(this._tileOnError, this, done, tile)
+          );
         });
       return tile;
     },
@@ -48,13 +60,12 @@ const TileLayerOffline = L.TileLayer.extend(
      * @return {Promise<string>} objecturl
      */
     setDataUrl(coords) {
-      return getTile(this._getStorageKey(coords))
-        .then((data) => {
-          if (data && typeof data === 'object') {
-            return URL.createObjectURL(data);
-          }
-          throw new Error('tile not found in storage');
-        });
+      return getTile(this._getStorageKey(coords)).then((data) => {
+        if (data && typeof data === 'object') {
+          return URL.createObjectURL(data);
+        }
+        throw new Error('tile not found in storage');
+      });
     },
     /**
      * get key to use for storage
@@ -79,7 +90,7 @@ const TileLayerOffline = L.TileLayer.extend(
     getTileUrls(bounds, zoom) {
       return getTileUrls(this, bounds, zoom);
     },
-  },
+  }
 );
 
 /**

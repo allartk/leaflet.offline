@@ -1,6 +1,9 @@
 import L from 'leaflet';
 import {
-  truncate, getStorageLength, downloadTile, saveTile,
+  truncate,
+  getStorageLength,
+  downloadTile,
+  saveTile,
 } from './TileManager';
 
 /**
@@ -120,7 +123,12 @@ const ControlSaveTiles = L.Control.extend(
     onAdd() {
       const container = L.DomUtil.create('div', 'savetiles leaflet-bar');
       const { options } = this;
-      this._createButton(options.saveText, 'savetiles', container, this._saveTiles);
+      this._createButton(
+        options.saveText,
+        'savetiles',
+        container,
+        this._saveTiles
+      );
       this._createButton(options.rmText, 'rmtiles', container, this._rmTiles);
       return container;
     },
@@ -168,9 +176,11 @@ const ControlSaveTiles = L.Control.extend(
       for (let i = 0; i < zoomlevels.length; i += 1) {
         bounds = L.bounds(
           this._map.project(latlngBounds.getNorthWest(), zoomlevels[i]),
-          this._map.project(latlngBounds.getSouthEast(), zoomlevels[i]),
+          this._map.project(latlngBounds.getSouthEast(), zoomlevels[i])
         );
-        tiles = tiles.concat(this._baseLayer.getTileUrls(bounds, zoomlevels[i]));
+        tiles = tiles.concat(
+          this._baseLayer.getTileUrls(bounds, zoomlevels[i])
+        );
       }
       this._resetStatus(tiles);
       const successCallback = async () => {
@@ -236,7 +246,8 @@ const ControlSaveTiles = L.Control.extend(
      * @param  {blob} blob    [description]
      * @return {void}         [description]
      */
-    _saveTile(tileInfo, blob) { // original is synchronous
+    _saveTile(tileInfo, blob) {
+      // original is synchronous
       const self = this;
       saveTile(tileInfo, blob)
         .then(() => {
@@ -266,7 +277,7 @@ const ControlSaveTiles = L.Control.extend(
         successCallback();
       }
     },
-  },
+  }
 );
 
 /**
@@ -292,4 +303,5 @@ const ControlSaveTiles = L.Control.extend(
  * @property {function} [options.confirmRemoval] function called before confirm, default null
  * @return {ControlSaveTiles}
  */
-L.control.savetiles = (baseLayer, options) => new ControlSaveTiles(baseLayer, options);
+L.control.savetiles = (baseLayer, options) =>
+  new ControlSaveTiles(baseLayer, options);
