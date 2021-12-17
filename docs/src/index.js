@@ -1,7 +1,8 @@
 /* global L */
 import 'leaflet.offline';
+import debounce  from 'debounce';
 import { urlTemplate } from './const';
-import storageLayer from './storageLayer';
+import storageLayer from './index/storageLayer';
 
 
 const map = L.map('map');
@@ -39,7 +40,7 @@ map.setView(
     lat: 52.090,
     lng: 5.118,
   },
-  16,
+  15,
 );
 // layer switcher control
 const layerswitcher = L.control
@@ -51,12 +52,22 @@ const layerswitcher = L.control
 storageLayer(baseLayer, layerswitcher);
 
 // events while saving a tile layer
-let progress;
+let progress, total;
+const showProgress = debounce(() => {
+  document.getElementById('progressbar').style.width = `${(progress/total) * 100}%`;
+  document.getElementById('progressbar').innerHTML = progress;  
+  if(progress === total) {
+    setTimeout(() => document.getElementById('progress').classList.remove('show'), 1000);    
+  }
+}, 10);
+
 baseLayer.on('savestart', (e) => {
   progress = 0;
-  document.getElementById('total').innerHTML = e._tilesforSave.length;
+  total = e._tilesforSave.length;
+  document.getElementById('progress').classList.add('show');  
+  document.getElementById('progressbar').style.width = '0%';
 });
 baseLayer.on('savetileend', () => {
-  progress += 1;
-  document.getElementById('progress').innerHTML = progress;
+  progress += 1;     
+  showProgress();
 });

@@ -1,7 +1,11 @@
 ---
 layout: default
 script: apilayer.js
-title: ApiLayer
+title: Custom
 ---
-<p>This WMTS layer autosaves all tiles.</p>
+<p>This leaflet WMTS layer uses the download & save methods from the 
+    <a href="https://github.com/allartk/leaflet.offline/blob/master/docs/api.md#tilemanagerdownloadtiletileurl--promiseblob" target="_blank">API</a> 
+    to save all viewed tiles for offline usage.
+</p>
+
 <div id="map" style="height: 75vh"></div>

@@ -56,8 +56,8 @@
     "sinon": "^12.0.1"
   },
   "peerDependencies": {
-    "leaflet": "^1.6.0",
-    "idb": "^6.1.4"
+    "idb": "^6.1.4",
+    "leaflet": "^1.6.0"
   },
   "lint-staged": {
     "src/**/*.js": [

@@ -1,6 +1,6 @@
 /* global L */
 import { getStorageInfo, getStoredTilesAsJson } from 'leaflet.offline';
-import { urlTemplate } from './const';
+import { urlTemplate } from '../const';
 
 
 export default function storageLayer(baseLayer, layerswitcher) {
