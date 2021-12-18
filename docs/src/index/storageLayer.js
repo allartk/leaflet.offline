@@ -14,7 +14,7 @@ export default function storageLayer(baseLayer, layerswitcher) {
       layer = L.geoJSON(geojson).bindPopup(
         (clickedLayer) => clickedLayer.feature.properties.key,
       );
-      layerswitcher.addOverlay(layer, 'stored tiles');
+      layerswitcher.addOverlay(layer, 'offline tiles');
     });
   };
 

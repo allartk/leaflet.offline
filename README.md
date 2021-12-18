@@ -3,9 +3,9 @@
 [![npm version](https://badge.fury.io/js/leaflet.offline.svg)](https://badge.fury.io/js/leaflet.offline)
 [![Build Status](https://travis-ci.org/allartk/leaflet.offline.png?branch=master)](https://travis-ci.org/allartk/leaflet.offline)
 
-Just a modern and slim library to store tiles offline.
+This library can be used to create maps, which are still available when you are offline and are fast when your connection is not. It works in the browser or can be used in an mobile app based on html and in progressive webapps.
 
-- [example](http://allartk.github.io/leaflet.offline/)
+- [examples](http://allartk.github.io/leaflet.offline/)
 - [api docs](docs/api.md)
 
 ## Dependencies

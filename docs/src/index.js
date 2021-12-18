@@ -57,14 +57,14 @@ const showProgress = debounce(() => {
   document.getElementById('progressbar').style.width = `${(progress/total) * 100}%`;
   document.getElementById('progressbar').innerHTML = progress;  
   if(progress === total) {
-    setTimeout(() => document.getElementById('progress').classList.remove('show'), 1000);    
+    setTimeout(() => document.getElementById('progress-wrapper').classList.remove('show'), 1000);    
   }
 }, 10);
 
 baseLayer.on('savestart', (e) => {
   progress = 0;
   total = e._tilesforSave.length;
-  document.getElementById('progress').classList.add('show');  
+  document.getElementById('progress-wrapper').classList.add('show');  
   document.getElementById('progressbar').style.width = '0%';
 });
 baseLayer.on('savetileend', () => {
