@@ -60,7 +60,7 @@ export async function getStorageLength() {
  *
  * @return {Promise<tileInfo[]>}
  */
-export async function getStorageInfo(urlTemplate) {
+export async function getStorageInfo(urlTemplate: string) {
   const range = IDBKeyRange.only(urlTemplate);
   return (await dbPromise).getAllFromIndex(
     tileStoreName,
