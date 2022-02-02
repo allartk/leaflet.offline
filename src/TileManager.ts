@@ -6,7 +6,7 @@
  *
  */
 
-import L from 'leaflet';
+import { bounds, Bounds, Browser, GridLayer, Point, TileLayer, Util } from 'leaflet';
 import { openDB, deleteDB } from 'idb';
 
 const tileStoreName = 'tileStore';
@@ -27,26 +27,24 @@ const dbPromise = openDB('leaflet.offline', 2, {
   },
 });
 
-/**
- * @typedef {Object} tileInfo
- * @property {string} key storage key
- * @property {string} url resolved url
- * @property {string} urlTemplate orig url, used to find tiles per layer
- * @property {string} x left point of tile
- * @property {string} y top point coord of tile
- * @property {string} z tile zoomlevel
- * @property {Number} createdAt
- */
+type tileInfo = {
+  key: string,
+  url: string,
+  urlTemplate: string,
+  x: Number,
+  y: Number,
+  z: Number,
+  createdAt: Number
+}
 
 /**
  * @example
  * ```js
  * import { getStorageLength } from 'leaflet.offline'
  * getStorageLength().then(i => console.log(i + 'tiles in storage'))
- * ```
- * @return {Promise<Number>} get number of store tiles
+ * ``` 
  */
-export async function getStorageLength() {
+export async function getStorageLength(): Promise<Number> {
   return (await dbPromise).count(tileStoreName);
 }
 
@@ -56,11 +54,8 @@ export async function getStorageLength() {
  * import { getStorageInfo } from 'leaflet.offline'
  * getStorageInfo('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
  * ```
- * @param {string} urlTemplate
- *
- * @return {Promise<tileInfo[]>}
  */
-export async function getStorageInfo(urlTemplate: string) {
+export async function getStorageInfo(urlTemplate: string): Promise<tileInfo[]> {
   const range = IDBKeyRange.only(urlTemplate);
   return (await dbPromise).getAllFromIndex(
     tileStoreName,
@@ -74,11 +69,9 @@ export async function getStorageInfo(urlTemplate: string) {
  * ```js
  * import { downloadTile } from 'leaflet.offline'
  * downloadTile(tileInfo.url).then(blob => saveTile(tileInfo, blob))
- * ```
- * @param {string} tileUrl
- * @return {Promise<blob>}
+ * ``` 
  */
-export async function downloadTile(tileUrl) {
+export async function downloadTile(tileUrl:string): Promise<Blob> {
   return fetch(tileUrl).then((response) => {
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.statusText}`);
@@ -86,44 +79,23 @@ export async function downloadTile(tileUrl) {
     return response.blob();
   });
 }
-/**
- * TODO validate tileinfo props?
- *
+/** 
  * @example
  * ```js
  * saveTile(tileInfo, blob).then(() => console.log(`saved tile from ${tileInfo.url}`))
  * ```
- *
- * @param {tileInfo} tileInfo
- * @param {Blob} blob
- *
- * @return {Promise}
  */
-export async function saveTile(tileInfo, blob) {
-  ['urlTemplate', 'z', 'x', 'y', 'key', 'url', 'createdAt'].forEach((key) => {
-    if (tileInfo[key] === undefined) {
-      throw Error(`Missing ${key} prop`);
-    }
-  });
-
+export async function saveTile(tileInfo: tileInfo, blob: Blob): Promise<IDBValidKey> {
   return (await dbPromise).put(tileStoreName, {
     blob,
     ...tileInfo,
   });
 }
 
-/**
- *
- * @param {string} urlTemplate
- * @param {object} data  x, y, z, s
- * @param {string} data.s subdomain
- *
- * @returns {string}
- */
-export function getTileUrl(urlTemplate, data) {
-  return L.Util.template(urlTemplate, {
+export function getTileUrl(urlTemplate: string, data: {x: string, y: string, z: Number, s: string }): string {
+  return Util.template(urlTemplate, {
     ...data,
-    r: L.Browser.retina ? '@2x' : '',
+    r: Browser.retina ? '@2x' : '',
   });
 }
 /**
@@ -131,22 +103,20 @@ export function getTileUrl(urlTemplate, data) {
  * const p1 = L.point(10, 10)
  * const p2 = L.point(40, 60)
  * getTileUrls(layer, L.bounds(p1,p2), 12)
- *
- * @param {object} layer leaflet tilelayer
- * @param {object} bounds L.bounds
- * @param {number} zoom zoomlevel 0-19
- *
- * @return {Array.<tileInfo>}
+ * 
  */
-export function getTileUrls(layer, bounds, zoom) {
-  const tiles = [];
-  const tileBounds = L.bounds(
-    bounds.min.divideBy(layer.getTileSize().x).floor(),
-    bounds.max.divideBy(layer.getTileSize().x).floor()
+export function getTileUrls(layer: TileLayer, area: Bounds, zoom: Number): tileInfo[] {
+  const tiles: tileInfo[] = [];
+  if(!area.min || !area.max) {
+    return tiles;
+  }
+  const tileBounds = bounds(
+    area.min.divideBy(layer.getTileSize().x).floor(),
+    area.max.divideBy(layer.getTileSize().x).floor()
   );
-  for (let j = tileBounds.min.y; j <= tileBounds.max.y; j += 1) {
-    for (let i = tileBounds.min.x; i <= tileBounds.max.x; i += 1) {
-      const tilePoint = new L.Point(i, j);
+  for (let j = tileBounds.min?.y; j <= tileBounds.max.y; j += 1) {
+    for (let i = tileBounds.min?.x; i <= tileBounds.max.x; i += 1) {
+      const tilePoint = new Point(i, j);
       const data = {
         ...layer.options,
         x: i,
@@ -156,7 +126,7 @@ export function getTileUrls(layer, bounds, zoom) {
       tiles.push({
         key: getTileUrl(layer._url, {
           ...data,
-          s: layer.options.subdomains['0'],
+          s: layer.options.subdomains[0],
         }),
         url: getTileUrl(layer._url, {
           ...data,
@@ -187,12 +157,8 @@ export function getTileUrls(layer, bounds, zoom) {
  *   );
  * });
  *
- * @param {object} layer
- * @param {tileInfo[]} tiles
- *
- * @return {object} geojson
  */
-export function getStoredTilesAsJson(layer, tiles) {
+export function getStoredTilesAsJson(layer: GridLayer, tiles: tileInfo[]): object {
   const featureCollection = {
     type: 'FeatureCollection',
     features: [],
@@ -238,22 +204,15 @@ export function getStoredTilesAsJson(layer, tiles) {
 
 /**
  * Remove tile by key
- * @param {string} key
- *
- * @returns {Promise}
  */
-export async function removeTile(key) {
+export async function removeTile(key: string): Promise<void> {
   return (await dbPromise).delete(tileStoreName, key);
 }
 
 /**
  * Get single tile blob
- *
- * @param {string} key
- *
- * @returns {Promise<Blob>}
  */
-export async function getTile(key) {
+export async function getTile(key: string): Promise<Blob> {
   return (await dbPromise)
     .get(tileStoreName, key)
     .then((result) => result && result.blob);
@@ -261,9 +220,7 @@ export async function getTile(key) {
 
 /**
  * Remove everything
- *
- * @return {Promise}
  */
-export async function truncate() {
+export async function truncate(): Promise<void> {
   return (await dbPromise).clear(tileStoreName);
 }
