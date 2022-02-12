@@ -6,8 +6,9 @@
  *
  */
 
-import { bounds, Bounds, Browser, GridLayer, Point, TileLayer, Util } from 'leaflet';
+import { bounds, Bounds, Browser, CRS, GridLayer, Point, TileLayer, Util } from 'leaflet';
 import { openDB, deleteDB } from 'idb';
+import { FeatureCollection } from 'geojson';
 
 const tileStoreName = 'tileStore';
 const urlTemplateIndex = 'urlTemplate';
@@ -31,10 +32,10 @@ type tileInfo = {
   key: string,
   url: string,
   urlTemplate: string,
-  x: Number,
-  y: Number,
-  z: Number,
-  createdAt: Number
+  x: number,
+  y: number,
+  z: number,
+  createdAt: number
 }
 
 /**
@@ -44,7 +45,7 @@ type tileInfo = {
  * getStorageLength().then(i => console.log(i + 'tiles in storage'))
  * ``` 
  */
-export async function getStorageLength(): Promise<Number> {
+export async function getStorageLength(): Promise<number> {
   return (await dbPromise).count(tileStoreName);
 }
 
@@ -92,7 +93,7 @@ export async function saveTile(tileInfo: tileInfo, blob: Blob): Promise<IDBValid
   });
 }
 
-export function getTileUrl(urlTemplate: string, data: {x: string, y: string, z: Number, s: string }): string {
+export function getTileUrl(urlTemplate: string, data: {x: number, y: number, z: number, s: string|undefined }): string {
   return Util.template(urlTemplate, {
     ...data,
     r: Browser.retina ? '@2x' : '',
@@ -105,17 +106,16 @@ export function getTileUrl(urlTemplate: string, data: {x: string, y: string, z: 
  * getTileUrls(layer, L.bounds(p1,p2), 12)
  * 
  */
-export function getTileUrls(layer: TileLayer, area: Bounds, zoom: Number): tileInfo[] {
+export function getTileUrls(layer: TileLayer, area: Bounds, zoom: number): tileInfo[] {
   const tiles: tileInfo[] = [];
   if(!area.min || !area.max) {
     return tiles;
   }
-  const tileBounds = bounds(
-    area.min.divideBy(layer.getTileSize().x).floor(),
-    area.max.divideBy(layer.getTileSize().x).floor()
-  );
-  for (let j = tileBounds.min?.y; j <= tileBounds.max.y; j += 1) {
-    for (let i = tileBounds.min?.x; i <= tileBounds.max.x; i += 1) {
+  const topLeftTile = area.min.divideBy(layer.getTileSize().x).floor();
+  const bottomRightTile = area.max.divideBy(layer.getTileSize().x).floor();
+
+  for (let j = topLeftTile.y; j <= bottomRightTile.y; j += 1) {
+    for (let i = topLeftTile.x; i <= bottomRightTile.x; i += 1) {
       const tilePoint = new Point(i, j);
       const data = {
         ...layer.options,
@@ -126,7 +126,7 @@ export function getTileUrls(layer: TileLayer, area: Bounds, zoom: Number): tileI
       tiles.push({
         key: getTileUrl(layer._url, {
           ...data,
-          s: layer.options.subdomains[0],
+          s: layer.options.subdomains?.[0],
         }),
         url: getTileUrl(layer._url, {
           ...data,
@@ -158,26 +158,26 @@ export function getTileUrls(layer: TileLayer, area: Bounds, zoom: Number): tileI
  * });
  *
  */
-export function getStoredTilesAsJson(layer: GridLayer, tiles: tileInfo[]): object {
-  const featureCollection = {
+export function getStoredTilesAsJson(layer: GridLayer, tiles: tileInfo[]): FeatureCollection {
+  const featureCollection: FeatureCollection = {
     type: 'FeatureCollection',
     features: [],
   };
   for (let i = 0; i < tiles.length; i += 1) {
-    const topLeftPoint = new L.Point(
+    const topLeftPoint = new Point(
       tiles[i].x * layer.getTileSize().x,
       tiles[i].y * layer.getTileSize().y
     );
-    const bottomRightPoint = new L.Point(
+    const bottomRightPoint = new Point(
       topLeftPoint.x + layer.getTileSize().x,
       topLeftPoint.y + layer.getTileSize().y
     );
 
-    const topLeftlatlng = L.CRS.EPSG3857.pointToLatLng(
+    const topLeftlatlng = CRS.EPSG3857.pointToLatLng(
       topLeftPoint,
       tiles[i].z
     );
-    const botRightlatlng = L.CRS.EPSG3857.pointToLatLng(
+    const botRightlatlng = CRS.EPSG3857.pointToLatLng(
       bottomRightPoint,
       tiles[i].z
     );
