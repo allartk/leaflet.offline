@@ -1,6 +1,6 @@
 /* global describe, it, assert, beforeEach L sinon */
 import '../src/ControlSaveTiles';
-
+import {TileLayerOffline} from '../src/TileLayerOffline';
 
 describe('control with defaults', () => {
   let c;
@@ -11,7 +11,7 @@ describe('control with defaults', () => {
       lat: 51.985,
       lng: 5,
     }, 16);
-    baseLayer = L.tileLayer.offline('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    baseLayer = new TileLayerOffline('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       subdomains: 'abc',
     }).addTo(map);
     c = L.control.savetiles(baseLayer);
@@ -66,7 +66,7 @@ describe('control with different options', () => {
       lat: 51.985,
       lng: 5,
     }, 16);
-    baseLayer = L.tileLayer.offline('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    baseLayer = new TileLayerOffline('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       subdomains: 'abc',
     }).addTo(map);
   });

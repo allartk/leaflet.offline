@@ -1,5 +1,5 @@
-import L from 'leaflet';
-import { getTileUrls, getTileUrl, getTile } from './TileManager';
+import { Bounds, Coords, DomEvent, DoneCallback, TileLayer, Util } from 'leaflet';
+import { getTileUrl, getTile, tileInfo, getTilePoints } from './TileManager';
 
 /**
  * A layer that uses stored tiles when available. Falls back to online.
@@ -15,18 +15,11 @@ import { getTileUrls, getTileUrl, getTile } from './TileManager';
  * })
  * .addTo(map);
  */
-const TileLayerOffline = L.TileLayer.extend(
+export const TileLayerOffline = TileLayer.extend(
   /** @lends  TileLayerOffline */ {
-    /**
-     * Create tile HTMLElement
-     * @private
-     * @param  {object}   coords x,y,z
-     * @param  {Function} done
-     * @return {HTMLElement}  img
-     */
-    createTile(coords, done) {
+    createTile(coords: Coords, done: DoneCallback): HTMLImageElement {
       let error;
-      const tile = L.TileLayer.prototype.createTile.call(
+      const tile = TileLayer.prototype.createTile.call(
         this,
         coords,
         () => {}
@@ -40,26 +33,21 @@ const TileLayerOffline = L.TileLayer.extend(
         })
         .catch(() => {
           tile.src = url;
-          L.DomEvent.on(
+          DomEvent.on(
             tile,
             'load',
-            L.Util.bind(this._tileOnLoad, this, done, tile)
+            Util.bind(this._tileOnLoad, this, done, tile)
           );
-          L.DomEvent.on(
+          DomEvent.on(
             tile,
             'error',
-            L.Util.bind(this._tileOnError, this, done, tile)
+            Util.bind(this._tileOnError, this, done, tile)
           );
         });
       return tile;
     },
-    /**
-     * dataurl from localstorage
-     * @private
-     * @param {object} coords x,y,z
-     * @return {Promise<string>} objecturl
-     */
-    setDataUrl(coords) {
+
+    setDataUrl(coords: {x: number, y: number, z: number }): Promise<string> {
       return getTile(this._getStorageKey(coords)).then((data) => {
         if (data && typeof data === 'object') {
           return URL.createObjectURL(data);
@@ -73,22 +61,43 @@ const TileLayerOffline = L.TileLayer.extend(
      * @param  {string} url url used to load tile
      * @return {string} unique identifier.
      */
-    _getStorageKey(coords) {
+    _getStorageKey(coords: {x: number, y: number, z: number }) {
       return getTileUrl(this._url, {
         ...coords,
         ...this.options,
         s: this.options.subdomains['0'],
       });
     },
-    /**
-     * getTileUrls for single zoomlevel
-     * @private
-     * @param  {object} L.latLngBounds
-     * @param  {number} zoom
-     * @return {object[]} the tile urls, key, url, x, y, z
-     */
-    getTileUrls(bounds, zoom) {
-      return getTileUrls(this, bounds, zoom);
+
+    getTileUrls(bounds: Bounds, zoom: number): tileInfo[] {
+      const tiles: tileInfo[] = [];
+      const tilePoints = getTilePoints(bounds, this.getTileSize());
+      for (let index = 0; index < tilePoints.length; index++) {
+        const tilePoint = tilePoints[index];
+        const data = {
+          ...this.options,
+          x: tilePoint.x,
+          y: tilePoint.y,
+          z: zoom,
+        };
+        tiles.push({
+          key: getTileUrl(this._url, {
+            ...data,
+            s: this.options.subdomains?.[0],
+          }),
+          url: getTileUrl(this._url, {
+            ...data,
+            s: this._getSubdomain(tilePoint),
+          }),
+          z: zoom,
+          x: tilePoint.x,
+          y: tilePoint.y,
+          urlTemplate: this._url,
+          createdAt: Date.now(),
+        });
+        
+      }
+      return tiles;
     },
   }
 );
@@ -154,4 +163,4 @@ const TileLayerOffline = L.TileLayer.extend(
  * @param  {object} options {@link http://leafletjs.com/reference-1.2.0.html#tilelayer}
  * @return {TileLayerOffline}      an instance of TileLayerOffline
  */
-L.tileLayer.offline = (url, options) => new TileLayerOffline(url, options);
+// L.tileLayer.offline = (url, options) => new TileLayerOffline(url, options);

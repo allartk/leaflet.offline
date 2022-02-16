@@ -6,9 +6,10 @@
  *
  */
 
-import { bounds, Bounds, Browser, CRS, GridLayer, Point, TileLayer, Util } from 'leaflet';
+import { Bounds, Browser, CRS, GridLayer, Point, TileLayer, Util } from 'leaflet';
 import { openDB, deleteDB } from 'idb';
 import { FeatureCollection } from 'geojson';
+import { TileLayerOffline } from './TileLayerOffline';
 
 const tileStoreName = 'tileStore';
 const urlTemplateIndex = 'urlTemplate';
@@ -28,7 +29,7 @@ const dbPromise = openDB('leaflet.offline', 2, {
   },
 });
 
-type tileInfo = {
+export type tileInfo = {
   key: string,
   url: string,
   urlTemplate: string,
@@ -93,55 +94,27 @@ export async function saveTile(tileInfo: tileInfo, blob: Blob): Promise<IDBValid
   });
 }
 
-export function getTileUrl(urlTemplate: string, data: {x: number, y: number, z: number, s: string|undefined }): string {
+export function getTileUrl(urlTemplate: string, data: any): string {
   return Util.template(urlTemplate, {
     ...data,
     r: Browser.retina ? '@2x' : '',
   });
 }
-/**
- * @example
- * const p1 = L.point(10, 10)
- * const p2 = L.point(40, 60)
- * getTileUrls(layer, L.bounds(p1,p2), 12)
- * 
- */
-export function getTileUrls(layer: TileLayer, area: Bounds, zoom: number): tileInfo[] {
-  const tiles: tileInfo[] = [];
+
+export function getTilePoints(area: Bounds, tileSize: Point): Point[] {
+  const points: Point[] = [];
   if(!area.min || !area.max) {
-    return tiles;
+    return points;
   }
-  const topLeftTile = area.min.divideBy(layer.getTileSize().x).floor();
-  const bottomRightTile = area.max.divideBy(layer.getTileSize().x).floor();
+  const topLeftTile = area.min.divideBy(tileSize.x).floor();
+  const bottomRightTile = area.max.divideBy(tileSize.x).floor();
 
   for (let j = topLeftTile.y; j <= bottomRightTile.y; j += 1) {
     for (let i = topLeftTile.x; i <= bottomRightTile.x; i += 1) {
-      const tilePoint = new Point(i, j);
-      const data = {
-        ...layer.options,
-        x: i,
-        y: j,
-        z: zoom,
-      };
-      tiles.push({
-        key: getTileUrl(layer._url, {
-          ...data,
-          s: layer.options.subdomains?.[0],
-        }),
-        url: getTileUrl(layer._url, {
-          ...data,
-          s: layer._getSubdomain(tilePoint),
-        }),
-        z: zoom,
-        x: i,
-        y: j,
-        urlTemplate: layer._url,
-        createdAt: Date.now(),
-      });
+      points.push(new Point(i, j));
     }
   }
-
-  return tiles;
+  return points;
 }
 /**
  * Get a geojson of tiles from one resource
