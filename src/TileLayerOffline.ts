@@ -1,54 +1,34 @@
-import { Bounds, Coords, DomEvent, DoneCallback, TileLayer, Util } from 'leaflet';
-import { getTileUrl, getTile, tileInfo, getTilePoints } from './TileManager';
+import { Bounds, Coords, DomEvent, DoneCallback, TileLayer, TileLayerOptions, Util } from 'leaflet';
+import { getTileUrl, getBlobByKey, tileInfo, getTilePoints } from './TileManager';
 
-/**
- * A layer that uses stored tiles when available. Falls back to online.
- *
- * @class TileLayerOffline
- * @hideconstructor
- * @example
- * const tileLayerOffline = L.tileLayer
- * .offline('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
- *   attribution: 'Map data {attribution.OpenStreetMap}',
- *   subdomains: 'abc',
- *   minZoom: 13,
- * })
- * .addTo(map);
- */
-export const TileLayerOffline = TileLayer.extend(
-  /** @lends  TileLayerOffline */ {
-    createTile(coords: Coords, done: DoneCallback): HTMLImageElement {
-      let error;
-      const tile = TileLayer.prototype.createTile.call(
-        this,
-        coords,
-        () => {}
-      );
-      const url = tile.src;
-      tile.src = '';
+export var TileLayerOffline = TileLayer.extend({
+    createTile(coords: Coords, done: DoneCallback): HTMLElement {
+      var tile = document.createElement('img');
+
+      DomEvent.on(tile, 'load', Util.bind(this._tileOnLoad, this, done, tile));
+      DomEvent.on(tile, 'error', Util.bind(this._tileOnError, this, done, tile));
+  
+      if (this.options.crossOrigin || this.options.crossOrigin === '') {
+        tile.crossOrigin = this.options.crossOrigin === true ? '' : this.options.crossOrigin;
+      }
+  
+      if (typeof this.options.referrerPolicy === 'string') {
+        tile.referrerPolicy = this.options.referrerPolicy;
+      }
+  
+      tile.alt = '';  
+      
+      tile.setAttribute('role', 'presentation');  
+      
       this.setDataUrl(coords)
-        .then((dataurl) => {
-          tile.src = dataurl;
-          done(error, tile);
-        })
-        .catch(() => {
-          tile.src = url;
-          DomEvent.on(
-            tile,
-            'load',
-            Util.bind(this._tileOnLoad, this, done, tile)
-          );
-          DomEvent.on(
-            tile,
-            'error',
-            Util.bind(this._tileOnError, this, done, tile)
-          );
-        });
+        .then((dataurl: string) => tile.src = dataurl)
+        .catch(() => tile.src = this.getTileUrl(coords))
+  
       return tile;
     },
 
     setDataUrl(coords: {x: number, y: number, z: number }): Promise<string> {
-      return getTile(this._getStorageKey(coords)).then((data) => {
+      return getBlobByKey(this._getStorageKey(coords)).then((data) => {
         if (data && typeof data === 'object') {
           return URL.createObjectURL(data);
         }
@@ -102,65 +82,8 @@ export const TileLayerOffline = TileLayer.extend(
   }
 );
 
-/**
- * Control finished calculating storage size
- * @event storagesize
- * @memberof TileLayerOffline
- * @type {ControlStatus}
- */
-
-/**
- * Start saving tiles
- * @event savestart
- * @memberof TileLayerOffline
- * @type {object}
- */
-
-/**
- * Tile fetched
- * @event loadtileend
- * @memberof TileLayerOffline
- * @type {object}
- */
-
-/**
- * All tiles fetched
- * @event loadend
- * @memberof TileLayerOffline
- * @type {object}
- */
-
-/**
- * Tile saved
- * @event savetileend
- * @memberof TileLayerOffline
- * @type {object}
- */
-
-/**
- * All tiles saved
- * @event saveend
- * @memberof TileLayerOffline
- * @type {object}
- */
-
-/**
- * Tile removed
- * @event tilesremoved
- * @memberof TileLayerOffline
- * @type {object}
- */
-
-/**
- * Leaflet tilelayer
- * @external "L.tileLayer"
- * @see {@link https://leafletjs.com/reference-1.6.0.html#tilelayer|TileLayer}
- */
-
-/**
- * @function external:"L.tileLayer".offline
- * @param  {string} url     [description]
- * @param  {object} options {@link http://leafletjs.com/reference-1.2.0.html#tilelayer}
- * @return {TileLayerOffline}      an instance of TileLayerOffline
- */
-// L.tileLayer.offline = (url, options) => new TileLayerOffline(url, options);
+// TODO, typescript does not recognize arguments for new instance
+// TODO check global in umd
+export function tileLayerOffline(url: string, options: TileLayerOptions) {
+	return new TileLayerOffline(url, options);
+}

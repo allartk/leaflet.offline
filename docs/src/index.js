@@ -1,19 +1,21 @@
 /* global L */
-import 'leaflet.offline';
+import { tileLayerOffline } from  'leaflet.offline';
 import debounce  from 'debounce';
 import { urlTemplate } from './const';
 import storageLayer from './index/storageLayer';
 
-
 const map = L.map('map');
+
 // offline baselayer, will use offline source if available
-const baseLayer = L.tileLayer
-  .offline(urlTemplate, {
+const baseLayer = tileLayerOffline(
+  urlTemplate, 
+  {
     attribution: 'Map data {attribution.OpenStreetMap}',
     subdomains: 'abc',
     minZoom: 13,
   })
   .addTo(map);
+  
 // add buttons to save tiles in area viewed
 const control = L.control.savetiles(baseLayer, {
   zoomlevels: [13, 16], // optional zoomlevels to save, default current zoomlevel

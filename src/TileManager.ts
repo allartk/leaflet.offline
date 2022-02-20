@@ -185,7 +185,7 @@ export async function removeTile(key: string): Promise<void> {
 /**
  * Get single tile blob
  */
-export async function getTile(key: string): Promise<Blob> {
+export async function getBlobByKey(key: string): Promise<Blob> {
   return (await dbPromise)
     .get(tileStoreName, key)
     .then((result) => result && result.blob);

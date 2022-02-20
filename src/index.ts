@@ -1,4 +1,4 @@
-import './TileLayerOffline';
+export { tileLayerOffline } from  './TileLayerOffline';
 import './ControlSaveTiles';
 import {
   getStorageInfo,
@@ -8,11 +8,11 @@ import {
   truncate,
   downloadTile,
   saveTile,
-  getTile,
+  getBlobByKey,
 } from './TileManager';
 
 export {
-  getTile,
+  getBlobByKey,
   downloadTile,
   getStorageInfo,  
   getStorageLength,
