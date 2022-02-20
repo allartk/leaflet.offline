@@ -1,7 +1,8 @@
 import { Bounds, Coords, DomEvent, DoneCallback, TileLayer, TileLayerOptions, Util } from 'leaflet';
 import { getTileUrl, getBlobByKey, tileInfo, getTilePoints } from './TileManager';
 
-export var TileLayerOffline = TileLayer.extend({
+export class TileLayerOffline extends TileLayer {
+    _url = '';
     createTile(coords: Coords, done: DoneCallback): HTMLElement {
       var tile = document.createElement('img');
 
@@ -10,10 +11,6 @@ export var TileLayerOffline = TileLayer.extend({
   
       if (this.options.crossOrigin || this.options.crossOrigin === '') {
         tile.crossOrigin = this.options.crossOrigin === true ? '' : this.options.crossOrigin;
-      }
-  
-      if (typeof this.options.referrerPolicy === 'string') {
-        tile.referrerPolicy = this.options.referrerPolicy;
       }
   
       tile.alt = '';  
@@ -25,8 +22,7 @@ export var TileLayerOffline = TileLayer.extend({
         .catch(() => tile.src = this.getTileUrl(coords))
   
       return tile;
-    },
-
+    }
     setDataUrl(coords: {x: number, y: number, z: number }): Promise<string> {
       return getBlobByKey(this._getStorageKey(coords)).then((data) => {
         if (data && typeof data === 'object') {
@@ -34,7 +30,7 @@ export var TileLayerOffline = TileLayer.extend({
         }
         throw new Error('tile not found in storage');
       });
-    },
+    }
     /**
      * get key to use for storage
      * @private
@@ -45,10 +41,10 @@ export var TileLayerOffline = TileLayer.extend({
       return getTileUrl(this._url, {
         ...coords,
         ...this.options,
+        // @ts-ignore: Possibly undefined
         s: this.options.subdomains['0'],
       });
-    },
-
+    }
     getTileUrls(bounds: Bounds, zoom: number): tileInfo[] {
       const tiles: tileInfo[] = [];
       const tilePoints = getTilePoints(bounds, this.getTileSize());
@@ -67,6 +63,7 @@ export var TileLayerOffline = TileLayer.extend({
           }),
           url: getTileUrl(this._url, {
             ...data,
+            // @ts-ignore: Undefined
             s: this._getSubdomain(tilePoint),
           }),
           z: zoom,
@@ -78,9 +75,8 @@ export var TileLayerOffline = TileLayer.extend({
         
       }
       return tiles;
-    },
-  }
-);
+    }
+};
 
 // TODO, typescript does not recognize arguments for new instance
 // TODO check global in umd

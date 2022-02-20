@@ -1,6 +1,6 @@
 export { tileLayerOffline } from  './TileLayerOffline';
 import './ControlSaveTiles';
-import {
+export {
   getStorageInfo,
   getStorageLength,  
   getStoredTilesAsJson,
@@ -11,13 +11,4 @@ import {
   getBlobByKey,
 } from './TileManager';
 
-export {
-  getBlobByKey,
-  downloadTile,
-  getStorageInfo,  
-  getStorageLength,
-  truncate,
-  getStoredTilesAsJson,
-  removeTile,
-  saveTile,
-};
+
