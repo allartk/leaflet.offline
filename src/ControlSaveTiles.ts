@@ -6,6 +6,7 @@ import {
   LatLngBounds,
   setOptions,
   bounds,
+  Map,
 } from 'leaflet';
 import { TileLayerOffline } from './TileLayerOffline';
 import {
@@ -37,6 +38,8 @@ interface SaveStatus {
 }
 
 export class ControlSaveTiles extends Control {
+  _map!: Map;
+  _refocusOnMap!: DomEvent.EventHandlerFn;
   _baseLayer!: TileLayerOffline;
   options: SaveTileOptions = {
     position: 'topleft',
@@ -57,7 +60,8 @@ export class ControlSaveTiles extends Control {
     lengthLoaded: 0,
     _tilesforSave: [],
   };
-  initialize(baseLayer: TileLayerOffline, options: ControlOptions) {
+  constructor(baseLayer: TileLayerOffline, options: ControlOptions) {
+    super(options);
     this._baseLayer = baseLayer;
     this.setStorageSize();
     setOptions(this, options);
@@ -146,11 +150,11 @@ export class ControlSaveTiles extends Control {
     this._resetStatus(tiles);
     const successCallback = async () => {
       this._baseLayer.fire('savestart', this.status);
-      const loader = () => {
-        if (tiles.length === 0) {
+      const loader = (): Promise<void> => {
+        const tile = tiles.shift();
+        if (tile === undefined) {
           return Promise.resolve();
         }
-        const tile = tiles.shift();
         return this._loadTile(tile).then(loader);
       };
       const parallel = Math.min(tiles.length, this.options.parallel);
