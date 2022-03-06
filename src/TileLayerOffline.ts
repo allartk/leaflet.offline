@@ -16,8 +16,9 @@ import {
 
 export class TileLayerOffline extends TileLayer {
   _url!: string;
+
   createTile(coords: Coords, done: DoneCallback): HTMLElement {
-    var tile = document.createElement('img');
+    const tile = document.createElement('img');
 
     DomEvent.on(tile, 'load', Util.bind(this._tileOnLoad, this, done, tile));
     DomEvent.on(tile, 'error', Util.bind(this._tileOnError, this, done, tile));
@@ -37,6 +38,7 @@ export class TileLayerOffline extends TileLayer {
 
     return tile;
   }
+
   setDataUrl(coords: { x: number; y: number; z: number }): Promise<string> {
     return getBlobByKey(this._getStorageKey(coords)).then((data) => {
       if (data && typeof data === 'object') {
@@ -45,6 +47,7 @@ export class TileLayerOffline extends TileLayer {
       throw new Error('tile not found in storage');
     });
   }
+
   /**
    * get key to use for storage
    * @private
@@ -59,10 +62,11 @@ export class TileLayerOffline extends TileLayer {
       s: this.options.subdomains['0'],
     });
   }
+
   getTileUrls(bounds: Bounds, zoom: number): tileInfo[] {
     const tiles: tileInfo[] = [];
     const tilePoints = getTilePoints(bounds, this.getTileSize());
-    for (let index = 0; index < tilePoints.length; index++) {
+    for (let index = 0; index < tilePoints.length; index += 1) {
       const tilePoint = tilePoints[index];
       const data = {
         ...this.options,

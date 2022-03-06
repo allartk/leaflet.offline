@@ -39,8 +39,11 @@ interface SaveStatus {
 
 export class ControlSaveTiles extends Control {
   _map!: Map;
+
   _refocusOnMap!: DomEvent.EventHandlerFn;
+
   _baseLayer!: TileLayerOffline;
+
   options: SaveTileOptions = {
     position: 'topleft',
     saveText: '+',
@@ -53,6 +56,7 @@ export class ControlSaveTiles extends Control {
     parallel: 50,
     zoomlevels: undefined,
   };
+
   status: SaveStatus = {
     storagesize: 0,
     lengthToBeSaved: 0,
@@ -60,12 +64,14 @@ export class ControlSaveTiles extends Control {
     lengthLoaded: 0,
     _tilesforSave: [],
   };
+
   constructor(baseLayer: TileLayerOffline, options: ControlOptions) {
     super(options);
     this._baseLayer = baseLayer;
     this.setStorageSize();
     setOptions(this, options);
   }
+
   setStorageSize() {
     if (this.status.storagesize) {
       return Promise.resolve(this.status.storagesize);
@@ -78,6 +84,7 @@ export class ControlSaveTiles extends Control {
       })
       .catch(() => 0);
   }
+
   getStorageSize(callback: Function) {
     this.setStorageSize().then((result) => {
       if (callback) {
@@ -85,9 +92,11 @@ export class ControlSaveTiles extends Control {
       }
     });
   }
+
   setLayer(layer: TileLayerOffline) {
     this._baseLayer = layer;
   }
+
   onAdd() {
     const container = DomUtil.create('div', 'savetiles leaflet-bar');
     const { options } = this;
@@ -100,6 +109,7 @@ export class ControlSaveTiles extends Control {
     this._createButton(options.rmText, 'rmtiles', container, this._rmTiles);
     return container;
   }
+
   _createButton(
     html: string,
     className: string,
@@ -117,6 +127,7 @@ export class ControlSaveTiles extends Control {
 
     return link;
   }
+
   _saveTiles() {
     let tiles: tileInfo[] = [];
     // minimum zoom to prevent the user from saving the whole world
@@ -168,6 +179,7 @@ export class ControlSaveTiles extends Control {
       successCallback();
     }
   }
+
   _resetStatus(tiles: tileInfo[]) {
     this.status = {
       lengthLoaded: 0,
@@ -177,6 +189,7 @@ export class ControlSaveTiles extends Control {
       storagesize: this.status.storagesize,
     };
   }
+
   async _loadTile(tile: tileInfo) {
     const self = this;
     await downloadTile(tile.url).then((blob) => {
@@ -188,10 +201,11 @@ export class ControlSaveTiles extends Control {
       }
     });
   }
-  _saveTile(tileInfo: tileInfo, blob: Blob) {
+
+  _saveTile(tile: tileInfo, blob: Blob) {
     // original is synchronous
     const self = this;
-    saveTile(tileInfo, blob)
+    saveTile(tile, blob)
       .then(() => {
         self.status.lengthSaved += 1;
         self._baseLayer.fire('savetileend', self.status);
@@ -204,12 +218,13 @@ export class ControlSaveTiles extends Control {
         throw new Error(err);
       });
   }
+
   _rmTiles() {
     const successCallback = () => {
       truncate().then(() => {
         this.status.storagesize = 0;
         this._baseLayer.fire('tilesremoved');
-        this._baseLayer.fire('storagesize', self.status);
+        this._baseLayer.fire('storagesize', this.status);
       });
     };
     if (this.options.confirmRemoval) {

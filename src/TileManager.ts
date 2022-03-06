@@ -6,10 +6,9 @@
  *
  */
 
-import { Bounds, Browser, CRS, GridLayer, Point, TileLayer, Util } from 'leaflet';
+import { Bounds, Browser, CRS, GridLayer, Point, Util } from 'leaflet';
 import { openDB, deleteDB } from 'idb';
 import { FeatureCollection } from 'geojson';
-import { TileLayerOffline } from './TileLayerOffline';
 
 const tileStoreName = 'tileStore';
 const urlTemplateIndex = 'urlTemplate';
@@ -30,21 +29,21 @@ const dbPromise = openDB('leaflet.offline', 2, {
 });
 
 export type tileInfo = {
-  key: string,
-  url: string,
-  urlTemplate: string,
-  x: number,
-  y: number,
-  z: number,
-  createdAt: number
-}
+  key: string;
+  url: string;
+  urlTemplate: string;
+  x: number;
+  y: number;
+  z: number;
+  createdAt: number;
+};
 
 /**
  * @example
  * ```js
  * import { getStorageLength } from 'leaflet.offline'
  * getStorageLength().then(i => console.log(i + 'tiles in storage'))
- * ``` 
+ * ```
  */
 export async function getStorageLength(): Promise<number> {
   return (await dbPromise).count(tileStoreName);
@@ -71,9 +70,9 @@ export async function getStorageInfo(urlTemplate: string): Promise<tileInfo[]> {
  * ```js
  * import { downloadTile } from 'leaflet.offline'
  * downloadTile(tileInfo.url).then(blob => saveTile(tileInfo, blob))
- * ``` 
+ * ```
  */
-export async function downloadTile(tileUrl:string): Promise<Blob> {
+export async function downloadTile(tileUrl: string): Promise<Blob> {
   return fetch(tileUrl).then((response) => {
     if (!response.ok) {
       throw new Error(`Request failed with status ${response.statusText}`);
@@ -81,13 +80,16 @@ export async function downloadTile(tileUrl:string): Promise<Blob> {
     return response.blob();
   });
 }
-/** 
+/**
  * @example
  * ```js
  * saveTile(tileInfo, blob).then(() => console.log(`saved tile from ${tileInfo.url}`))
  * ```
  */
-export async function saveTile(tileInfo: tileInfo, blob: Blob): Promise<IDBValidKey> {
+export async function saveTile(
+  tileInfo: tileInfo,
+  blob: Blob
+): Promise<IDBValidKey> {
   return (await dbPromise).put(tileStoreName, {
     blob,
     ...tileInfo,
@@ -103,7 +105,7 @@ export function getTileUrl(urlTemplate: string, data: any): string {
 
 export function getTilePoints(area: Bounds, tileSize: Point): Point[] {
   const points: Point[] = [];
-  if(!area.min || !area.max) {
+  if (!area.min || !area.max) {
     return points;
   }
   const topLeftTile = area.min.divideBy(tileSize.x).floor();
@@ -131,7 +133,10 @@ export function getTilePoints(area: Bounds, tileSize: Point): Point[] {
  * });
  *
  */
-export function getStoredTilesAsJson(layer: GridLayer, tiles: tileInfo[]): FeatureCollection {
+export function getStoredTilesAsJson(
+  layer: GridLayer,
+  tiles: tileInfo[]
+): FeatureCollection {
   const featureCollection: FeatureCollection = {
     type: 'FeatureCollection',
     features: [],
@@ -146,10 +151,7 @@ export function getStoredTilesAsJson(layer: GridLayer, tiles: tileInfo[]): Featu
       topLeftPoint.y + layer.getTileSize().y
     );
 
-    const topLeftlatlng = CRS.EPSG3857.pointToLatLng(
-      topLeftPoint,
-      tiles[i].z
-    );
+    const topLeftlatlng = CRS.EPSG3857.pointToLatLng(topLeftPoint, tiles[i].z);
     const botRightlatlng = CRS.EPSG3857.pointToLatLng(
       bottomRightPoint,
       tiles[i].z
