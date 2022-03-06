@@ -1,4 +1,4 @@
-import { getTile, downloadTile, saveTile } from 'leaflet.offline';
+import { getBlobByKey, downloadTile, saveTile } from 'leaflet.offline';
 import { wmtsUrlTemplate } from './const';
 
 /* global L */
@@ -17,7 +17,7 @@ brtLayer.on('tileloadstart', (event) => {
   const url = tile.src;
   // reset tile.src, to not start download yet
   tile.src = '';
-  getTile(url).then((blob) => {
+  getBlobByKey(url).then((blob) => {
     if (blob) {
       tile.src = URL.createObjectURL(blob);
       console.debug(`Loaded ${url} from idb`);

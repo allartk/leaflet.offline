@@ -40,7 +40,7 @@ map.setView(
     lat: 52.09,
     lng: 5.118,
   },
-  15
+  16
 );
 // layer switcher control
 const layerswitcher = L.control
