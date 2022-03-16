@@ -1,4 +1,4 @@
-/* global describe, it, assert L, beforeEach */
+/* global describe, it, assert, beforeEach */
 import { saveTile, truncate } from '../src/TileManager';
 
 describe('save tiles', () => {

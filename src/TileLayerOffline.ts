@@ -10,7 +10,7 @@ import {
 import {
   getTileUrl,
   getBlobByKey,
-  tileInfo,
+  TileInfo,
   getTilePoints,
 } from './TileManager';
 
@@ -63,8 +63,8 @@ export class TileLayerOffline extends TileLayer {
     });
   }
 
-  getTileUrls(bounds: Bounds, zoom: number): tileInfo[] {
-    const tiles: tileInfo[] = [];
+  getTileUrls(bounds: Bounds, zoom: number): TileInfo[] {
+    const tiles: TileInfo[] = [];
     const tilePoints = getTilePoints(bounds, this.getTileSize());
     for (let index = 0; index < tilePoints.length; index += 1) {
       const tilePoint = tilePoints[index];

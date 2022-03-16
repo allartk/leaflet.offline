@@ -28,7 +28,7 @@ const dbPromise = openDB('leaflet.offline', 2, {
   },
 });
 
-export type tileInfo = {
+export type TileInfo = {
   key: string;
   url: string;
   urlTemplate: string;
@@ -56,7 +56,7 @@ export async function getStorageLength(): Promise<number> {
  * getStorageInfo('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
  * ```
  */
-export async function getStorageInfo(urlTemplate: string): Promise<tileInfo[]> {
+export async function getStorageInfo(urlTemplate: string): Promise<TileInfo[]> {
   const range = IDBKeyRange.only(urlTemplate);
   return (await dbPromise).getAllFromIndex(
     tileStoreName,
@@ -87,7 +87,7 @@ export async function downloadTile(tileUrl: string): Promise<Blob> {
  * ```
  */
 export async function saveTile(
-  tileInfo: tileInfo,
+  tileInfo: TileInfo,
   blob: Blob
 ): Promise<IDBValidKey> {
   return (await dbPromise).put(tileStoreName, {
@@ -135,7 +135,7 @@ export function getTilePoints(area: Bounds, tileSize: Point): Point[] {
  */
 export function getStoredTilesAsJson(
   layer: GridLayer,
-  tiles: tileInfo[]
+  tiles: TileInfo[]
 ): FeatureCollection {
   const featureCollection: FeatureCollection = {
     type: 'FeatureCollection',

@@ -14,7 +14,7 @@ import {
   getStorageLength,
   downloadTile,
   saveTile,
-  tileInfo,
+  TileInfo,
 } from './TileManager';
 
 interface SaveTileOptions extends ControlOptions {
@@ -30,7 +30,7 @@ interface SaveTileOptions extends ControlOptions {
 }
 
 interface SaveStatus {
-  _tilesforSave: tileInfo[];
+  _tilesforSave: TileInfo[];
   storagesize: number;
   lengthToBeSaved: number;
   lengthSaved: number;
@@ -129,7 +129,7 @@ export class ControlSaveTiles extends Control {
   }
 
   _saveTiles() {
-    let tiles: tileInfo[] = [];
+    let tiles: TileInfo[] = [];
     // minimum zoom to prevent the user from saving the whole world
     const minZoom = 5;
     // current zoom or zoom options
@@ -180,7 +180,7 @@ export class ControlSaveTiles extends Control {
     }
   }
 
-  _resetStatus(tiles: tileInfo[]) {
+  _resetStatus(tiles: TileInfo[]) {
     this.status = {
       lengthLoaded: 0,
       lengthToBeSaved: tiles.length,
@@ -190,7 +190,7 @@ export class ControlSaveTiles extends Control {
     };
   }
 
-  async _loadTile(tile: tileInfo) {
+  async _loadTile(tile: TileInfo) {
     const self = this;
     await downloadTile(tile.url).then((blob) => {
       self.status.lengthLoaded += 1;
@@ -202,7 +202,7 @@ export class ControlSaveTiles extends Control {
     });
   }
 
-  _saveTile(tile: tileInfo, blob: Blob) {
+  _saveTile(tile: TileInfo, blob: Blob) {
     // original is synchronous
     const self = this;
     saveTile(tile, blob)
