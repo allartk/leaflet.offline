@@ -16,7 +16,7 @@ module.exports = (config) => {
       'node_modules/leaflet/dist/leaflet.js',
       'node_modules/sinon/pkg/sinon.js',
       'node_modules/idb/build/iife/index-min.js',
-      'test/*.js',
+      'test/*.ts',
     ],
 
     // list of files to exclude
@@ -25,7 +25,7 @@ module.exports = (config) => {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/*.js': ['rollup'],
+      'test/*.ts': ['rollup'],
     },
     rollupPreprocessor: {
       output: {
