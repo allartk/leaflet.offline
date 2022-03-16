@@ -11,6 +11,6 @@
         "moduleResolution": "Node",
         "strict": true
       },
-      "include": ["./src/**/*"]
+      "include": ["./src/**/*","./test/**/*"]
   }
   
