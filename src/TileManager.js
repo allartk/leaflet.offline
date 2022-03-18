@@ -78,13 +78,24 @@ export async function getStorageInfo(urlTemplate) {
  * @param {string} tileUrl
  * @return {Promise<blob>}
  */
-export async function downloadTile(tileUrl) {
-  return fetch(tileUrl).then((response) => {
-    if (!response.ok) {
-      throw new Error(`Request failed with status ${response.statusText}`);
-    }
-    return response.blob();
-  });
+export async function downloadTile(tileUrl,tileKey, alwaysDownload) {
+  if(alwaysDownload) return fetch(tileUrl).then(response => {
+          if (!response.ok) {
+            throw new Error("Request failed with status ".concat(response.statusText));
+          }   
+          return response.blob();
+    else return getTile(tileKey).then(blob => {
+            if (blob == undefined) { 
+              return fetch(tileUrl).then(response => {
+                if (!response.ok) {
+                  throw new Error("Request failed with status ".concat(response.statusText));
+                }   
+              return response.blob();
+              });
+            } else {
+              return blob;
+            }
+          });
 }
 /**
  * TODO validate tileinfo props?
