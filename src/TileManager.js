@@ -84,6 +84,7 @@ export async function downloadTile(tileUrl,tileKey, alwaysDownload) {
             throw new Error("Request failed with status ".concat(response.statusText));
           }   
           return response.blob();
+          });
     else return getTile(tileKey).then(blob => {
             if (blob == undefined) { 
               return fetch(tileUrl).then(response => {
