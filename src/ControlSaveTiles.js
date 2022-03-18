@@ -54,6 +54,7 @@ const ControlSaveTiles = L.Control.extend(
       confirm: null,
       confirmRemoval: null,
       parallel: 50,
+      alwaysDownload: true,
     },
     status: {
       storagesize: null,
@@ -225,7 +226,7 @@ const ControlSaveTiles = L.Control.extend(
     _loadTile: async function _loadTile(jtile) {
       const self = this;
       const tile = jtile;
-      await downloadTile(tile.url).then((blob) => {
+      await downloadTile(tile.url,tile.key, this.options.alwaysDownload).then((blob) => {
         self.status.lengthLoaded += 1;
         self._saveTile(tile, blob);
         self._baseLayer.fire('loadtileend', self.status);
