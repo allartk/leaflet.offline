@@ -17,6 +17,22 @@ import { getTileUrls, getTileUrl, getTile } from './TileManager';
  */
 const TileLayerOffline = L.TileLayer.extend(
   /** @lends  TileLayerOffline */ {
+
+    _ongoingSave: false,
+
+  	initialize: function (url, options) {
+
+      this._url = url;
+      options = L__default["default"].Util.setOptions(this, options);
+
+      this.on('savestart', () => {
+       this._ongoingSave = true;
+      });
+      this.on('saveend', () => {
+        this._ongoingSave = false;
+       });
+    },  
+
     /**
      * Create tile HTMLElement
      * @private
@@ -60,6 +76,8 @@ const TileLayerOffline = L.TileLayer.extend(
      * @return {Promise<string>} objecturl
      */
     setDataUrl(coords) {
+      if(this._ongoingSave) return Promise.resolve().then(() => {throw new Error('On download state');});
+
       return getTile(this._getStorageKey(coords)).then((data) => {
         if (data && typeof data === 'object') {
           return URL.createObjectURL(data);
