@@ -1,4 +1,3 @@
-/* global describe, it, assert, beforeEach L sinon */
 import { savetiles } from '../src/ControlSaveTiles';
 import { TileLayerOffline } from '../src/TileLayerOffline';
 

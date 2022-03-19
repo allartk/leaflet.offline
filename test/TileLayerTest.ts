@@ -1,4 +1,4 @@
-/* global describe, it, assert L */
+import { Bounds, Point } from 'leaflet';
 import { TileLayerOffline } from '../src/TileLayerOffline';
 
 describe('TileLayer.Offline', () => {
@@ -7,16 +7,14 @@ describe('TileLayer.Offline', () => {
       'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
     );
     assert.instanceOf(
-      layer.setDataUrl(
-        { x: 123456, y: 456789, z: 16 },
-        'http://exampletile.nl/'
-      ),
+      layer.setDataUrl({ x: 123456, y: 456789, z: 16 }),
       Promise
     );
   });
   it('createTile', () => {
     const url = 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
     const layer = new TileLayerOffline(url);
+    // @ts-ignore
     const tile = layer.createTile({ x: 123456, y: 456789, z: 16 }, () => {});
     assert.instanceOf(tile, HTMLElement);
   });
@@ -55,9 +53,9 @@ describe('TileLayer.Offline', () => {
     const layer = new TileLayerOffline(
       'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
     );
-    const bounds = new L.Bounds(
-      new L.Point(8621975, 5543267.999999999),
-      new L.Point(8621275, 5542538)
+    const bounds = new Bounds(
+      new Point(8621975, 5543267.999999999),
+      new Point(8621275, 5542538)
     );
     const tiles = layer.getTileUrls(bounds, 16);
     assert.lengthOf(tiles, 16);
@@ -71,9 +69,9 @@ describe('TileLayer.Offline', () => {
     const layer = new TileLayerOffline(
       'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
     );
-    const bounds = new L.Bounds(
-      new L.Point(8621975, 5543267.999999999),
-      new L.Point(8621275, 5542538)
+    const bounds = new Bounds(
+      new Point(8621975, 5543267.999999999),
+      new Point(8621275, 5542538)
     );
     const tiles = layer.getTileUrls(bounds, 16);
     assert.lengthOf(tiles, 16);
@@ -87,16 +85,16 @@ describe('TileLayer.Offline', () => {
     const layer = new TileLayerOffline(
       'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
     );
-    const bounds = new L.Bounds(
-      new L.Point(8621975, 5543267.999999999),
-      new L.Point(8621275, 5542538)
+    const bounds = new Bounds(
+      new Point(8621975, 5543267.999999999),
+      new Point(8621275, 5542538)
     );
     const tiles = layer.getTileUrls(bounds, 16);
-    const subs = tiles.map((t) => t.url.match(/([abc])\./)['1']);
+    const subs = tiles.map((t) => t.url.match(/([abc])\./)?.[1]);
     assert.include(subs, 'a');
     assert.include(subs, 'b');
     assert.include(subs, 'c');
-    const subskeys = tiles.map((t) => t.key.match(/([abc])\./)['1']);
+    const subskeys = tiles.map((t) => t.key.match(/([abc])\./)?.[1]);
     assert.include(subskeys, 'a');
     assert.notInclude(subskeys, 'b');
     assert.notInclude(subskeys, 'c');
@@ -106,9 +104,9 @@ describe('TileLayer.Offline', () => {
     const layer = new TileLayerOffline(
       'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
     );
-    const bounds = new L.Bounds(
-      new L.Point(8621975, 5543267.999999999),
-      new L.Point(8621275, 5542538)
+    const bounds = new Bounds(
+      new Point(8621975, 5543267.999999999),
+      new Point(8621275, 5542538)
     );
     const tiles = layer.getTileUrls(bounds, 16);
     assert.lengthOf(tiles, 16);
@@ -126,9 +124,9 @@ describe('TileLayer.Offline', () => {
         accessToken: 'xyz',
       }
     );
-    const bounds = new L.Bounds(
-      new L.Point(8621975, 5543267.999999999),
-      new L.Point(8621275, 5542538)
+    const bounds = new Bounds(
+      new Point(8621975, 5543267.999999999),
+      new Point(8621275, 5542538)
     );
     const tiles = layer.getTileUrls(bounds, 16);
     assert.lengthOf(tiles, 16);
