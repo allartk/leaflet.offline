@@ -3,6 +3,7 @@ import {
   truncate,
   getStorageLength,
   downloadTile,
+  getTile,
   saveTile,
 } from './TileManager';
 
@@ -226,7 +227,8 @@ const ControlSaveTiles = L.Control.extend(
     _loadTile: async function _loadTile(jtile) {
       const self = this;
       const tile = jtile;
-      await downloadTile(tile.url,tile.key, this.options.alwaysDownload).then((blob) => {
+
+      if(alwaysDownload)   await downloadTile(tile.url).then((blob) => {
         self.status.lengthLoaded += 1;
         self._saveTile(tile, blob);
         self._baseLayer.fire('loadtileend', self.status);
@@ -234,6 +236,22 @@ const ControlSaveTiles = L.Control.extend(
           self._baseLayer.fire('loadend', self.status);
         }
       });
+      else await getTile(tileKey).then(blob => {
+          if (blob === undefined) { 
+
+            await downloadTile(tile.url).then((blob) => {
+              self.status.lengthLoaded += 1;
+              self._saveTile(tile, blob);
+              self._baseLayer.fire('loadtileend', self.status);
+              if (self.status.lengthLoaded === self.status.lengthToBeSaved) {
+                self._baseLayer.fire('loadend', self.status);
+              }
+            });
+
+          } else {
+            return blob;
+          }
+        });
     },
 
     /**
