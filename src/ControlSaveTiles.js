@@ -238,7 +238,7 @@ const ControlSaveTiles = L.Control.extend(
           }
         });
       } else {
-        await getTile(tileKey).then(blob => {
+        await getTile(tile.key).then(blob => {
           if (blob === undefined) { 
 
             downloadTile(tile.url).then((blob) => {
