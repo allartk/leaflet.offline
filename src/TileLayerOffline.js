@@ -23,7 +23,7 @@ const TileLayerOffline = L.TileLayer.extend(
   	initialize: function (url, options) {
 
       this._url = url;
-      options = L__default["default"].Util.setOptions(this, options);
+      options = L.Util.setOptions(this, options);
 
       this.on('savestart', () => {
        this._ongoingSave = true;
