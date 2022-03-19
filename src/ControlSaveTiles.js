@@ -239,7 +239,7 @@ const ControlSaveTiles = L.Control.extend(
       else await getTile(tileKey).then(blob => {
           if (blob === undefined) { 
 
-            await downloadTile(tile.url).then((blob) => {
+            downloadTile(tile.url).then((blob) => {
               self.status.lengthLoaded += 1;
               self._saveTile(tile, blob);
               self._baseLayer.fire('loadtileend', self.status);
