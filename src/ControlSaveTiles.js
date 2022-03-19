@@ -238,8 +238,8 @@ const ControlSaveTiles = L.Control.extend(
           }
         });
       } else {
-        await getTile(tile.key).then((result) => {
-          if (result === undefined) {
+        await getTile(tile.key).then((blobGetTile) => {
+          if (blobGetTile === undefined) {
             downloadTile(tile.url).then((blob) => {
               self.status.lengthLoaded += 1;
               self._saveTile(tile, blob);
@@ -250,7 +250,7 @@ const ControlSaveTiles = L.Control.extend(
             });
           } else {
             self.status.lengthLoaded += 1;
-            self._saveTile(tile, blob);
+            self._saveTile(tile, blobGetTile);
             self._baseLayer.fire('loadtileend', self.status);
             if (self.status.lengthLoaded === self.status.lengthToBeSaved) {
               self._baseLayer.fire('loadend', self.status);
