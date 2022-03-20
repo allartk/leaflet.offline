@@ -78,14 +78,13 @@ export async function getStorageInfo(urlTemplate) {
  * @param {string} tileUrl
  * @return {Promise<blob>}
  */
- export async function downloadTile(tileUrl) {
-  return fetch(tileUrl).then(response => {
+export async function downloadTile(tileUrl) {
+  return fetch(tileUrl).then((response) => {
     if (!response.ok) {
-      throw new Error("Request failed with status ".concat(response.statusText));
-    }   
+      throw new Error(`Request failed with status ${response.statusText}`);
+    }
     return response.blob();
   });
-    
 }
 /**
  * TODO validate tileinfo props?
