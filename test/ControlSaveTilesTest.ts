@@ -1,12 +1,13 @@
-import { savetiles } from '../src/ControlSaveTiles';
+import { Map, map } from 'leaflet';
+import { ControlSaveTiles, savetiles } from '../src/ControlSaveTiles';
 import { TileLayerOffline } from '../src/TileLayerOffline';
 
 describe('control with defaults', () => {
-  let c;
-  let baseLayer;
+  let saveControl: ControlSaveTiles;
+  let baseLayer: TileLayerOffline;
   beforeEach(() => {
-    const map = L.map(document.createElement('div'));
-    map.setView(
+    const leafletMap = map(document.createElement('div'));
+    leafletMap.setView(
       {
         lat: 51.985,
         lng: 5,
@@ -18,45 +19,51 @@ describe('control with defaults', () => {
       {
         subdomains: 'abc',
       }
-    ).addTo(map);
-    c = savetiles(baseLayer);
-    c.addTo(map);
-    c._rmTiles();
+    ).addTo(leafletMap);
+    saveControl = savetiles(baseLayer, {});
+    saveControl.addTo(leafletMap);
+    saveControl._rmTiles();
   });
   it('exists', () => {
     assert.ok(savetiles);
   });
   it('adds button', () => {
-    const div = c.onAdd();
+    const div = saveControl.onAdd();
     assert.ok(div);
     assert.lengthOf(div.querySelectorAll('a'), 2);
   });
   it('calculates storagesize', () =>
-    c.setStorageSize().then((n) => {
+    saveControl.setStorageSize().then((n) => {
       assert.equal(n, 0);
     }));
   it('_saveTiles sets status', () => {
-    const stub = sinon.stub(c, '_loadTile').returns(Promise.resolve());
-    const resetstub = sinon.stub(c, '_resetStatus');
-    c._saveTiles();
-    assert.isObject(c.status);
+    const stub = sinon
+      .stub(saveControl, '_loadTile')
+      .returns(Promise.resolve());
+    const resetstub = sinon.stub(saveControl, '_resetStatus');
+    saveControl._saveTiles();
+    assert.isObject(saveControl.status);
     assert.isTrue(resetstub.calledOnce);
     stub.resetBehavior();
     resetstub.resetBehavior();
   });
   it('_saveTiles fires savestart with _tilesforSave prop', (done) => {
-    const stub = sinon.stub(c, '_loadTile').returns(Promise.resolve());
+    const stub = sinon
+      .stub(saveControl, '_loadTile')
+      .returns(Promise.resolve());
     baseLayer.on('savestart', (status) => {
       assert.lengthOf(status._tilesforSave, 1);
       stub.resetBehavior();
       done();
     });
-    c._saveTiles();
+    saveControl._saveTiles();
   });
 
   it('_saveTiles calls loadTile for each tile', () => {
-    const stub = sinon.stub(c, '_loadTile').returns(Promise.resolve());
-    c._saveTiles();
+    const stub = sinon
+      .stub(saveControl, '_loadTile')
+      .returns(Promise.resolve());
+    saveControl._saveTiles();
     assert.equal(
       stub.callCount,
       1,
@@ -67,11 +74,11 @@ describe('control with defaults', () => {
 });
 
 describe('control with different options', () => {
-  let map;
-  let baseLayer;
+  let leafletMap: Map;
+  let baseLayer: TileLayerOffline;
   beforeEach(() => {
-    map = L.map(document.createElement('div'));
-    map.setView(
+    leafletMap = map(document.createElement('div'));
+    leafletMap.setView(
       {
         lat: 51.985,
         lng: 5,
@@ -83,13 +90,13 @@ describe('control with different options', () => {
       {
         subdomains: 'abc',
       }
-    ).addTo(map);
+    ).addTo(leafletMap);
   });
   it('_saveTiles calculates tiles for 2 zoomlevels', () => {
     const c = savetiles(baseLayer, {
       zoomlevels: [16, 17],
     });
-    c.addTo(map);
+    c.addTo(leafletMap);
     c._rmTiles();
     const stub = sinon.stub(c, '_loadTile').returns(Promise.resolve());
     c._saveTiles();
@@ -102,7 +109,7 @@ describe('control with different options', () => {
     const c = savetiles(baseLayer, {
       saveWhatYouSee: true,
     });
-    c.addTo(map);
+    c.addTo(leafletMap);
     c._rmTiles();
     const stub = sinon.stub(c, '_loadTile').returns(Promise.resolve());
     c._saveTiles();
@@ -120,7 +127,7 @@ describe('control with different options', () => {
     const c = savetiles(baseLayer, {
       confirm: callback,
     });
-    c.addTo(map);
+    c.addTo(leafletMap);
     c._rmTiles();
     c._saveTiles();
     assert(callback.calledOnce);
