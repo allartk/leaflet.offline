@@ -3,6 +3,7 @@ import {
   truncate,
   getStorageLength,
   downloadTile,
+  getTile,
   saveTile,
 } from './TileManager';
 
@@ -54,6 +55,7 @@ const ControlSaveTiles = L.Control.extend(
       confirm: null,
       confirmRemoval: null,
       parallel: 50,
+      alwaysDownload: true,
     },
     status: {
       storagesize: null,
@@ -216,6 +218,22 @@ const ControlSaveTiles = L.Control.extend(
         _tilesforSave: tiles,
       };
     },
+
+    /**
+     * @private
+     * @param {string} tile
+     * @param { blob} blob
+     * @return {void}
+     */
+    _saveTileAndUpdateStatus(tile, blob) {
+      this.status.lengthLoaded += 1;
+      this._saveTile(tile, blob);
+      this._baseLayer.fire('loadtileend', this.status);
+      if (this.status.lengthLoaded === this.status.lengthToBeSaved) {
+        this._baseLayer.fire('loadend', this.status);
+      }
+    },
+
     /**
      * Loop over status._tilesforSave prop till all tiles are downloaded
      * Calls _saveTile for each download
@@ -225,14 +243,22 @@ const ControlSaveTiles = L.Control.extend(
     _loadTile: async function _loadTile(jtile) {
       const self = this;
       const tile = jtile;
-      await downloadTile(tile.url).then((blob) => {
-        self.status.lengthLoaded += 1;
-        self._saveTile(tile, blob);
-        self._baseLayer.fire('loadtileend', self.status);
-        if (self.status.lengthLoaded === self.status.lengthToBeSaved) {
-          self._baseLayer.fire('loadend', self.status);
-        }
-      });
+
+      if (this.options.alwaysDownload) {
+        await downloadTile(tile.url).then((blob) => {
+          self._saveTileAndUpdateStatus(tile, blob);
+        });
+      } else {
+        await getTile(tile.key).then((blobGetTile) => {
+          if (blobGetTile === undefined) {
+            downloadTile(tile.url).then((blob) => {
+              self._saveTileAndUpdateStatus(tile, blob);
+            });
+          } else {
+            self._saveTileAndUpdateStatus(tile, blobGetTile);
+          }
+        });
+      }
     },
 
     /**
