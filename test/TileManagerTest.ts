@@ -4,14 +4,6 @@ import { saveTile, truncate } from '../src/TileManager';
 describe('save tiles', () => {
   beforeEach(() => truncate());
 
-  it('throws an Error for missing props', () =>
-    saveTile({}, new Blob()).catch((e) => {
-      assert.equal(
-        e.message,
-        'Data provided to an operation does not meet requirements.'
-      );
-    }));
-
   it('saves a tile', () =>
     saveTile(
       {

@@ -52,6 +52,8 @@ describe('control with defaults', () => {
       .stub(saveControl, '_loadTile')
       .returns(Promise.resolve());
     baseLayer.on('savestart', (status) => {
+      // TODO
+      // @ts-ignore
       assert.lengthOf(status._tilesforSave, 1);
       stub.resetBehavior();
       done();
