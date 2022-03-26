@@ -1,4 +1,4 @@
-import { Map, map } from 'leaflet';
+import { Map } from 'leaflet';
 import { ControlSaveTiles, savetiles } from '../src/ControlSaveTiles';
 import { TileLayerOffline } from '../src/TileLayerOffline';
 
@@ -6,7 +6,7 @@ describe('control with defaults', () => {
   let saveControl: ControlSaveTiles;
   let baseLayer: TileLayerOffline;
   beforeEach(() => {
-    const leafletMap = map(document.createElement('div'));
+    const leafletMap = new Map(document.createElement('div'));
     leafletMap.setView(
       {
         lat: 51.985,
@@ -77,7 +77,7 @@ describe('control with different options', () => {
   let leafletMap: Map;
   let baseLayer: TileLayerOffline;
   beforeEach(() => {
-    leafletMap = map(document.createElement('div'));
+    leafletMap = new Map(document.createElement('div'));
     leafletMap.setView(
       {
         lat: 51.985,
