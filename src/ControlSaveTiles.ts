@@ -4,7 +4,6 @@ import {
   DomEvent,
   DomUtil,
   LatLngBounds,
-  setOptions,
   bounds,
   Map,
 } from 'leaflet';
@@ -29,6 +28,18 @@ interface SaveTileOptions extends ControlOptions {
   zoomlevels?: number[] | undefined;
 }
 
+interface SaveTileOptionsArg extends ControlOptions {
+  saveText?: string;
+  rmText?: string;
+  maxZoom?: number;
+  saveWhatYouSee?: boolean;
+  bounds?: LatLngBounds | null;
+  confirm?: Function | null;
+  confirmRemoval?: Function | null;
+  parallel?: number;
+  zoomlevels?: number[] | undefined;
+}
+
 interface SaveStatus {
   _tilesforSave: TileInfo[];
   storagesize: number;
@@ -44,18 +55,7 @@ export class ControlSaveTiles extends Control {
 
   _baseLayer!: TileLayerOffline;
 
-  options: SaveTileOptions = {
-    position: 'topleft',
-    saveText: '+',
-    rmText: '-',
-    maxZoom: 19,
-    saveWhatYouSee: false,
-    bounds: null,
-    confirm: null,
-    confirmRemoval: null,
-    parallel: 50,
-    zoomlevels: undefined,
-  };
+  options: SaveTileOptions;
 
   status: SaveStatus = {
     storagesize: 0,
@@ -65,11 +65,25 @@ export class ControlSaveTiles extends Control {
     _tilesforSave: [],
   };
 
-  constructor(baseLayer: TileLayerOffline, options: ControlOptions) {
+  constructor(baseLayer: TileLayerOffline, options: SaveTileOptionsArg) {
     super(options);
     this._baseLayer = baseLayer;
     this.setStorageSize();
-    setOptions(this, options);
+    this.options = {
+      ...{
+        position: 'topleft',
+        saveText: '+',
+        rmText: '-',
+        maxZoom: 19,
+        saveWhatYouSee: false,
+        bounds: null,
+        confirm: null,
+        confirmRemoval: null,
+        parallel: 50,
+        zoomlevels: undefined,
+      },
+      ...options,
+    };
   }
 
   setStorageSize() {
@@ -237,7 +251,7 @@ export class ControlSaveTiles extends Control {
 
 export function savetiles(
   baseLayer: TileLayerOffline,
-  options: ControlOptions
+  options: SaveTileOptionsArg
 ) {
   return new ControlSaveTiles(baseLayer, options);
 }
