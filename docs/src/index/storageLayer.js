@@ -1,18 +1,19 @@
-/* global L */
+import { geoJSON } from 'leaflet';
 import { getStorageInfo, getStoredTilesAsJson } from 'leaflet.offline';
 import { urlTemplate } from '../const';
-
 
 export default function storageLayer(baseLayer, layerswitcher) {
   let layer;
 
-  const getGeoJsonData = () => getStorageInfo(urlTemplate)
-    .then((tiles) => getStoredTilesAsJson(baseLayer, tiles));
+  const getGeoJsonData = () =>
+    getStorageInfo(urlTemplate).then((tiles) =>
+      getStoredTilesAsJson(baseLayer, tiles)
+    );
 
   const addStorageLayer = () => {
     getGeoJsonData().then((geojson) => {
-      layer = L.geoJSON(geojson).bindPopup(
-        (clickedLayer) => clickedLayer.feature.properties.key,
+      layer = geoJSON(geojson).bindPopup(
+        (clickedLayer) => clickedLayer.feature.properties.key
       );
       layerswitcher.addOverlay(layer, 'offline tiles');
     });

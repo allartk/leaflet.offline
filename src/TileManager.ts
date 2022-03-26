@@ -10,6 +10,16 @@ import { Bounds, Browser, CRS, GridLayer, Point, Util } from 'leaflet';
 import { openDB, deleteDB, IDBPDatabase } from 'idb';
 import { FeatureCollection } from 'geojson';
 
+export type TileInfo = {
+  key: string;
+  url: string;
+  urlTemplate: string;
+  x: number;
+  y: number;
+  z: number;
+  createdAt: number;
+};
+
 const tileStoreName = 'tileStore';
 const urlTemplateIndex = 'urlTemplate';
 let dbPromise: Promise<IDBPDatabase> | undefined;
@@ -34,16 +44,6 @@ export function openTilesDataBase(): Promise<IDBPDatabase> {
   });
   return dbPromise;
 }
-
-export type TileInfo = {
-  key: string;
-  url: string;
-  urlTemplate: string;
-  x: number;
-  y: number;
-  z: number;
-  createdAt: number;
-};
 
 /**
  * @example

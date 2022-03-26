@@ -1,20 +1,20 @@
-/* global L */
 import { tileLayerOffline, savetiles } from 'leaflet.offline';
+import { Control, Map } from 'leaflet';
 import debounce from 'debounce';
 import { urlTemplate } from './const';
 import storageLayer from './index/storageLayer';
 
-const map = L.map('map');
+const leafletMap = new Map('map');
 
 // offline baselayer, will use offline source if available
 const baseLayer = tileLayerOffline(urlTemplate, {
   attribution: 'Map data {attribution.OpenStreetMap}',
   subdomains: 'abc',
   minZoom: 13,
-}).addTo(map);
+}).addTo(leafletMap);
 
 // add buttons to save tiles in area viewed
-const control = savetiles(baseLayer, {
+const saveControl = savetiles(baseLayer, {
   zoomlevels: [13, 16], // optional zoomlevels to save, default current zoomlevel
   confirm(layer, successCallback) {
     // eslint-disable-next-line no-alert
@@ -33,9 +33,9 @@ const control = savetiles(baseLayer, {
   rmText:
     '<i class="fa fa-trash" aria-hidden="true"  title="Remove tiles"></i>',
 });
-control.addTo(map);
+saveControl.addTo(leafletMap);
 
-map.setView(
+leafletMap.setView(
   {
     lat: 52.09,
     lng: 5.118,
@@ -43,15 +43,13 @@ map.setView(
   16
 );
 // layer switcher control
-const layerswitcher = L.control
-  .layers(
-    {
-      'osm (offline)': baseLayer,
-    },
-    null,
-    { collapsed: false }
-  )
-  .addTo(map);
+const layerswitcher = new Control.Layers(
+  {
+    'osm (offline)': baseLayer,
+  },
+  null,
+  { collapsed: false }
+).addTo(leafletMap);
 // add storage overlay
 storageLayer(baseLayer, layerswitcher);
 

@@ -1,16 +1,16 @@
+import { Map, tileLayer } from 'leaflet';
 import { getBlobByKey, downloadTile, saveTile } from 'leaflet.offline';
 import { wmtsUrlTemplate } from './const';
 
-/* global L */
-const map = L.map('map');
+const leafletMap = new Map('map');
 
-const brtLayer = L.tileLayer(wmtsUrlTemplate, {
+const brtLayer = tileLayer(wmtsUrlTemplate, {
   layer: 'standaard',
   format: 'image/png',
   transparent: true,
 });
 
-brtLayer.addTo(map);
+brtLayer.addTo(leafletMap);
 
 brtLayer.on('tileloadstart', (event) => {
   const { tile } = event;
@@ -42,7 +42,7 @@ brtLayer.on('tileloadstart', (event) => {
   });
 });
 
-map.setView(
+leafletMap.setView(
   {
     lat: 52.09,
     lng: 5.118,
