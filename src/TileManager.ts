@@ -7,26 +7,33 @@
  */
 
 import { Bounds, Browser, CRS, GridLayer, Point, Util } from 'leaflet';
-import { openDB, deleteDB } from 'idb';
+import { openDB, deleteDB, IDBPDatabase } from 'idb';
 import { FeatureCollection } from 'geojson';
 
 const tileStoreName = 'tileStore';
 const urlTemplateIndex = 'urlTemplate';
+let dbPromise: Promise<IDBPDatabase> | undefined;
 
-const dbPromise = openDB('leaflet.offline', 2, {
-  upgrade(db, oldVersion) {
-    deleteDB('leaflet_offline');
-    deleteDB('leaflet_offline_areas');
+export function openTilesDataBase(): Promise<IDBPDatabase> {
+  if (dbPromise) {
+    return dbPromise;
+  }
+  dbPromise = openDB('leaflet.offline', 2, {
+    upgrade(db, oldVersion) {
+      deleteDB('leaflet_offline');
+      deleteDB('leaflet_offline_areas');
 
-    if (oldVersion < 1) {
-      const tileStore = db.createObjectStore(tileStoreName, {
-        keyPath: 'key',
-      });
-      tileStore.createIndex(urlTemplateIndex, 'urlTemplate');
-      tileStore.createIndex('z', 'z');
-    }
-  },
-});
+      if (oldVersion < 1) {
+        const tileStore = db.createObjectStore(tileStoreName, {
+          keyPath: 'key',
+        });
+        tileStore.createIndex(urlTemplateIndex, 'urlTemplate');
+        tileStore.createIndex('z', 'z');
+      }
+    },
+  });
+  return dbPromise;
+}
 
 export type TileInfo = {
   key: string;
@@ -46,7 +53,7 @@ export type TileInfo = {
  * ```
  */
 export async function getStorageLength(): Promise<number> {
-  return (await dbPromise).count(tileStoreName);
+  return (await openTilesDataBase()).count(tileStoreName);
 }
 
 /**
@@ -58,7 +65,7 @@ export async function getStorageLength(): Promise<number> {
  */
 export async function getStorageInfo(urlTemplate: string): Promise<TileInfo[]> {
   const range = IDBKeyRange.only(urlTemplate);
-  return (await dbPromise).getAllFromIndex(
+  return (await openTilesDataBase()).getAllFromIndex(
     tileStoreName,
     urlTemplateIndex,
     range
@@ -90,7 +97,7 @@ export async function saveTile(
   tileInfo: TileInfo,
   blob: Blob
 ): Promise<IDBValidKey> {
-  return (await dbPromise).put(tileStoreName, {
+  return (await openTilesDataBase()).put(tileStoreName, {
     blob,
     ...tileInfo,
   });
@@ -181,14 +188,14 @@ export function getStoredTilesAsJson(
  * Remove tile by key
  */
 export async function removeTile(key: string): Promise<void> {
-  return (await dbPromise).delete(tileStoreName, key);
+  return (await openTilesDataBase()).delete(tileStoreName, key);
 }
 
 /**
  * Get single tile blob
  */
 export async function getBlobByKey(key: string): Promise<Blob> {
-  return (await dbPromise)
+  return (await openTilesDataBase())
     .get(tileStoreName, key)
     .then((result) => result && result.blob);
 }
@@ -197,5 +204,5 @@ export async function getBlobByKey(key: string): Promise<Blob> {
  * Remove everything
  */
 export async function truncate(): Promise<void> {
-  return (await dbPromise).clear(tileStoreName);
+  return (await openTilesDataBase()).clear(tileStoreName);
 }
