@@ -75,9 +75,7 @@ const TileLayerOffline = L.TileLayer.extend(
      */
     setDataUrl(coords) {
       if (this._ongoingSave)
-        return Promise.resolve().then(() => {
-          throw new Error('On download state');
-        });
+        return Promise.reject(new Error('On download state'));
 
       return getTile(this._getStorageKey(coords)).then((data) => {
         if (data && typeof data === 'object') {
