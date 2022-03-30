@@ -21,23 +21,11 @@ interface SaveTileOptions extends ControlOptions {
   rmText: string;
   maxZoom: number;
   saveWhatYouSee: boolean;
-  bounds?: LatLngBounds | null;
-  confirm?: Function | null;
-  confirmRemoval?: Function | null;
+  bounds: LatLngBounds | null;
+  confirm: Function | null;
+  confirmRemoval: Function | null;
   parallel: number;
-  zoomlevels?: number[] | undefined;
-}
-
-interface SaveTileOptionsArg extends ControlOptions {
-  saveText?: string;
-  rmText?: string;
-  maxZoom?: number;
-  saveWhatYouSee?: boolean;
-  bounds?: LatLngBounds | null;
-  confirm?: Function | null;
-  confirmRemoval?: Function | null;
-  parallel?: number;
-  zoomlevels?: number[] | undefined;
+  zoomlevels: number[] | undefined;
 }
 
 interface SaveStatus {
@@ -65,7 +53,7 @@ export class ControlSaveTiles extends Control {
     _tilesforSave: [],
   };
 
-  constructor(baseLayer: TileLayerOffline, options: SaveTileOptionsArg) {
+  constructor(baseLayer: TileLayerOffline, options: Partial<SaveTileOptions>) {
     super(options);
     this._baseLayer = baseLayer;
     this.setStorageSize();
@@ -251,7 +239,7 @@ export class ControlSaveTiles extends Control {
 
 export function savetiles(
   baseLayer: TileLayerOffline,
-  options: SaveTileOptionsArg
+  options: Partial<SaveTileOptions>
 ) {
   return new ControlSaveTiles(baseLayer, options);
 }
