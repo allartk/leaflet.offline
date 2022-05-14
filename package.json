@@ -4,7 +4,7 @@
   "description": "Offline tilelayer for leaflet",
   "main": "dist/bundle.js",
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
