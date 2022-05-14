@@ -3,6 +3,9 @@
   "version": "2.1.0",
   "description": "Offline tilelayer for leaflet",
   "main": "dist/bundle.js",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "type-check": "tsc --noEmit",
     "docs": "typedoc --plugin typedoc-plugin-markdown --out docs/typedoc src/index.ts",
