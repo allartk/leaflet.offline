@@ -14,6 +14,7 @@ import {
   downloadTile,
   saveTile,
   TileInfo,
+  hasTile,
 } from './TileManager';
 
 interface SaveTileOptions extends ControlOptions {
@@ -26,6 +27,7 @@ interface SaveTileOptions extends ControlOptions {
   confirmRemoval: Function | null;
   parallel: number;
   zoomlevels: number[] | undefined;
+  alwaysDownload: boolean;
 }
 
 interface SaveStatus {
@@ -69,6 +71,7 @@ export class ControlSaveTiles extends Control {
         confirmRemoval: null,
         parallel: 50,
         zoomlevels: undefined,
+        alwaysDownload: true,
       },
       ...options,
     };
@@ -140,7 +143,9 @@ export class ControlSaveTiles extends Control {
     if (this.options.saveWhatYouSee) {
       const currentZoom = this._map.getZoom();
       if (currentZoom < minZoom) {
-        throw new Error("It's not possible to save with zoom below level 5.");
+        throw new Error(
+          `It's not possible to save with zoom below level ${minZoom}.`
+        );
       }
       const { maxZoom } = this.options;
 
@@ -163,12 +168,13 @@ export class ControlSaveTiles extends Control {
     this._resetStatus(tiles);
     const successCallback = async () => {
       this._baseLayer.fire('savestart', this.status);
-      const loader = (): Promise<void> => {
+      const loader = async (): Promise<void> => {
         const tile = tiles.shift();
         if (tile === undefined) {
           return Promise.resolve();
         }
-        return this._loadTile(tile).then(loader);
+        await this._loadTile(tile);
+        return loader();
       };
       const parallel = Math.min(tiles.length, this.options.parallel);
       for (let i = 0; i < parallel; i += 1) {
@@ -194,20 +200,27 @@ export class ControlSaveTiles extends Control {
 
   async _loadTile(tile: TileInfo) {
     const self = this;
-    await downloadTile(tile.url).then((blob) => {
+    if (
+      this.options.alwaysDownload === true ||
+      (await hasTile(tile.key)) === false
+    ) {
+      const blob = await downloadTile(tile.url);
       self.status.lengthLoaded += 1;
-      self._saveTile(tile, blob);
-      self._baseLayer.fire('loadtileend', self.status);
-      if (self.status.lengthLoaded === self.status.lengthToBeSaved) {
-        self._baseLayer.fire('loadend', self.status);
-      }
-    });
+      await this._saveTile(tile, blob);
+    } else {
+      self.status.lengthLoaded += 1;
+    }
+
+    self._baseLayer.fire('loadtileend', self.status);
+    if (self.status.lengthLoaded === self.status.lengthToBeSaved) {
+      self._baseLayer.fire('loadend', self.status);
+    }
   }
 
-  _saveTile(tile: TileInfo, blob: Blob) {
+  _saveTile(tile: TileInfo, blob: Blob): Promise<void> {
     // original is synchronous
     const self = this;
-    saveTile(tile, blob)
+    return saveTile(tile, blob)
       .then(() => {
         self.status.lengthSaved += 1;
         self._baseLayer.fire('savetileend', self.status);

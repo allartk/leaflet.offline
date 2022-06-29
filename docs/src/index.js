@@ -16,6 +16,7 @@ const baseLayer = tileLayerOffline(urlTemplate, {
 // add buttons to save tiles in area viewed
 const saveControl = savetiles(baseLayer, {
   zoomlevels: [13, 16], // optional zoomlevels to save, default current zoomlevel
+  alwaysDownload: false,
   confirm(layer, successCallback) {
     // eslint-disable-next-line no-alert
     if (window.confirm(`Save ${layer._tilesforSave.length}`)) {
@@ -76,7 +77,7 @@ baseLayer.on('savestart', (e) => {
   document.getElementById('progress-wrapper').classList.add('show');
   document.getElementById('progressbar').style.width = '0%';
 });
-baseLayer.on('savetileend', () => {
+baseLayer.on('loadtileend', () => {
   progress += 1;
   showProgress();
 });
