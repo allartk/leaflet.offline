@@ -134,6 +134,34 @@ export class ControlSaveTiles extends Control {
   }
 
   _saveTiles() {
+    const tiles = this._calculateTiles();
+    this._resetStatus(tiles);
+    const successCallback = async () => {
+      this._baseLayer.fire('savestart', this.status);
+      const loader = async (): Promise<void> => {
+        const tile = tiles.shift();
+        if (tile === undefined) {
+          return Promise.resolve();
+        }
+        const blob = await this._loadTile(tile);
+        if (blob) {
+          await this._saveTile(tile, blob);
+        }
+        return loader();
+      };
+      const parallel = Math.min(tiles.length, this.options.parallel);
+      for (let i = 0; i < parallel; i += 1) {
+        loader();
+      }
+    };
+    if (this.options.confirm) {
+      this.options.confirm(this.status, successCallback);
+    } else {
+      successCallback();
+    }
+  }
+
+  _calculateTiles() {
     let tiles: TileInfo[] = [];
     // minimum zoom to prevent the user from saving the whole world
     const minZoom = 5;
@@ -165,27 +193,7 @@ export class ControlSaveTiles extends Control {
       );
       tiles = tiles.concat(this._baseLayer.getTileUrls(area, zoomlevels[i]));
     }
-    this._resetStatus(tiles);
-    const successCallback = async () => {
-      this._baseLayer.fire('savestart', this.status);
-      const loader = async (): Promise<void> => {
-        const tile = tiles.shift();
-        if (tile === undefined) {
-          return Promise.resolve();
-        }
-        await this._loadTile(tile);
-        return loader();
-      };
-      const parallel = Math.min(tiles.length, this.options.parallel);
-      for (let i = 0; i < parallel; i += 1) {
-        loader();
-      }
-    };
-    if (this.options.confirm) {
-      this.options.confirm(this.status, successCallback);
-    } else {
-      successCallback();
-    }
+    return tiles;
   }
 
   _resetStatus(tiles: TileInfo[]) {
@@ -199,39 +207,31 @@ export class ControlSaveTiles extends Control {
   }
 
   async _loadTile(tile: TileInfo) {
-    const self = this;
+    let blob;
     if (
       this.options.alwaysDownload === true ||
       (await hasTile(tile.key)) === false
     ) {
-      const blob = await downloadTile(tile.url);
-      self.status.lengthLoaded += 1;
-      await this._saveTile(tile, blob);
-    } else {
-      self.status.lengthLoaded += 1;
+      blob = await downloadTile(tile.url);
+      this.status.lengthLoaded += 1;
     }
+    this.status.lengthLoaded += 1;
 
-    self._baseLayer.fire('loadtileend', self.status);
-    if (self.status.lengthLoaded === self.status.lengthToBeSaved) {
-      self._baseLayer.fire('loadend', self.status);
+    this._baseLayer.fire('loadtileend', this.status);
+    if (this.status.lengthLoaded === this.status.lengthToBeSaved) {
+      this._baseLayer.fire('loadend', this.status);
     }
+    return blob;
   }
 
-  _saveTile(tile: TileInfo, blob: Blob): Promise<void> {
-    // original is synchronous
-    const self = this;
-    return saveTile(tile, blob)
-      .then(() => {
-        self.status.lengthSaved += 1;
-        self._baseLayer.fire('savetileend', self.status);
-        if (self.status.lengthSaved === self.status.lengthToBeSaved) {
-          self._baseLayer.fire('saveend', self.status);
-          self.setStorageSize();
-        }
-      })
-      .catch((err) => {
-        throw new Error(err);
-      });
+  async _saveTile(tile: TileInfo, blob: Blob): Promise<void> {
+    await saveTile(tile, blob);
+    this.status.lengthSaved += 1;
+    this._baseLayer.fire('savetileend', this.status);
+    if (this.status.lengthSaved === this.status.lengthToBeSaved) {
+      this._baseLayer.fire('saveend', this.status);
+      this.setStorageSize();
+    }
   }
 
   _rmTiles() {
