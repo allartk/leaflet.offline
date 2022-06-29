@@ -53,7 +53,8 @@ export function openTilesDataBase(): Promise<IDBPDatabase> {
  * ```
  */
 export async function getStorageLength(): Promise<number> {
-  return (await openTilesDataBase()).count(tileStoreName);
+  const db = await openTilesDataBase();
+  return db.count(tileStoreName);
 }
 
 /**
@@ -65,11 +66,8 @@ export async function getStorageLength(): Promise<number> {
  */
 export async function getStorageInfo(urlTemplate: string): Promise<TileInfo[]> {
   const range = IDBKeyRange.only(urlTemplate);
-  return (await openTilesDataBase()).getAllFromIndex(
-    tileStoreName,
-    urlTemplateIndex,
-    range
-  );
+  const db = await openTilesDataBase();
+  return db.getAllFromIndex(tileStoreName, urlTemplateIndex, range);
 }
 
 /**
@@ -80,12 +78,11 @@ export async function getStorageInfo(urlTemplate: string): Promise<TileInfo[]> {
  * ```
  */
 export async function downloadTile(tileUrl: string): Promise<Blob> {
-  return fetch(tileUrl).then((response) => {
-    if (!response.ok) {
-      throw new Error(`Request failed with status ${response.statusText}`);
-    }
-    return response.blob();
-  });
+  const response = await fetch(tileUrl);
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.statusText}`);
+  }
+  return response.blob();
 }
 /**
  * @example
@@ -97,7 +94,8 @@ export async function saveTile(
   tileInfo: TileInfo,
   blob: Blob
 ): Promise<IDBValidKey> {
-  return (await openTilesDataBase()).put(tileStoreName, {
+  const db = await openTilesDataBase();
+  return db.put(tileStoreName, {
     blob,
     ...tileInfo,
   });
@@ -188,7 +186,8 @@ export function getStoredTilesAsJson(
  * Remove tile by key
  */
 export async function removeTile(key: string): Promise<void> {
-  return (await openTilesDataBase()).delete(tileStoreName, key);
+  const db = await openTilesDataBase();
+  return db.delete(tileStoreName, key);
 }
 
 /**
