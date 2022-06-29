@@ -200,6 +200,12 @@ export async function getBlobByKey(key: string): Promise<Blob> {
     .then((result) => result && result.blob);
 }
 
+export async function hasTile(key: string): Promise<boolean> {
+  const db = await openTilesDataBase();
+  const result = await db.getKey(tileStoreName, key);
+  return result !== undefined;
+}
+
 /**
  * Remove everything
  */
