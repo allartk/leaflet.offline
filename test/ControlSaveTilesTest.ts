@@ -39,7 +39,7 @@ describe('control with defaults', () => {
   it('_saveTiles sets status', () => {
     const stub = sinon
       .stub(saveControl, '_loadTile')
-      .returns(Promise.resolve());
+      .returns(Promise.resolve(new Blob()));
     const resetstub = sinon.stub(saveControl, '_resetStatus');
     saveControl._saveTiles();
     assert.isObject(saveControl.status);
@@ -50,7 +50,7 @@ describe('control with defaults', () => {
   it('_saveTiles fires savestart with _tilesforSave prop', (done) => {
     const stub = sinon
       .stub(saveControl, '_loadTile')
-      .returns(Promise.resolve());
+      .returns(Promise.resolve(new Blob()));
     baseLayer.on('savestart', (status) => {
       // TODO
       // @ts-ignore
@@ -64,7 +64,7 @@ describe('control with defaults', () => {
   it('_saveTiles calls loadTile for each tile', () => {
     const stub = sinon
       .stub(saveControl, '_loadTile')
-      .returns(Promise.resolve());
+      .returns(Promise.resolve(new Blob()));
     saveControl._saveTiles();
     assert.equal(
       stub.callCount,
@@ -100,7 +100,9 @@ describe('control with different options', () => {
     });
     c.addTo(leafletMap);
     c._rmTiles();
-    const stub = sinon.stub(c, '_loadTile').returns(Promise.resolve());
+    const stub = sinon
+      .stub(c, '_loadTile')
+      .returns(Promise.resolve(new Blob()));
     c._saveTiles();
     assert.isObject(c.status);
     assert.isArray(c.status._tilesforSave);
@@ -113,7 +115,9 @@ describe('control with different options', () => {
     });
     c.addTo(leafletMap);
     c._rmTiles();
-    const stub = sinon.stub(c, '_loadTile').returns(Promise.resolve());
+    const stub = sinon
+      .stub(c, '_loadTile')
+      .returns(Promise.resolve(new Blob()));
     c._saveTiles();
     assert.isObject(c.status);
     assert.isArray(c.status._tilesforSave);
