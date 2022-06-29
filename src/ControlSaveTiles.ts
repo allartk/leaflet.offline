@@ -124,6 +124,7 @@ export class ControlSaveTiles extends Control {
     const link = DomUtil.create('a', className, container);
     link.innerHTML = html;
     link.href = '#';
+    link.ariaRoleDescription = 'button';
 
     DomEvent.on(link, 'mousedown dblclick', DomEvent.stopPropagation)
       .on(link, 'click', DomEvent.stop)

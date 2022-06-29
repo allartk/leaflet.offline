@@ -29,10 +29,8 @@ const saveControl = savetiles(baseLayer, {
       successCallback();
     }
   },
-  saveText:
-    '<i class="fa fa-download" aria-hidden="true" title="Save tiles"></i>',
-  rmText:
-    '<i class="fa fa-trash" aria-hidden="true"  title="Remove tiles"></i>',
+  saveText: '<i class="fa fa-download" title="Save tiles"></i>',
+  rmText: '<i class="fa fa-trash" title="Remove tiles"></i>',
 });
 saveControl.addTo(leafletMap);
 
