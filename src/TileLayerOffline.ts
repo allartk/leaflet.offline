@@ -100,3 +100,7 @@ export class TileLayerOffline extends TileLayer {
 export function tileLayerOffline(url: string, options: TileLayerOptions) {
   return new TileLayerOffline(url, options);
 }
+
+
+/**  @ts-ignore */
+L.tileLayer.offline = tileLayerOffline;
