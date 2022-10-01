@@ -78,7 +78,7 @@
     ]
   },
   "dependencies": {
-    "idb": "^6.1.4",
+    "idb": "^7.1.0",
     "leaflet": "^1.6.0",
     "typescript": "^4.5.5"
   }
