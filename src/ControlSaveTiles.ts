@@ -30,7 +30,7 @@ interface SaveTileOptions extends ControlOptions {
   alwaysDownload: boolean;
 }
 
-interface SaveStatus {
+export interface SaveStatus {
   _tilesforSave: TileInfo[];
   storagesize: number;
   lengthToBeSaved: number;

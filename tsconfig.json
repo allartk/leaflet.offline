@@ -8,7 +8,7 @@
         "declarationDir": "dist/types",
         "target": "esnext",
         "module": "esnext",
-        "moduleResolution": "Node",
+        "moduleResolution": "node",
         "strict": true
       },
       "include": ["./src/**/*","./test/**/*"]

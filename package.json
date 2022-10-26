@@ -6,6 +6,7 @@
   "engines": {
     "node": "16.x"
   },
+  "types": "dist/types/src/index.d.ts",
   "scripts": {
     "type-check": "tsc --noEmit",
     "docs": "typedoc --plugin typedoc-plugin-markdown --out docs/typedoc src/index.ts",
