@@ -69,7 +69,7 @@
     "prettier": "2.7.1",
     "rollup": "^2.63.0",
     "sinon": "^13.0.2",
-    "typedoc": "^0.22.13",
+    "typedoc": "^0.23.18",
     "typedoc-plugin-markdown": "^3.11.14"
   },
   "lint-staged": {
