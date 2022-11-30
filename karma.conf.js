@@ -73,5 +73,14 @@ module.exports = (config) => {
     // Concurrency level
     // how many browser should be started simultaneous
     concurrency: Infinity,
+
+    // damn ubuntu snap https://github.com/karma-runner/karma-firefox-launcher/issues/183#issuecomment-1283875784
+    customLaunchers: {
+      FirefoxHeadless: {
+        base: 'Firefox',
+        flags: ['-headless'],
+        profile: require('path').join(__dirname, 'tmp'),
+      },
+    },
   });
 };
