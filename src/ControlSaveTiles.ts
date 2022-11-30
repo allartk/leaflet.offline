@@ -17,7 +17,7 @@ import {
   hasTile,
 } from './TileManager';
 
-interface SaveTileOptions extends ControlOptions {
+export interface SaveTileOptions extends ControlOptions {
   saveText: string;
   rmText: string;
   maxZoom: number;
@@ -256,4 +256,10 @@ export function savetiles(
   options: Partial<SaveTileOptions>
 ) {
   return new ControlSaveTiles(baseLayer, options);
+}
+
+/**  @ts-ignore */
+if (window.L) {
+  /**  @ts-ignore */
+  window.L.control.savetiles = savetiles;
 }

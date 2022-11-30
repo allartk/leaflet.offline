@@ -1,6 +1,7 @@
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
+const commonjs = require('@rollup/plugin-commonjs');
 const { babel } = require('@rollup/plugin-babel');
-const extensions = ['.ts'];
+const extensions = ['.js', '.ts'];
 
 module.exports = (config) => {
   config.set({
@@ -12,12 +13,7 @@ module.exports = (config) => {
     frameworks: ['mocha', 'chai'],
 
     // list of files / patterns to load in the browser
-    files: [
-      'node_modules/leaflet/dist/leaflet.js',
-      'node_modules/sinon/pkg/sinon.js',
-      'node_modules/idb/build/iife/index-min.js',
-      'test/*.ts',
-    ],
+    files: ['node_modules/sinon/pkg/sinon.js', 'test/*.ts'],
 
     // list of files to exclude
     exclude: [],
@@ -32,13 +28,10 @@ module.exports = (config) => {
         format: 'iife',
         name: 'LeafletOffline',
         sourcemap: 'inline',
-        globals: {
-          leaflet: 'L',
-          sinon: 'sinon',
-        },
       },
-      external: ['leaflet', 'sinon'],
+      external: ['sinon'],
       plugins: [
+        commonjs(),
         nodeResolve({ extensions }),
         babel({ extensions, babelHelpers: 'bundled' }),
       ],

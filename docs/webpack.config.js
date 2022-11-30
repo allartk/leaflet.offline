@@ -1,4 +1,5 @@
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -13,7 +14,21 @@ module.exports = {
     static: {
       directory: path.join(__dirname, '_site'),
     },
+    devMiddleware: {
+      writeToDisk: true,
+    },
     compress: true,
     port: 9000,
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'dist/bundle.js',
+          to: 'leaflet.offline.bundle.js',
+          context: 'node_modules/leaflet.offline/',
+        },
+      ],
+    }),
+  ],
 };
