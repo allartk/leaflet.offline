@@ -258,7 +258,8 @@ export function savetiles(
   return new ControlSaveTiles(baseLayer, options);
 }
 
-if (window.L && window.L.control) {
+/**  @ts-ignore */
+if (window.L) {
   /**  @ts-ignore */
   window.L.control.savetiles = savetiles;
 }

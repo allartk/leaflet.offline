@@ -101,7 +101,8 @@ export function tileLayerOffline(url: string, options: TileLayerOptions) {
   return new TileLayerOffline(url, options);
 }
 
-if (window.L && window.L.control) {
+/**  @ts-ignore */
+if (window.L) {
   /**  @ts-ignore */
   window.L.tileLayer.offline = tileLayerOffline;
 }
