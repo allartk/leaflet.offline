@@ -17,7 +17,7 @@ import {
   hasTile,
 } from './TileManager';
 
-interface SaveTileOptions extends ControlOptions {
+export interface SaveTileOptions extends ControlOptions {
   saveText: string;
   rmText: string;
   maxZoom: number;

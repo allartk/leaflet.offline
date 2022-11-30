@@ -4,6 +4,20 @@
 
 ## Table of contents
 
+### Classes
+
+- [ControlSaveTiles](classes/ControlSaveTiles.md)
+- [TileLayerOffline](classes/TileLayerOffline.md)
+
+### Interfaces
+
+- [SaveStatus](interfaces/SaveStatus.md)
+- [SaveTileOptions](interfaces/SaveTileOptions.md)
+
+### Type Aliases
+
+- [TileInfo](modules.md#tileinfo)
+
 ### Functions
 
 - [downloadTile](modules.md#downloadtile)
@@ -17,13 +31,36 @@
 - [tileLayerOffline](modules.md#tilelayeroffline)
 - [truncate](modules.md#truncate)
 
+## Type Aliases
+
+### TileInfo
+
+Ƭ **TileInfo**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `createdAt` | `number` |
+| `key` | `string` |
+| `url` | `string` |
+| `urlTemplate` | `string` |
+| `x` | `number` |
+| `y` | `number` |
+| `z` | `number` |
+
+#### Defined in
+
+[src/TileManager.ts:13](https://github.com/allartk/leaflet.offline/blob/c681d1c/src/TileManager.ts#L13)
+
 ## Functions
 
 ### downloadTile
 
 ▸ **downloadTile**(`tileUrl`): `Promise`<`Blob`\>
 
-**`example`**
+**`Example`**
+
 ```js
 import { downloadTile } from 'leaflet.offline'
 downloadTile(tileInfo.url).then(blob => saveTile(tileInfo, blob))
@@ -41,7 +78,7 @@ downloadTile(tileInfo.url).then(blob => saveTile(tileInfo, blob))
 
 #### Defined in
 
-[TileManager.ts:82](https://github.com/allartk/leaflet.offline/blob/ecbebae/src/TileManager.ts#L82)
+[src/TileManager.ts:80](https://github.com/allartk/leaflet.offline/blob/c681d1c/src/TileManager.ts#L80)
 
 ___
 
@@ -63,15 +100,16 @@ Get single tile blob
 
 #### Defined in
 
-[TileManager.ts:197](https://github.com/allartk/leaflet.offline/blob/ecbebae/src/TileManager.ts#L197)
+[src/TileManager.ts:196](https://github.com/allartk/leaflet.offline/blob/c681d1c/src/TileManager.ts#L196)
 
 ___
 
 ### getStorageInfo
 
-▸ **getStorageInfo**(`urlTemplate`): `Promise`<`TileInfo`[]\>
+▸ **getStorageInfo**(`urlTemplate`): `Promise`<[`TileInfo`](modules.md#tileinfo)[]\>
 
-**`example`**
+**`Example`**
+
 ```js
 import { getStorageInfo } from 'leaflet.offline'
 getStorageInfo('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
@@ -85,11 +123,11 @@ getStorageInfo('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
 
 #### Returns
 
-`Promise`<`TileInfo`[]\>
+`Promise`<[`TileInfo`](modules.md#tileinfo)[]\>
 
 #### Defined in
 
-[TileManager.ts:66](https://github.com/allartk/leaflet.offline/blob/ecbebae/src/TileManager.ts#L66)
+[src/TileManager.ts:67](https://github.com/allartk/leaflet.offline/blob/c681d1c/src/TileManager.ts#L67)
 
 ___
 
@@ -97,7 +135,8 @@ ___
 
 ▸ **getStorageLength**(): `Promise`<`number`\>
 
-**`example`**
+**`Example`**
+
 ```js
 import { getStorageLength } from 'leaflet.offline'
 getStorageLength().then(i => console.log(i + 'tiles in storage'))
@@ -109,7 +148,7 @@ getStorageLength().then(i => console.log(i + 'tiles in storage'))
 
 #### Defined in
 
-[TileManager.ts:55](https://github.com/allartk/leaflet.offline/blob/ecbebae/src/TileManager.ts#L55)
+[src/TileManager.ts:55](https://github.com/allartk/leaflet.offline/blob/c681d1c/src/TileManager.ts#L55)
 
 ___
 
@@ -119,7 +158,9 @@ ___
 
 Get a geojson of tiles from one resource
 
-**`example`**
+**`Example`**
+
+```ts
 const urlTemplate = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const getGeoJsonData = () => LeafletOffline.getStorageInfo(urlTemplate)
  .then((data) => LeafletOffline.getStoredTilesAsJson(baseLayer, data));
@@ -129,13 +170,14 @@ getGeoJsonData().then((geojson) => {
     (clickedLayer) => clickedLayer.feature.properties.key,
   );
 });
+```
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `layer` | `GridLayer` |
-| `tiles` | `TileInfo`[] |
+| `tiles` | [`TileInfo`](modules.md#tileinfo)[] |
 
 #### Returns
 
@@ -143,7 +185,7 @@ getGeoJsonData().then((geojson) => {
 
 #### Defined in
 
-[TileManager.ts:143](https://github.com/allartk/leaflet.offline/blob/ecbebae/src/TileManager.ts#L143)
+[src/TileManager.ts:141](https://github.com/allartk/leaflet.offline/blob/c681d1c/src/TileManager.ts#L141)
 
 ___
 
@@ -165,7 +207,7 @@ Remove tile by key
 
 #### Defined in
 
-[TileManager.ts:190](https://github.com/allartk/leaflet.offline/blob/ecbebae/src/TileManager.ts#L190)
+[src/TileManager.ts:188](https://github.com/allartk/leaflet.offline/blob/c681d1c/src/TileManager.ts#L188)
 
 ___
 
@@ -173,7 +215,8 @@ ___
 
 ▸ **saveTile**(`tileInfo`, `blob`): `Promise`<`IDBValidKey`\>
 
-**`example`**
+**`Example`**
+
 ```js
 saveTile(tileInfo, blob).then(() => console.log(`saved tile from ${tileInfo.url}`))
 ```
@@ -182,7 +225,7 @@ saveTile(tileInfo, blob).then(() => console.log(`saved tile from ${tileInfo.url}
 
 | Name | Type |
 | :------ | :------ |
-| `tileInfo` | `TileInfo` |
+| `tileInfo` | [`TileInfo`](modules.md#tileinfo) |
 | `blob` | `Blob` |
 
 #### Returns
@@ -191,34 +234,34 @@ saveTile(tileInfo, blob).then(() => console.log(`saved tile from ${tileInfo.url}
 
 #### Defined in
 
-[TileManager.ts:96](https://github.com/allartk/leaflet.offline/blob/ecbebae/src/TileManager.ts#L96)
+[src/TileManager.ts:93](https://github.com/allartk/leaflet.offline/blob/c681d1c/src/TileManager.ts#L93)
 
 ___
 
 ### savetiles
 
-▸ **savetiles**(`baseLayer`, `options`): `ControlSaveTiles`
+▸ **savetiles**(`baseLayer`, `options`): [`ControlSaveTiles`](classes/ControlSaveTiles.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `baseLayer` | `TileLayerOffline` |
-| `options` | `SaveTileOptionsArg` |
+| `baseLayer` | [`TileLayerOffline`](classes/TileLayerOffline.md) |
+| `options` | `Partial`<[`SaveTileOptions`](interfaces/SaveTileOptions.md)\> |
 
 #### Returns
 
-`ControlSaveTiles`
+[`ControlSaveTiles`](classes/ControlSaveTiles.md)
 
 #### Defined in
 
-[ControlSaveTiles.ts:252](https://github.com/allartk/leaflet.offline/blob/ecbebae/src/ControlSaveTiles.ts#L252)
+[src/ControlSaveTiles.ts:254](https://github.com/allartk/leaflet.offline/blob/c681d1c/src/ControlSaveTiles.ts#L254)
 
 ___
 
 ### tileLayerOffline
 
-▸ **tileLayerOffline**(`url`, `options`): `TileLayerOffline`
+▸ **tileLayerOffline**(`url`, `options`): [`TileLayerOffline`](classes/TileLayerOffline.md)
 
 #### Parameters
 
@@ -229,11 +272,11 @@ ___
 
 #### Returns
 
-`TileLayerOffline`
+[`TileLayerOffline`](classes/TileLayerOffline.md)
 
 #### Defined in
 
-[TileLayerOffline.ts:100](https://github.com/allartk/leaflet.offline/blob/ecbebae/src/TileLayerOffline.ts#L100)
+[src/TileLayerOffline.ts:100](https://github.com/allartk/leaflet.offline/blob/c681d1c/src/TileLayerOffline.ts#L100)
 
 ___
 
@@ -249,4 +292,4 @@ Remove everything
 
 #### Defined in
 
-[TileManager.ts:206](https://github.com/allartk/leaflet.offline/blob/ecbebae/src/TileManager.ts#L206)
+[src/TileManager.ts:211](https://github.com/allartk/leaflet.offline/blob/c681d1c/src/TileManager.ts#L211)
