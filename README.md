@@ -24,8 +24,6 @@ your existing project with [npm](http://npmjs.com):
 
 ```
 # version 3
-npm install leaflet.offline@next
-# version 2
 npm install leaflet.offline
 ```
 
