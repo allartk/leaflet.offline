@@ -1,9 +1,14 @@
 import { babel } from '@rollup/plugin-babel';
+import resolve from '@rollup/plugin-node-resolve';
+import pkg from './package.json';
+
+const extensions = ['.ts'];
+
 
 export default {
-  input: 'src/index.js',
+  input: 'src/index.ts',
   output: {
-    file: 'dist/bundle.js',
+    file: pkg.main,
     format: 'umd',
     name: 'LeafletOffline',
     globals: {
@@ -11,6 +16,9 @@ export default {
       idb: 'idb',
     },
   },
-  plugins: [babel({ babelHelpers: 'bundled' })],
+  plugins: [
+    resolve({ extensions }),
+    babel({ extensions, babelHelpers: 'bundled' })
+  ],
   external: ['leaflet', 'idb'],
 };

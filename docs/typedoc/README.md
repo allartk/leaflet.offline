@@ -1,3 +1,5 @@
+leaflet.offline / [Exports](modules.md)
+
 # leaflet.offline version 3.x
 
 [![npm version](https://badge.fury.io/js/leaflet.offline.svg)](https://badge.fury.io/js/leaflet.offline)
