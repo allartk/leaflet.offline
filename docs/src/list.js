@@ -1,4 +1,4 @@
-import { getStorageInfo, truncate } from 'leaflet.offline';
+import { getStorageInfo, removeTile, truncate } from 'leaflet.offline';
 import { urlTemplate, wmtsUrlTemplate } from './const';
 
 const layerSelector = document.getElementById('selectlayer');
@@ -42,6 +42,19 @@ document
   .addEventListener('click', () =>
     truncate().then(() => createTable(layerSelector.value))
   );
+
+document
+  .getElementById('remove_old_tiles')
+  .addEventListener('click', async () => {
+    const tiles = await getStorageInfo(urlTemplate);
+    const minCreatedAt = new Date().setDate(-30);
+    tiles.forEach(async (tile) => {
+      if (tile.createdAt < minCreatedAt) {
+        await removeTile(tile.key);
+      }
+    });
+    createTable(layerSelector.value);
+  });
 
 layerSelector.addEventListener('change', (e) => {
   createTable(e.target.value);
