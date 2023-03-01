@@ -48,11 +48,11 @@ document
   .addEventListener('click', async () => {
     const tiles = await getStorageInfo(urlTemplate);
     const minCreatedAt = new Date().setDate(-30);
-    tiles.forEach(async (tile) => {
-      if (tile.createdAt < minCreatedAt) {
-        await removeTile(tile.key);
-      }
-    });
+    await Promise.all(
+      tiles.map((tile) =>
+        tile.createdAt < minCreatedAt ? removeTile(tile.key) : Promise.resolve()
+      )
+    );
     createTable(layerSelector.value);
   });
 
