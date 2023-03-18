@@ -6,3 +6,6 @@ updates:
       interval: 'monthly'
     target-branch: 'develop'
     versioning-strategy: increase-if-necessary
+    allow:
+      # Allow both direct and indirect updates for all packages
+      - dependency-type: "direct"
