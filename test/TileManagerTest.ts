@@ -1,6 +1,11 @@
 /* global describe, it, assert, beforeEach */
 import { point, bounds } from 'leaflet';
-import { getStorageLength, getTilePoints, saveTile, truncate } from '../src/TileManager';
+import {
+  getStorageLength,
+  getTilePoints,
+  saveTile,
+  truncate,
+} from '../src/TileManager';
 
 describe('manage tile storage', () => {
   beforeEach(() => truncate());
@@ -31,10 +36,10 @@ describe('manage tile storage', () => {
   });
 
   it('will calc tile points', () => {
-    const minBound = point(0,0);
-    const maxBound = point(200,200);
-    const tilebounds = bounds(minBound,maxBound);
+    const minBound = point(0, 0);
+    const maxBound = point(200, 200);
+    const tilebounds = bounds(minBound, maxBound);
     const tilePoints = getTilePoints(tilebounds, point(256, 256));
-    assert.lengthOf(tilePoints, 1);    
+    assert.lengthOf(tilePoints, 1);
   });
 });
