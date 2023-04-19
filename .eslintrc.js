@@ -3,20 +3,26 @@ module.exports = {
   env: {
     browser: true,
   },
-  extends: ['airbnb-base', 'airbnb-typescript/base', 'prettier'],
+  extends: ['airbnb-base', 'prettier'],
   parserOptions: {
     project: './tsconfig.json',
   },
-  rules: {
-    'import/no-extraneous-dependencies': [
-      'error',
-      {
-        devDependencies: true,
-        optionalDependencies: false,
-        peerDependencies: false,
+  overrides: [
+    {
+      files: ['src/**/*.ts', 'test/**/*.ts'],
+      extends: ['airbnb-base', 'airbnb-typescript/base', 'prettier'],
+      rules: {
+        'import/no-extraneous-dependencies': [
+          'error',
+          {
+            devDependencies: true,
+            optionalDependencies: false,
+            peerDependencies: false,
+          },
+        ],
+        'no-underscore-dangle': 0,
+        'no-return-assign': ['error', 'except-parens'],
       },
-    ],
-    'no-underscore-dangle': 0,
-    'no-return-assign': ['error', "except-parens"]
-  },
+    },
+  ],
 };

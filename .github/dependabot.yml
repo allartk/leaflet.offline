@@ -4,5 +4,8 @@ updates:
     directory: '/'
     schedule:
       interval: 'monthly'
-    target-branch: 'develop'
+    target-branch: 'master'
     versioning-strategy: increase-if-necessary
+    allow:
+      # Allow both direct and indirect updates for all packages
+      - dependency-type: "direct"

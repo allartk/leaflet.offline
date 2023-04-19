@@ -72,7 +72,7 @@ export class TileLayerOffline extends TileLayer {
         ...this.options,
         x: tilePoint.x,
         y: tilePoint.y,
-        z: zoom,
+        z: zoom + (this.options.zoomOffset || 0),
       };
       tiles.push({
         key: getTileUrl(this._url, {
