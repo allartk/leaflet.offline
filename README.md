@@ -41,9 +41,9 @@ to your page (after leaflet and idb).
 For running the example locally, you'll need to clone the project and run:
 
 ```
-npm i && npm run start
+npm i && npm run build
 cd docs
-npm install && npm run serve
+npm install && npm run start
 ```
 
 You can test your code with `npm test`. Please configure eslint in your editor if you wish to contribute.
