@@ -41,7 +41,7 @@ to your page (after leaflet and idb).
 For running the example locally, you'll need to clone the project and run:
 
 ```
-npm i && npm run build
+npm i && npm run start
 cd docs
 npm install && npm run serve
 ```
