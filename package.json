@@ -15,6 +15,7 @@
     "build": "npm run build:types && npm run build:js",
     "lint": "eslint && prettier --check \"./(src|test)/**/*.ts\"",
     "lint:fix": "eslint --fix src test",
+    "format": "eslint --fix src test && prettier -w \"./(src|test)/**/*.ts\"",
     "test": "karma  start karma.conf.js",
     "test:watch": "karma start --no-single-run karma.conf.js",
     "watch": "rollup -c -w",

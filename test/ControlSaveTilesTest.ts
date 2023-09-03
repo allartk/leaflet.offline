@@ -12,13 +12,13 @@ describe('control with defaults', () => {
         lat: 51.985,
         lng: 5,
       },
-      16
+      16,
     );
     baseLayer = new TileLayerOffline(
       'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
         subdomains: 'abc',
-      }
+      },
     ).addTo(leafletMap);
     saveControl = savetiles(baseLayer, {});
     saveControl.addTo(leafletMap);
@@ -69,7 +69,7 @@ describe('control with defaults', () => {
     assert.equal(
       stub.callCount,
       1,
-      `_loadTile has been called ${stub.callCount} times`
+      `_loadTile has been called ${stub.callCount} times`,
     );
     stub.resetBehavior();
   });
@@ -85,13 +85,13 @@ describe('control with different options', () => {
         lat: 51.985,
         lng: 5,
       },
-      16
+      16,
     );
     baseLayer = new TileLayerOffline(
       'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
         subdomains: 'abc',
-      }
+      },
     ).addTo(leafletMap);
   });
   it('_saveTiles calculates tiles for 2 zoomlevels', () => {
@@ -124,7 +124,7 @@ describe('control with different options', () => {
     assert.equal(
       stub.callCount,
       4,
-      `_loadTile has been called ${stub.callCount} times`
+      `_loadTile has been called ${stub.callCount} times`,
     );
     stub.resetBehavior();
   });
