@@ -71,7 +71,7 @@
     "prettier": "^3.0.3",
     "rollup": "^3.20.2",
     "sinon": "^13.0.2",
-    "typedoc": "^0.24.1",
+    "typedoc": "^0.25.0",
     "typedoc-plugin-markdown": "^3.11.14",
     "typescript": "^5.0.4"
   },
