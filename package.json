@@ -1,6 +1,6 @@
 {
   "name": "leaflet.offline",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Offline tilelayer for leaflet",
   "main": "dist/bundle.js",
   "engines": {
