@@ -109,7 +109,7 @@ export class ControlSaveTiles extends Control {
       options.saveText,
       'savetiles',
       container,
-      this._saveTiles
+      this._saveTiles,
     );
     this._createButton(options.rmText, 'rmtiles', container, this._rmTiles);
     return container;
@@ -119,7 +119,7 @@ export class ControlSaveTiles extends Control {
     html: string,
     className: string,
     container: HTMLElement,
-    fn: DomEvent.EventHandlerFn
+    fn: DomEvent.EventHandlerFn,
   ) {
     const link = DomUtil.create('a', className, container);
     link.innerHTML = html;
@@ -173,7 +173,7 @@ export class ControlSaveTiles extends Control {
       const currentZoom = this._map.getZoom();
       if (currentZoom < minZoom) {
         throw new Error(
-          `It's not possible to save with zoom below level ${minZoom}.`
+          `It's not possible to save with zoom below level ${minZoom}.`,
         );
       }
       const { maxZoom } = this.options;
@@ -190,7 +190,7 @@ export class ControlSaveTiles extends Control {
     for (let i = 0; i < zoomlevels.length; i += 1) {
       const area = bounds(
         this._map.project(latlngBounds.getNorthWest(), zoomlevels[i]),
-        this._map.project(latlngBounds.getSouthEast(), zoomlevels[i])
+        this._map.project(latlngBounds.getSouthEast(), zoomlevels[i]),
       );
       tiles = tiles.concat(this._baseLayer.getTileUrls(area, zoomlevels[i]));
     }
@@ -253,7 +253,7 @@ export class ControlSaveTiles extends Control {
 
 export function savetiles(
   baseLayer: TileLayerOffline,
-  options: Partial<SaveTileOptions>
+  options: Partial<SaveTileOptions>,
 ) {
   return new ControlSaveTiles(baseLayer, options);
 }

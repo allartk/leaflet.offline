@@ -22,11 +22,11 @@ describe('manage tile storage', () => {
           'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}',
         createdAt: Date.now(),
       },
-      new Blob()
+      new Blob(),
     ).then((r) => {
       assert.equal(
         r,
-        'https://api.tiles.mapbox.com/v4/mapbox.streets/16/33677/21651.png?access_token=xyz'
+        'https://api.tiles.mapbox.com/v4/mapbox.streets/16/33677/21651.png?access_token=xyz',
       );
     }));
 

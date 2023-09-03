@@ -92,7 +92,7 @@ export async function downloadTile(tileUrl: string): Promise<Blob> {
  */
 export async function saveTile(
   tileInfo: TileInfo,
-  blob: Blob
+  blob: Blob,
 ): Promise<IDBValidKey> {
   const db = await openTilesDataBase();
   return db.put(tileStoreName, {
@@ -140,7 +140,7 @@ export function getTilePoints(area: Bounds, tileSize: Point): Point[] {
  */
 export function getStoredTilesAsJson(
   layer: GridLayer,
-  tiles: TileInfo[]
+  tiles: TileInfo[],
 ): FeatureCollection {
   const featureCollection: FeatureCollection = {
     type: 'FeatureCollection',
@@ -149,17 +149,17 @@ export function getStoredTilesAsJson(
   for (let i = 0; i < tiles.length; i += 1) {
     const topLeftPoint = new Point(
       tiles[i].x * layer.getTileSize().x,
-      tiles[i].y * layer.getTileSize().y
+      tiles[i].y * layer.getTileSize().y,
     );
     const bottomRightPoint = new Point(
       topLeftPoint.x + layer.getTileSize().x,
-      topLeftPoint.y + layer.getTileSize().y
+      topLeftPoint.y + layer.getTileSize().y,
     );
 
     const topLeftlatlng = CRS.EPSG3857.pointToLatLng(topLeftPoint, tiles[i].z);
     const botRightlatlng = CRS.EPSG3857.pointToLatLng(
       bottomRightPoint,
-      tiles[i].z
+      tiles[i].z,
     );
     featureCollection.features.push({
       type: 'Feature',
