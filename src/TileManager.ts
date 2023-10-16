@@ -98,7 +98,7 @@ export async function saveTile(
   return db.put(tileStoreName, {
     blob,
     ...tileInfo,
-  });
+  }, tileInfo.key);
 }
 
 export function getTileUrl(urlTemplate: string, data: any): string {
