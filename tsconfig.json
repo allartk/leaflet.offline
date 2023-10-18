@@ -1,8 +1,9 @@
 {
     "compilerOptions": {        
-        "target": "es2016",
-        "module": "esnext",
-        "strict": true
+        "target": "es6",
+        "module": "NodeNext",
+        "strict": true,
+        "moduleResolution":"NodeNext"
       },
       "include": ["./src/**/*","./test/**/*"]
   }
