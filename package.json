@@ -15,10 +15,10 @@
     "lint": "eslint && prettier --check \"./(src|test)/**/*.ts\"",
     "lint:fix": "eslint --fix src test",
     "format": "eslint --fix src test && prettier -w \"./(src|test)/**/*.ts\"",
-    "test": "karma  start karma.conf.js",
-    "test:watch": "karma start --no-single-run karma.conf.js",
+    "test": "karma  start",
+    "test:watch": "karma start --no-single-run",
     "watch": "rollup -c -w",
-    "preversion": "./node_modules/karma/bin/karma  start  karma.conf.js --single-run",
+    "preversion": "./node_modules/karma/bin/karma  start  --single-run",
     "prepublishOnly": "npm run build && npx husky install"
   },
   "repository": {
