@@ -7,3 +7,4 @@ npm-debug.log
 /.vscode
 /tmp/**
 !/tmp/.gitkeep
+coverage

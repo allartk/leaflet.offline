@@ -1,6 +1,8 @@
+const typescript = require('@rollup/plugin-typescript');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
-const { babel } = require('@rollup/plugin-babel');
+const istanbul = require('rollup-plugin-istanbul');
+
 const extensions = ['.js', '.ts'];
 
 module.exports = (config) => {
@@ -33,14 +35,15 @@ module.exports = (config) => {
       plugins: [
         commonjs(),
         nodeResolve({ extensions }),
-        babel({ extensions, babelHelpers: 'bundled' }),
+        typescript(),
+        istanbul({ exclude: ['test/*.ts', 'node_modules/**/*'] }),
       ],
     },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['mocha', 'progress'],
+    reporters: ['mocha', 'progress', 'coverage'],
 
     // web server port
     port: 9876,
@@ -74,6 +77,10 @@ module.exports = (config) => {
         flags: ['-headless'],
         profile: require('path').join(__dirname, 'tmp'),
       },
+    },
+    coverageReporter: {
+      type: 'html',
+      dir: 'coverage/',
     },
   });
 };

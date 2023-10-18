@@ -1,9 +1,8 @@
-import { babel } from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
-import pkg from './package.json' assert { type: "json" };;
+import pkg from './package.json' assert { type: 'json' };
+import typescript from '@rollup/plugin-typescript';
 
 const extensions = ['.ts'];
-
 
 export default {
   input: 'src/index.ts',
@@ -16,9 +15,6 @@ export default {
       idb: 'idb',
     },
   },
-  plugins: [
-    resolve({ extensions }),
-    babel({ extensions, babelHelpers: 'bundled' })
-  ],
+  plugins: [resolve({ extensions }), typescript()],
   external: ['leaflet', 'idb'],
 };
