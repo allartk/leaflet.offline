@@ -1,7 +1,7 @@
 {
     "compilerOptions": {        
         "target": "es6",
-        "module": "NodeNext",
+        "module": "esnext",
         "strict": true,
         "moduleResolution":"bundler"
       },
