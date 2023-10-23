@@ -20,6 +20,8 @@ export type TileInfo = {
   createdAt: number;
 };
 
+export type StoredTile = TileInfo & { blob: Blob };
+
 const tileStoreName = 'tileStore';
 const urlTemplateIndex = 'urlTemplate';
 let dbPromise: Promise<IDBPDatabase> | undefined;
@@ -64,7 +66,9 @@ export async function getStorageLength(): Promise<number> {
  * getStorageInfo('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
  * ```
  */
-export async function getStorageInfo(urlTemplate: string): Promise<TileInfo[]> {
+export async function getStorageInfo(
+  urlTemplate: string,
+): Promise<StoredTile[]> {
   const range = IDBKeyRange.only(urlTemplate);
   const db = await openTilesDataBase();
   return db.getAllFromIndex(tileStoreName, urlTemplateIndex, range);
