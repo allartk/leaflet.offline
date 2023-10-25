@@ -1,8 +1,9 @@
 /* global describe, it, assert, beforeEach */
-import { point, bounds } from 'leaflet';
+import { point, bounds, GridLayer, gridLayer } from 'leaflet';
 import {
   getStorageInfo,
   getStorageLength,
+  getStoredTilesAsJson,
   getTilePoints,
   hasTile,
   removeTile,
@@ -77,5 +78,16 @@ describe('manage tile storage', () => {
     await removeTile(testTileInfo.key);
     const result = await hasTile(testTileInfo.key);
     assert.isFalse(result);
+  });
+
+  it('Creates geojson with tiles', () => {
+    const layer = gridLayer();
+    const json = getStoredTilesAsJson(layer, [testTileInfo]);
+    assert.lengthOf(json.features, 1);
+    const feature = json.features[0];
+    assert.equal(feature.type, 'Feature');
+    assert.equal(feature.geometry.type, 'Polygon');
+    assert.lengthOf(feature.geometry.coordinates, 1);
+    assert.lengthOf(feature.geometry.coordinates[0], 5);
   });
 });
