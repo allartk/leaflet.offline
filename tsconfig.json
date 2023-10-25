@@ -3,7 +3,9 @@
         "target": "es6",
         "module": "esnext",
         "strict": true,
-        "moduleResolution":"bundler"
+        "moduleResolution":"bundler",
+        "declaration": true,
+        "declarationDir": "dist/types",
       },
       "include": ["./src/**/*","./test/**/*"]
   }
