@@ -8,7 +8,7 @@
 
 import { Bounds, Browser, CRS, GridLayer, Point, Util } from 'leaflet';
 import { openDB, deleteDB, IDBPDatabase } from 'idb';
-import { FeatureCollection } from 'geojson';
+import { FeatureCollection, Polygon } from 'geojson';
 
 export type TileInfo = {
   key: string;
@@ -145,8 +145,8 @@ export function getTilePoints(area: Bounds, tileSize: Point): Point[] {
 export function getStoredTilesAsJson(
   layer: GridLayer,
   tiles: TileInfo[],
-): FeatureCollection {
-  const featureCollection: FeatureCollection = {
+): FeatureCollection<Polygon> {
+  const featureCollection: FeatureCollection<Polygon> = {
     type: 'FeatureCollection',
     features: [],
   };
