@@ -35,7 +35,7 @@ module.exports = (config) => {
       plugins: [
         commonjs(),
         nodeResolve({ extensions }),
-        typescript(),
+        typescript({ declaration: false, declarationDir: undefined }),
         istanbul({ exclude: ['test/*.ts', 'node_modules/**/*'] }),
       ],
     },
