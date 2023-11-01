@@ -1,6 +1,7 @@
 /* global describe, it, assert, beforeEach */
 import { point, bounds, GridLayer, gridLayer } from 'leaflet';
 import {
+  downloadTile,
   getStorageInfo,
   getStorageLength,
   getStoredTilesAsJson,
@@ -10,6 +11,7 @@ import {
   saveTile,
   truncate,
 } from '../src/TileManager';
+import fetchMock from 'fetch-mock/esm/client';
 
 const testTileInfo = {
   url: 'https://api.tiles.mapbox.com/v4/mapbox.streets/16/33677/21651.png?access_token=xyz',
@@ -89,5 +91,26 @@ describe('manage tile storage', () => {
     assert.equal(feature.geometry.type, 'Polygon');
     assert.lengthOf(feature.geometry.coordinates, 1);
     assert.lengthOf(feature.geometry.coordinates[0], 5);
+  });
+
+  it('downloads a tile', async () => {
+    const url = 'https://tile.openstreetmap.org/16/33700/21621.png';
+    fetchMock.once(url, new Blob(), { sendAsJson: false });
+    const result = await downloadTile(url);
+    assert.instanceOf(result, Blob);
+    fetchMock.restore();
+  });
+
+  it('downloading a tile throws if response is not successful', async () => {
+    const url = 'https://tile.openstreetmap.org/16/33700/21621.png';
+    let err;
+    fetchMock.once(url, 400);
+    try {
+      await downloadTile(url);
+    } catch (error) {
+      err = error;
+    }
+    assert.instanceOf(err, Error);
+    fetchMock.restore();
   });
 });
