@@ -215,3 +215,12 @@ export async function hasTile(key: string): Promise<boolean> {
 export async function truncate(): Promise<void> {
   return (await openTilesDataBase()).clear(tileStoreName);
 }
+
+export async function getTileImageSource(key: string, url: string) {
+  const shouldUseUrl = !(await hasTile(key));
+  if (shouldUseUrl) {
+    return url;
+  }
+  const blob = await getBlobByKey(key);
+  return URL.createObjectURL(blob);
+}
