@@ -85,7 +85,7 @@ describe('manage tile storage', () => {
 
   it('Creates geojson with tiles', () => {
     const layer = gridLayer();
-    const json = getStoredTilesAsJson(layer, [testTileInfo]);
+    const json = getStoredTilesAsJson(layer.getTileSize(), [testTileInfo]);
     assert.lengthOf(json.features, 1);
     const feature = json.features[0];
     assert.equal(feature.type, 'Feature');

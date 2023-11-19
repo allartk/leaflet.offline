@@ -7,13 +7,13 @@ export default function storageLayer(baseLayer, layerswitcher) {
 
   const getGeoJsonData = () =>
     getStorageInfo(urlTemplate).then((tiles) =>
-      getStoredTilesAsJson(baseLayer, tiles)
+      getStoredTilesAsJson(baseLayer.getTileSize(), tiles),
     );
 
   const addStorageLayer = () => {
     getGeoJsonData().then((geojson) => {
       layer = geoJSON(geojson).bindPopup(
-        (clickedLayer) => clickedLayer.feature.properties.key
+        (clickedLayer) => clickedLayer.feature.properties.key,
       );
       layerswitcher.addOverlay(layer, 'offline tiles');
     });
