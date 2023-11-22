@@ -143,7 +143,7 @@ export function getTilePoints(area: Bounds, tileSize: Point): Point[] {
  *
  */
 export function getStoredTilesAsJson(
-  layer: GridLayer,
+  tileSize: { x: number; y: number },
   tiles: TileInfo[],
 ): FeatureCollection<Polygon> {
   const featureCollection: FeatureCollection<Polygon> = {
@@ -152,12 +152,12 @@ export function getStoredTilesAsJson(
   };
   for (let i = 0; i < tiles.length; i += 1) {
     const topLeftPoint = new Point(
-      tiles[i].x * layer.getTileSize().x,
-      tiles[i].y * layer.getTileSize().y,
+      tiles[i].x * tileSize.x,
+      tiles[i].y * tileSize.y,
     );
     const bottomRightPoint = new Point(
-      topLeftPoint.x + layer.getTileSize().x,
-      topLeftPoint.y + layer.getTileSize().y,
+      topLeftPoint.x + tileSize.x,
+      topLeftPoint.y + tileSize.y,
     );
 
     const topLeftlatlng = CRS.EPSG3857.pointToLatLng(topLeftPoint, tiles[i].z);
@@ -214,4 +214,13 @@ export async function hasTile(key: string): Promise<boolean> {
  */
 export async function truncate(): Promise<void> {
   return (await openTilesDataBase()).clear(tileStoreName);
+}
+
+export async function getTileImageSource(key: string, url: string) {
+  const shouldUseUrl = !(await hasTile(key));
+  if (shouldUseUrl) {
+    return url;
+  }
+  const blob = await getBlobByKey(key);
+  return URL.createObjectURL(blob);
 }

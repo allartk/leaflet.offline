@@ -2,15 +2,6 @@ import { Bounds, Point } from 'leaflet';
 import { TileLayerOffline } from '../src/TileLayerOffline';
 
 describe('TileLayer.Offline', () => {
-  it('get getTileUrl', () => {
-    const layer = new TileLayerOffline(
-      'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    );
-    assert.instanceOf(
-      layer.setDataUrl({ x: 123456, y: 456789, z: 16 }),
-      Promise,
-    );
-  });
   it('createTile', () => {
     const url = 'http://a.tile.openstreetmap.org/{z}/{x}/{y}.png';
     const layer = new TileLayerOffline(url);

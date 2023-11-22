@@ -12,6 +12,7 @@ import {
   getBlobByKey,
   TileInfo,
   getTilePoints,
+  getTileImageSource,
 } from './TileManager';
 
 export class TileLayerOffline extends TileLayer {
@@ -32,20 +33,12 @@ export class TileLayerOffline extends TileLayer {
 
     tile.setAttribute('role', 'presentation');
 
-    this.setDataUrl(coords)
-      .then((dataurl: string) => (tile.src = dataurl))
-      .catch(() => (tile.src = this.getTileUrl(coords)));
+    getTileImageSource(
+      this._getStorageKey(coords),
+      this.getTileUrl(coords),
+    ).then((src) => (tile.src = src));
 
     return tile;
-  }
-
-  setDataUrl(coords: { x: number; y: number; z: number }): Promise<string> {
-    return getBlobByKey(this._getStorageKey(coords)).then((data) => {
-      if (data && typeof data === 'object') {
-        return URL.createObjectURL(data);
-      }
-      throw new Error('tile not found in storage');
-    });
   }
 
   /**
@@ -63,6 +56,9 @@ export class TileLayerOffline extends TileLayer {
     });
   }
 
+  /**
+   * Get tileinfo for zoomlevel & bounds
+   */
   getTileUrls(bounds: Bounds, zoom: number): TileInfo[] {
     const tiles: TileInfo[] = [];
     const tilePoints = getTilePoints(bounds, this.getTileSize());
@@ -95,8 +91,6 @@ export class TileLayerOffline extends TileLayer {
   }
 }
 
-// TODO, typescript does not recognize arguments for new instance
-// TODO check global in umd
 export function tileLayerOffline(url: string, options: TileLayerOptions) {
   return new TileLayerOffline(url, options);
 }

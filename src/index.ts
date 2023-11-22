@@ -5,7 +5,7 @@ export type {
   ControlSaveTiles,
   SaveTileOptions,
 } from './ControlSaveTiles';
-export type { TileInfo } from './TileManager';
+export type { TileInfo, StoredTile } from './TileManager';
 export type { TileLayerOffline } from './TileLayerOffline';
 export {
   getStorageInfo,

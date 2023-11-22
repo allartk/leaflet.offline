@@ -5,6 +5,7 @@ import {
   getStorageInfo,
   getStorageLength,
   getStoredTilesAsJson,
+  getTileImageSource,
   getTilePoints,
   hasTile,
   removeTile,
@@ -84,7 +85,7 @@ describe('manage tile storage', () => {
 
   it('Creates geojson with tiles', () => {
     const layer = gridLayer();
-    const json = getStoredTilesAsJson(layer, [testTileInfo]);
+    const json = getStoredTilesAsJson(layer.getTileSize(), [testTileInfo]);
     assert.lengthOf(json.features, 1);
     const feature = json.features[0];
     assert.equal(feature.type, 'Feature');
@@ -112,5 +113,20 @@ describe('manage tile storage', () => {
     }
     assert.instanceOf(err, Error);
     fetchMock.restore();
+  });
+
+  it('get image src returns url if tile with key does not exist', async () => {
+    const result = await getTileImageSource(testTileInfo.key, testTileInfo.url);
+    assert.equal(result, testTileInfo.url);
+  });
+
+  it('get image src returns dataSource url if tile key does exist', async () => {
+    await saveTile(testTileInfo, new Blob());
+    const result = await getTileImageSource(
+      testTileInfo.key,
+      'http://someurl/tile.png',
+    );
+    assert.isString(result);
+    assert.isTrue(result.includes('blob:'));
   });
 });
