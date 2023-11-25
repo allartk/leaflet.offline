@@ -6,7 +6,7 @@
  *
  */
 
-import { Bounds, Browser, CRS, GridLayer, Point, Util } from 'leaflet';
+import { Bounds, CRS, Point } from 'leaflet';
 import { openDB, deleteDB, IDBPDatabase } from 'idb';
 import { FeatureCollection, Polygon } from 'geojson';
 
@@ -102,13 +102,6 @@ export async function saveTile(
   return db.put(tileStoreName, {
     blob,
     ...tileInfo,
-  });
-}
-
-export function getTileUrl(urlTemplate: string, data: any): string {
-  return Util.template(urlTemplate, {
-    ...data,
-    r: Browser.retina ? '@2x' : '',
   });
 }
 

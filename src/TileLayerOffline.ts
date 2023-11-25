@@ -1,5 +1,6 @@
 import {
   Bounds,
+  Browser,
   Coords,
   DomEvent,
   DoneCallback,
@@ -7,13 +8,7 @@ import {
   TileLayerOptions,
   Util,
 } from 'leaflet';
-import {
-  getTileUrl,
-  getBlobByKey,
-  TileInfo,
-  getTilePoints,
-  getTileImageSource,
-} from './TileManager';
+import { TileInfo, getTilePoints, getTileImageSource } from './TileManager';
 
 export class TileLayerOffline extends TileLayer {
   _url!: string;
@@ -48,7 +43,7 @@ export class TileLayerOffline extends TileLayer {
    * @return {string} unique identifier.
    */
   _getStorageKey(coords: { x: number; y: number; z: number }) {
-    return getTileUrl(this._url, {
+    return this._getTileUrl(this._url, {
       ...coords,
       ...this.options,
       // @ts-ignore: Possibly undefined
@@ -71,11 +66,11 @@ export class TileLayerOffline extends TileLayer {
         z: zoom + (this.options.zoomOffset || 0),
       };
       tiles.push({
-        key: getTileUrl(this._url, {
+        key: this._getTileUrl(this._url, {
           ...data,
           s: this.options.subdomains?.[0],
         }),
-        url: getTileUrl(this._url, {
+        url: this._getTileUrl(this._url, {
           ...data,
           // @ts-ignore: Undefined
           s: this._getSubdomain(tilePoint),
@@ -88,6 +83,13 @@ export class TileLayerOffline extends TileLayer {
       });
     }
     return tiles;
+  }
+
+  _getTileUrl(urlTemplate: string, data: any): string {
+    return Util.template(urlTemplate, {
+      ...data,
+      r: Browser.retina ? '@2x' : '',
+    });
   }
 }
 
