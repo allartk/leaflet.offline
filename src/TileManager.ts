@@ -83,8 +83,8 @@ export async function getStorageInfo(
  */
 export async function downloadTile(tileUrl: string): Promise<Blob> {
   const response = await fetch(tileUrl);
-  if (!response.ok) {
-    throw new Error(`Request failed with status ${response.statusText}`);
+  if (!response.ok && response.status !== 400) {
+    throw new Error(`Request failed with status ${response.status} ${response.statusText} for ${tileUrl}`);
   }
   return response.blob();
 }
