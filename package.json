@@ -18,6 +18,7 @@
     "test:watch": "karma start --no-single-run",
     "watch": "rollup -c -w",
     "preversion": "./node_modules/karma/bin/karma  start  --single-run",
+    "build:copy": "yarn run build; cp dist/bundle.js ../RedMap/worldmap/leaflet/leaflet.offline.js",
     "prepublishOnly": "npm run build && npx husky install"
   },
   "repository": {
