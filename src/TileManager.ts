@@ -40,6 +40,7 @@ export function openTilesDataBase(): Promise<IDBPDatabase> {
           keyPath: 'key',
         });
         tileStore.createIndex(urlTemplateIndex, 'urlTemplate');
+        tileStore.createIndex('createdAt', 'createdAt');
         tileStore.createIndex('z', 'z');
       }
     },
