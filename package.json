@@ -69,7 +69,7 @@
     "rollup": "^3.20.2",
     "rollup-plugin-istanbul": "^5.0.0",
     "sinon": "^17.0.0",
-    "typedoc": "^0.25.2",
+    "typedoc": "^0.26.3",
     "typedoc-plugin-markdown": "^3.11.14",
     "typescript": "^5.0.4"
   },
