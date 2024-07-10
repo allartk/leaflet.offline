@@ -79,8 +79,13 @@ module.exports = (config) => {
       },
     },
     coverageReporter: {
-      type: 'html',
-      dir: 'coverage/',
+      reporters: [
+        {
+          type: 'html',
+          dir: 'coverage/',
+        },
+        { type: 'lcov' },
+      ],
     },
   });
 };
