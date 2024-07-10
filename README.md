@@ -1,6 +1,7 @@
 # leaflet.offline version 3.x
 
 [![npm version](https://badge.fury.io/js/leaflet.offline.svg)](https://badge.fury.io/js/leaflet.offline)
+[![codecov](https://codecov.io/github/allartk/leaflet.offline/graph/badge.svg?token=dy1uNlSvsh)](https://codecov.io/github/allartk/leaflet.offline)
 [![Build Status](https://travis-ci.org/allartk/leaflet.offline.png?branch=master)](https://travis-ci.org/allartk/leaflet.offline)
 
 This library can be used to create maps, which are still available when you are offline and are fast when your connection is not. It works in the browser or can be used in an mobile app based on html and in progressive webapps.
