@@ -16,4 +16,5 @@ export {
   downloadTile,
   saveTile,
   getBlobByKey,
+  openTilesDataBase,
 } from './TileManager';
