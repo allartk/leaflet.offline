@@ -9,3 +9,7 @@ updates:
     allow:
       # Allow both direct and indirect updates for all packages
       - dependency-type: "direct"
+    commit-message:
+      prefix: fix
+      prefix-development: chore
+      include: scope      
