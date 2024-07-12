@@ -51,7 +51,7 @@ npm install && npm run start
 * You MUST test your code with `npm test` and  `npm run lint`. 
 * Please one feature at a time, if you can split your PR, please do so.
 * Also, do not mix a feature with package updates.
-* [Use commit message conventions](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#-commit-message-format)
+* [Use commit message conventions](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#rules)
 
 ## Api
 
