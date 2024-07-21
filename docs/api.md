@@ -21,7 +21,7 @@ For advanced usage</p>
 <dl>
 <dt><a href="#ControlStatus">ControlStatus</a> : <code>Object</code></dt>
 <dd><p>Status of ControlSaveTiles, keeps info about process during downloading
-ans saving tiles. Used internal and as object for events.</p>
+and saving tiles. Used internal and as object for events.</p>
 </dd>
 </dl>
 
@@ -341,7 +341,7 @@ Tile removed
 
 ## ControlStatus : <code>Object</code>
 Status of ControlSaveTiles, keeps info about process during downloading
-ans saving tiles. Used internal and as object for events.
+and saving tiles. Used internal and as object for events.
 
 **Kind**: global typedef  
 **Properties**
