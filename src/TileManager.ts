@@ -6,7 +6,7 @@
  *
  */
 
-import { Bounds, Browser, CRS, GridLayer, Point, Util } from 'leaflet';
+import { Bounds, Browser, CRS, Point, Util } from 'leaflet';
 import { openDB, deleteDB, IDBPDatabase } from 'idb';
 import { FeatureCollection, Polygon } from 'geojson';
 
