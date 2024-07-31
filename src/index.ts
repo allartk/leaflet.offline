@@ -15,8 +15,9 @@ export {
   truncate,
   downloadTile,
   saveTile,
+  hasTile,
   getBlobByKey,
   getTilePoints,
   getTileUrl,
-  getTileImageSource
+  getTileImageSource,
 } from './TileManager';
