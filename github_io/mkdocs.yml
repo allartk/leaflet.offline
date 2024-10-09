@@ -1,0 +1,10 @@
+site_name: Leaflet Offline docs
+site_url: https://allartk.github.io/leaflet.offline/
+theme:
+  name: material
+nav:
+  - Welcome: index.md
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
