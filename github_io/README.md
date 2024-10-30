@@ -1,6 +1,8 @@
 # Docs with mkdocs
 
-Docs & examples are build using [mkdocs.org](https://www.mkdocs.org).
+This folder contains the https://allartk.github.io/leaflet.offline/ website 
+
+It is build with [mkdocs.org](https://www.mkdocs.org).
 
 ```shell
 # create your venv eg:
