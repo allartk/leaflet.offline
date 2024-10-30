@@ -15,7 +15,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v2
         with:
-          node-version: 18
+          node-version: 20
           check-latest: true
 
       - name: Cache dependencies
