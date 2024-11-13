@@ -6,6 +6,7 @@ import {
 import { Control, Map } from 'leaflet';
 import debounce from 'debounce';
 import storageLayer from './storageLayer';
+import './style.css'
 
 const urlTemplate = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 

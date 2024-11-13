@@ -10,6 +10,7 @@
     "format": "prettier -w ."
   },
   "devDependencies": {
+    "bootstrap": "4.3",
     "prettier": "^3.3.3",
     "typescript": "~5.6.2",
     "vite": "^5.4.10"
