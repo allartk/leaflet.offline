@@ -1,5 +1,6 @@
 /* global describe, it, assert, beforeEach */
-import { point, bounds, GridLayer, gridLayer } from 'leaflet';
+import { point, bounds, gridLayer } from 'leaflet';
+import fetchMock from 'fetch-mock/esm/client';
 import {
   downloadTile,
   getStorageInfo,
@@ -12,7 +13,6 @@ import {
   saveTile,
   truncate,
 } from '../src/TileManager';
-import fetchMock from 'fetch-mock/esm/client';
 
 const testTileInfo = {
   url: 'https://api.tiles.mapbox.com/v4/mapbox.streets/16/33677/21651.png?access_token=xyz',

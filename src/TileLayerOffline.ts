@@ -9,7 +9,6 @@ import {
 } from 'leaflet';
 import {
   getTileUrl,
-  getBlobByKey,
   TileInfo,
   getTilePoints,
   getTileImageSource,
