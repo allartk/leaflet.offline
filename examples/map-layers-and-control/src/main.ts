@@ -1,4 +1,8 @@
-import { tileLayerOffline, savetiles } from 'leaflet.offline';
+import {
+  tileLayerOffline,
+  savetiles,  
+  SaveStatus,
+} from 'leaflet.offline';
 import { Control, Map } from 'leaflet';
 import debounce from 'debounce';
 import storageLayer from './storageLayer';
@@ -18,13 +22,13 @@ const baseLayer = tileLayerOffline(urlTemplate, {
 const saveControl = savetiles(baseLayer, {
   zoomlevels: [13, 16], // optional zoomlevels to save, default current zoomlevel
   alwaysDownload: false,
-  confirm(layer, successCallback) {
+  confirm(status: SaveStatus, successCallback: Function) {
     // eslint-disable-next-line no-alert
-    if (window.confirm(`Save ${layer._tilesforSave.length}`)) {
+    if (window.confirm(`Save ${status._tilesforSave.length}`)) {
       successCallback();
     }
   },
-  confirmRemoval(layer, successCallback) {
+  confirmRemoval(status: SaveStatus, successCallback: Function) {
     // eslint-disable-next-line no-alert
     if (window.confirm('Remove all the tiles?')) {
       successCallback();
@@ -47,7 +51,7 @@ const layerswitcher = new Control.Layers(
   {
     'osm (offline)': baseLayer,
   },
-  null,
+  undefined,
   { collapsed: false },
 ).addTo(leafletMap);
 // add storage overlay
@@ -72,7 +76,8 @@ const showProgress = debounce(() => {
 
 baseLayer.on('savestart', (e) => {
   progress = 0;
-  total = e._tilesforSave.length;
+  // @ts-ignore
+  total = e._tilesforSave.length; 
   document.getElementById('progress-wrapper')!.classList.add('show');
   document.getElementById('progressbar')!.style.width = '0%';
 });
