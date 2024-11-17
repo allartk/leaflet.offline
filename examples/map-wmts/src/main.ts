@@ -4,15 +4,11 @@ import { getBlobByKey, downloadTile, saveTile } from 'leaflet.offline';
 import './style.css'
 
 export const wmtsUrlTemplate =
-  'https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?service=WMTS&request=GetTile&version=1.0.0&tilematrixset=EPSG:3857&layer={layer}&tilematrix={z}&tilerow={y}&tilecol={x}&format=image%2Fpng';
+  'https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?service=WMTS&request=GetTile&version=1.0.0&tilematrixset=EPSG:3857&layer=standaard&tilematrix={z}&tilerow={y}&tilecol={x}&format=image%2Fpng';
 
 const leafletMap = new Map('map');
 
-const brtLayer = tileLayer(wmtsUrlTemplate, {
-  layer: 'standaard',
-  format: 'image/png',
-  transparent: true,
-});
+const brtLayer = tileLayer(wmtsUrlTemplate);
 
 brtLayer.addTo(leafletMap);
 
