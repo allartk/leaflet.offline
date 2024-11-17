@@ -16,6 +16,8 @@
     "vite": "^5.4.10"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.6.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "debounce": "^2.2.0",
     "idb": "^8.0.0",
     "leaflet": "^1.9.4",
