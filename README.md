@@ -6,8 +6,7 @@
 
 This library can be used to create maps, which are still available when you are offline and are fast when your connection is not. It works in the browser or can be used in an mobile app based on html and in progressive webapps.
 
-- [examples](http://allartk.github.io/leaflet.offline/)
-- [api docs](docs/api.md)
+- [docs](http://allartk.github.io/leaflet.offline/)
 
 ## Dependencies
 
