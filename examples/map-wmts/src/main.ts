@@ -1,24 +1,55 @@
+import { Map, tileLayer } from 'leaflet';
+import { getBlobByKey, downloadTile, saveTile } from 'leaflet.offline';
+
 import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+export const wmtsUrlTemplate =
+  'https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0?service=WMTS&request=GetTile&version=1.0.0&tilematrixset=EPSG:3857&layer={layer}&tilematrix={z}&tilerow={y}&tilecol={x}&format=image%2Fpng';
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+const leafletMap = new Map('map');
+
+const brtLayer = tileLayer(wmtsUrlTemplate, {
+  layer: 'standaard',
+  format: 'image/png',
+  transparent: true,
+});
+
+brtLayer.addTo(leafletMap);
+
+brtLayer.on('tileloadstart', (event) => {
+  const { tile } = event;
+  const url = tile.src;
+  // reset tile.src, to not start download yet
+  tile.src = '';
+  getBlobByKey(url).then((blob) => {
+    if (blob) {
+      tile.src = URL.createObjectURL(blob);
+      console.debug(`Loaded ${url} from idb`);
+      return;
+    }
+    tile.src = url;
+    // create helper function for it?
+    const { x, y, z } = event.coords;
+    const { _url: urlTemplate } = event.target;
+    const tileInfo = {
+      key: url,
+      url,
+      x,
+      y,
+      z,
+      urlTemplate,
+      createdAt: Date.now(),
+    };
+    downloadTile(url)
+      .then((dl) => saveTile(tileInfo, dl))
+      .then(() => console.debug(`Saved ${url} in idb`));
+  });
+});
+
+leafletMap.setView(
+  {
+    lat: 52.09,
+    lng: 5.118,
+  },
+  16
+);

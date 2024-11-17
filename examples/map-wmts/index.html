@@ -1,13 +1,25 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta charset="UTF-8" />    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
+    <title>Custom Layer (WMTS)</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div class="container-fluid py-md-3" style="max-width: 1200px">
+      <main id="app">
+        <p>
+          This leaflet WMTS layer uses the download & save methods from the
+          <a
+            href="https://github.com/allartk/leaflet.offline/blob/master/docs/api.md#tilemanagerdownloadtiletileurl--promiseblob"
+            target="_blank"
+            >API</a
+          >
+          to save all viewed tiles for offline usage.
+        </p>
+        <div id="map" style="height: 75vh"></div>
+      </main>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

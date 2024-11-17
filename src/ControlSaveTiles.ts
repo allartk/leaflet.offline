@@ -24,7 +24,9 @@ export interface SaveTileOptions extends ControlOptions {
   saveWhatYouSee: boolean;
   bounds: LatLngBounds | null;
   confirm: ((status: SaveStatus, successCallback: Function) => void) | null;
-  confirmRemoval:  ((status: SaveStatus, successCallback: Function) => void) | null;
+  confirmRemoval:
+    | ((status: SaveStatus, successCallback: Function) => void)
+    | null;
   parallel: number;
   zoomlevels?: number[];
   alwaysDownload: boolean;
