@@ -1,4 +1,0 @@
-_site
-.jekyll-cache
-dist/*.hot-update.js
-dist/*.hot-update.json

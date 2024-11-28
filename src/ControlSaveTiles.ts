@@ -23,10 +23,12 @@ export interface SaveTileOptions extends ControlOptions {
   maxZoom: number;
   saveWhatYouSee: boolean;
   bounds: LatLngBounds | null;
-  confirm: Function | null;
-  confirmRemoval: Function | null;
+  confirm: ((status: SaveStatus, successCallback: Function) => void) | null;
+  confirmRemoval:
+    | ((status: SaveStatus, successCallback: Function) => void)
+    | null;
   parallel: number;
-  zoomlevels: number[] | undefined;
+  zoomlevels?: number[];
   alwaysDownload: boolean;
 }
 

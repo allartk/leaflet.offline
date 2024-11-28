@@ -6,8 +6,7 @@
 
 This library can be used to create maps, which are still available when you are offline and are fast when your connection is not. It works in the browser or can be used in an mobile app based on html and in progressive webapps.
 
-- [examples](http://allartk.github.io/leaflet.offline/)
-- [api docs](docs/api.md)
+- [examples](https://github.com/allartk/leaflet.offline/tree/main/examples)
 
 ## Dependencies
 
@@ -48,7 +47,7 @@ npm install && npm run start
 
 **pull requests welcome**
 
-* You MUST test your code with `npm test` and  `npm run lint`. 
+* You MUST test your code with `npm test` and  `npm run lint`.
 * Please one feature at a time, if you can split your PR, please do so.
 * Also, do not mix a feature with package updates.
 * [Use commit message conventions](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#rules)
