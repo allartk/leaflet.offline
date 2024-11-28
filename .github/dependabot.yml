@@ -4,7 +4,7 @@ updates:
     directory: '/'
     schedule:
       interval: 'monthly'
-    target-branch: 'master'
+    target-branch: 'main'
     versioning-strategy: increase-if-necessary
     allow:
       # Allow both direct and indirect updates for all packages
@@ -12,4 +12,4 @@ updates:
     commit-message:
       prefix: fix
       prefix-development: chore
-      include: scope      
+      include: scope
