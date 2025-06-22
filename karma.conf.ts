@@ -62,7 +62,7 @@ module.exports = (config) => {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['ChromeHeadless' /*, 'FirefoxHeadless'*/],
+    browsers: ['ChromeHeadless','ChromeHeadlessWithoutSandbox'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
@@ -74,11 +74,11 @@ module.exports = (config) => {
 
     // damn ubuntu snap https://github.com/karma-runner/karma-firefox-launcher/issues/183#issuecomment-1283875784
     customLaunchers: {
-      FirefoxHeadless: {
-        base: 'Firefox',
-        flags: ['-headless'],
-        profile: require('path').join(__dirname, 'tmp'),
-      },
+      ChromeHeadlessWithoutSandbox: {
+        base: 'Chrome',
+        flags: ['--no-sandbox','--headless'],
+        displayName: 'Chrome w/o sandbox'
+      }
     },
     coverageReporter: {
       reporters: [
