@@ -5,6 +5,8 @@ const istanbul = require('rollup-plugin-istanbul');
 
 const extensions = ['.js', '.ts'];
 
+process.env.CHROME_BIN = require('puppeteer').executablePath()
+
 module.exports = (config) => {
   config.set({
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -60,7 +62,7 @@ module.exports = (config) => {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['FirefoxHeadless'],
+    browsers: ['ChromeHeadless' /*, 'FirefoxHeadless'*/],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
