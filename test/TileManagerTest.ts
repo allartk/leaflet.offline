@@ -1,6 +1,8 @@
 /* global describe, it, assert, beforeEach */
 import { point, bounds, gridLayer } from 'leaflet';
 import fetchMock from 'fetch-mock/esm/client';
+import { assert } from 'chai';
+
 import {
   downloadTile,
   getStorageInfo,
