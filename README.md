@@ -47,7 +47,7 @@ npm install && npm run start
 
 **pull requests welcome**
 
-* You MUST test your code with `npm test` and  `npm run lint`.
+* You MUST test your code with `npm test` and  `npm run lint`. On wsl wit ubuntu 24.04, install first libasound, libnss3: `sudo apt install libasound2t64 libnss3`, see [puppeteer docs](https://pptr.dev/guides/system-requirements)
 * Please one feature at a time, if you can split your PR, please do so.
 * Also, do not mix a feature with package updates.
 * [Use commit message conventions](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#rules)
