@@ -1,7 +1,7 @@
 import { Map } from 'leaflet';
+import { assert } from 'chai';
 import { ControlSaveTiles, savetiles } from '../src/ControlSaveTiles';
 import { TileLayerOffline } from '../src/TileLayerOffline';
-import { assert } from 'chai';
 
 describe('control with defaults', () => {
   let saveControl: ControlSaveTiles;

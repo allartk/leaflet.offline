@@ -1,6 +1,6 @@
 import { Bounds, Point } from 'leaflet';
-import { TileLayerOffline } from '../src/TileLayerOffline';
 import { assert } from 'chai';
+import { TileLayerOffline } from '../src/TileLayerOffline';
 
 describe('TileLayer.Offline', () => {
   it('createTile', () => {
