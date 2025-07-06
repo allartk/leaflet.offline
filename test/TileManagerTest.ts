@@ -104,7 +104,7 @@ describe('manage tile storage', () => {
 
   it('downloads a tile', async () => {
     const url = 'https://tile.openstreetmap.org/16/33700/21621.png';
-    fetchMock.once(url, new Blob(), { sendAsJson: false });
+    fetchMock.once(url, new Blob());
     const result = await downloadTile(url);
     assert.instanceOf(result, Blob);
     fetchMock.removeRoutes();
