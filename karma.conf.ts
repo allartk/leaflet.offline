@@ -33,7 +33,6 @@ module.exports = (config) => {
         name: 'LeafletOffline',
         sourcemap: 'inline',
       },
-      external: ['sinon'],
       plugins: [
         commonjs(),
         nodeResolve({ extensions }),
