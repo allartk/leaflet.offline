@@ -17,7 +17,7 @@ module.exports = (config) => {
     frameworks: ['mocha'],
 
     // list of files / patterns to load in the browser
-    files: ['node_modules/sinon/pkg/sinon.js', 'test/*.ts'],
+    files: ['test/*.ts'],
 
     // list of files to exclude
     exclude: [],
