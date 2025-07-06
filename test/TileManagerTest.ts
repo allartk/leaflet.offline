@@ -1,6 +1,6 @@
-/* global describe, it, assert, beforeEach */
+/* global describe, it, beforeEach */
 import { point, bounds, gridLayer } from 'leaflet';
-import fetchMock from 'fetch-mock/esm/client';
+import fetchMock from 'fetch-mock';
 import { assert } from 'chai';
 
 import {
@@ -28,6 +28,12 @@ const testTileInfo = {
 };
 
 describe('manage tile storage', () => {
+  before(() => {
+    fetchMock.mockGlobal();
+  });
+  after(() => {
+    fetchMock.unmockGlobal();
+  });
   beforeEach(() => truncate());
 
   it('saves a tile', () =>
@@ -101,7 +107,7 @@ describe('manage tile storage', () => {
     fetchMock.once(url, new Blob(), { sendAsJson: false });
     const result = await downloadTile(url);
     assert.instanceOf(result, Blob);
-    fetchMock.restore();
+    fetchMock.removeRoutes();
   });
 
   it('downloading a tile throws if response is not successful', async () => {
@@ -114,7 +120,7 @@ describe('manage tile storage', () => {
       err = error;
     }
     assert.instanceOf(err, Error);
-    fetchMock.restore();
+    fetchMock.removeRoutes();
   });
 
   it('get image src returns url if tile with key does not exist', async () => {
