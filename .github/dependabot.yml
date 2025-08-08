@@ -9,13 +9,6 @@ updates:
     allow:
       # Allow both direct and indirect updates for all packages
       - dependency-type: "direct"
-    ignore:
-      - dependency-name: "*"
-        versions: []
-        update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
-        # Ignore updates in the examples folder
-        source:
-          path: "examples/"
     commit-message:
       prefix: fix
       prefix-development: chore
