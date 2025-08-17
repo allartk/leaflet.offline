@@ -28,6 +28,10 @@ jobs:
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: npm ci
 
+      - name: Make sure puppeteer installs chrome, when using npm cache
+        if: steps.cache-dependencies.outputs.cache-hit == 'true'
+        run: npx puppeteer browsers install        
+
       - name: Build project
         run: npm run build
 
