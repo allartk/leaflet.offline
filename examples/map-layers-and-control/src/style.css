@@ -1,4 +1,26 @@
-@import "bootstrap/dist/css/bootstrap.css";
-@import "leaflet/dist/leaflet.css";
-
+@import 'leaflet/dist/leaflet.css';
 @import '/node_modules/@fortawesome/fontawesome-free/css/all.min.css';
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+#app {
+  height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#progress-wrapper {
+  padding: 1em 0;
+  display: none;
+  &.show {
+    display: block;
+  }
+}
+
+#progressbar {
+  background-color: gray;
+  height: 1em;
+}

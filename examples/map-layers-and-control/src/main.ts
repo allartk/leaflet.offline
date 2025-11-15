@@ -1,12 +1,8 @@
-import {
-  tileLayerOffline,
-  savetiles,  
-  SaveStatus,
-} from 'leaflet.offline';
+import { tileLayerOffline, savetiles, SaveStatus } from 'leaflet.offline';
 import { Control, Map } from 'leaflet';
 import debounce from 'debounce';
 import storageLayer from './storageLayer';
-import './style.css'
+import './style.css';
 
 const urlTemplate = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 
@@ -78,7 +74,7 @@ const showProgress = debounce(() => {
 baseLayer.on('savestart', (e) => {
   progress = 0;
   // @ts-ignore
-  total = e._tilesforSave.length; 
+  total = e._tilesforSave.length;
   document.getElementById('progress-wrapper')!.classList.add('show');
   document.getElementById('progressbar')!.style.width = '0%';
 });
