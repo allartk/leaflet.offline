@@ -1,5 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve';
-import pkg from './package.json' assert { type: 'json' };
+import pkg from './package.json' with { type: 'json' };
 import typescript from '@rollup/plugin-typescript';
 
 const extensions = ['.ts'];
