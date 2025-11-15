@@ -2,6 +2,7 @@ name: Release
 
 on: workflow_dispatch
 permissions:
+  id-token: write  # Required for OIDC
   contents: read # for checkout
 
 jobs:
@@ -36,6 +37,5 @@ jobs:
 
       - name: Semantic Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}          
         run: npx semantic-release
