@@ -11,3 +11,16 @@ body {
   max-width: 1200px;
   margin: 0 auto;
 }
+
+#progress-wrapper {
+  padding: 1em 0;
+  display: none;
+  &.show {
+    display: block;
+  }
+}
+
+#progressbar {
+  background-color: gray;
+  height: 1em;
+}

@@ -1,2 +1,40 @@
-@import "bootstrap/dist/css/bootstrap.css";
-@import "leaflet/dist/leaflet.css";
+@import 'leaflet/dist/leaflet.css';
+@import '/node_modules/@fortawesome/fontawesome-free/css/all.min.css';
+
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+#app {
+  height: 100vh;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.btn-danger {
+  --background-color: red;
+  --foreground-color: white;
+}
+
+.btn-warning {
+  --background-color: orange;
+  --foreground-color: white;    
+}
+
+.btn {
+  border: var(--background-color) 1px solid;
+  background-color: var(--background-color);
+  color: var(--foreground-color);
+  padding: 0.5em;
+}
+
+
+.table-striped {
+  td {
+    padding: 0.5em;
+  }
+  tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }  
+}

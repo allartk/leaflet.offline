@@ -9,6 +9,7 @@
   <body>
     <div class="container">
       <main id="app">
+        <h1>Map with layers & control</h1>
         <p>
           This maps shows the default
           <a
@@ -23,24 +24,21 @@
         </p>
         <p>
           Total in database:
-          <a href="list.html"><span id="storage"></span> files</a>
+          <span id="storage"></span> files
         </p>
 
-        <div id="progress-wrapper" class="collapse pb-2">
-          <div class="d-flex">
-            <div class="">Download Progress</div>
-            <div class="flex-grow-1 ml-2 my-1">
-              <div id="progress" class="progress">
-                <div
-                  id="progressbar"
-                  class="progress-bar progress-bar-striped progress-bar-animated"
-                  role="progressbar"
-                  style="width: 0%"
-                  aria-valuenow="0"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                ></div>
-              </div>
+        <div id="progress-wrapper">
+          <div class="">Download Progress</div>
+          <div class="flex-grow-1 ml-2 my-1">
+            <div id="progress" class="progress">
+              <div
+                id="progressbar"
+                role="progressbar"
+                style="width: 0%"
+                aria-valuenow="0"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
             </div>
           </div>
         </div>
