@@ -18,7 +18,7 @@
     "testci": "karma  start --browsers ChromeHeadlessWithoutSandbox",
     "test:watch": "karma start --no-single-run",
     "watch": "rollup -c -w",
-    "preversion": "./node_modules/karma/bin/karma  start  --single-run",
+    "preversion": "karma  start --browsers ChromeHeadlessWithoutSandbox --single-run",
     "prepare": "husky || true",
     "prepublishOnly": "npm run build && npx husky install"
   },
