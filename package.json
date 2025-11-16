@@ -9,7 +9,8 @@
   "types": "dist/types/src/index.d.ts",
   "scripts": {
     "type-check": "tsc --noEmit",
-    "docs": "typedoc --plugin typedoc-plugin-markdown --out docs/typedoc src/index.ts",
+    "docs:build": "typedoc --out docs src/index.ts",
+    "docs:deploy": "gh-pages -d docs",
     "build": "rm -rf dist && rollup -c",
     "lint": "eslint && prettier --check \"./(src|test)/**/*.ts\"",
     "lint:fix": "eslint --fix src test",
@@ -35,7 +36,7 @@
   "bugs": {
     "url": "https://github.com/allartk/leaflet.offline/issues"
   },
-  "homepage": "https://github.com/allartk/leaflet.offline#readme",
+  "homepage": "https://github.com/allartk/leaflet.offline",
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^19.2.2",
@@ -56,6 +57,7 @@
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^10.0.1",
     "fetch-mock": "^12.5.3",
+    "gh-pages": "^6.3.0",
     "husky": "^9.0.11",
     "karma": "^6.4.2",
     "karma-chrome-launcher": "^3.2.0",
