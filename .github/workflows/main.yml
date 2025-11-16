@@ -1,0 +1,47 @@
+name: CI
+on:
+  pull_request: ~
+  push:
+    branches:
+      - main
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          check-latest: true
+
+      - name: Cache dependencies
+        id: cache-dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Make sure puppeteer installs chrome, when using npm cache
+        if: steps.cache-dependencies.outputs.cache-hit == 'true'
+        run: npx puppeteer browsers install        
+
+      - name: Build project
+        run: npm run build
+
+      - name: lint
+        run: npm run lint
+
+      - name: test
+        run: npm run testci
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}

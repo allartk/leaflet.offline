@@ -1,0 +1,10 @@
+/nbproject
+/bower_components
+node_modules
+/dist
+npm-debug.log
+.eslintcache
+/.vscode
+/tmp/**
+!/tmp/.gitkeep
+coverage

@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
+    target-branch: 'main'
+    versioning-strategy: increase-if-necessary
+    allow:
+      # Allow both direct and indirect updates for all packages
+      - dependency-type: "direct"
+    commit-message:
+      prefix: fix
+      prefix-development: chore
+      include: scope
