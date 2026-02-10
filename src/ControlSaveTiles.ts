@@ -216,11 +216,10 @@ export class ControlSaveTiles extends Control {
       (await hasTile(tile.key)) === false
     ) {
       blob = await downloadTile(tile.url);
-      this.status.lengthLoaded += 1;
-    } else {
-      this.status.lengthLoaded += 1;
     }
-    
+
+    this.status.lengthLoaded += 1;
+
     this._baseLayer.fire('loadtileend', this.status);
     if (this.status.lengthLoaded === this.status.lengthToBeSaved) {
       this._baseLayer.fire('loadend', this.status);
