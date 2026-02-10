@@ -48,7 +48,7 @@
     "@types/karma-chai-sinon": "^0.1.16",
     "@types/leaflet": "^1.7.9",
     "@types/mocha": "^10.0.7",
-    "@types/sinon": "^17.0.3",
+    "@types/sinon": "^21.0.0",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "chai": "^6.2.2",
