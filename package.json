@@ -41,7 +41,7 @@
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@rollup/plugin-commonjs": "^29.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-typescript": "^12.1.4",
     "@types/geojson": "^7946.0.8",
     "@types/karma-chai": "^0.1.3",
