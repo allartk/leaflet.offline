@@ -38,7 +38,7 @@
   },
   "homepage": "https://github.com/allartk/leaflet.offline",
   "devDependencies": {
-    "@commitlint/cli": "^20.1.0",
+    "@commitlint/cli": "^21.2.1",
     "@commitlint/config-conventional": "^19.2.2",
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
