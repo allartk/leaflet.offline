@@ -4,7 +4,7 @@ import {
   DomEvent,
   DomUtil,
   LatLngBounds,
-  bounds,
+  Bounds,
   Map,
 } from 'leaflet';
 import { TileLayerOffline } from './TileLayerOffline';
@@ -128,10 +128,10 @@ export class ControlSaveTiles extends Control {
     link.href = '#';
     link.ariaRoleDescription = 'button';
 
-    DomEvent.on(link, 'mousedown dblclick', DomEvent.stopPropagation)
-      .on(link, 'click', DomEvent.stop)
-      .on(link, 'click', fn, this)
-      .on(link, 'click', this._refocusOnMap, this);
+    DomEvent.disableClickPropagation(link);
+    DomEvent.on(link, 'click', DomEvent.stop);
+    DomEvent.on(link, 'click', fn, this);
+    DomEvent.on(link, 'click', this._refocusOnMap, this);
 
     return link;
   }
@@ -190,7 +190,7 @@ export class ControlSaveTiles extends Control {
     const latlngBounds = this.options.bounds || this._map.getBounds();
 
     for (let i = 0; i < zoomlevels.length; i += 1) {
-      const area = bounds(
+      const area = new Bounds(
         this._map.project(latlngBounds.getNorthWest(), zoomlevels[i]),
         this._map.project(latlngBounds.getSouthEast(), zoomlevels[i]),
       );
@@ -261,7 +261,7 @@ export function savetiles(
 }
 
 /**  @ts-ignore */
-if (window.L) {
+if (window.L?.control) {
   /**  @ts-ignore */
   window.L.control.savetiles = savetiles;
 }

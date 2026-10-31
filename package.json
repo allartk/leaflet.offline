@@ -87,7 +87,9 @@
     ]
   },
   "dependencies": {
-    "idb": "^8.0.2",
-    "leaflet": "^1.6.0"
+    "idb": "^8.0.2"
+  },
+  "peerDependencies": {
+    "leaflet": "^1.6.0 || >=2.0.0-0"
   }
 }

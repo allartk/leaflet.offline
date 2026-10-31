@@ -5,7 +5,6 @@ import {
   DoneCallback,
   TileLayer,
   TileLayerOptions,
-  Util,
 } from 'leaflet';
 import {
   getTileUrl,
@@ -20,8 +19,16 @@ export class TileLayerOffline extends TileLayer {
   createTile(coords: Coords, done: DoneCallback): HTMLElement {
     const tile = document.createElement('img');
 
-    DomEvent.on(tile, 'load', Util.bind(this._tileOnLoad, this, done, tile));
-    DomEvent.on(tile, 'error', Util.bind(this._tileOnError, this, done, tile));
+    DomEvent.on(tile, 'load', this._tileOnLoad.bind(this, done, tile));
+    DomEvent.on(
+      tile,
+      'error',
+      this._tileOnError.bind(
+        this,
+        done,
+        tile,
+      ) as unknown as DomEvent.EventHandlerFn,
+    );
 
     if (this.options.crossOrigin || this.options.crossOrigin === '') {
       tile.crossOrigin =
@@ -90,12 +97,15 @@ export class TileLayerOffline extends TileLayer {
   }
 }
 
-export function tileLayerOffline(url: string, options: TileLayerOptions) {
+export function tileLayerOffline(
+  url: string,
+  options?: Partial<TileLayerOptions>,
+) {
   return new TileLayerOffline(url, options);
 }
 
 /**  @ts-ignore */
-if (window.L) {
+if (window.L?.tileLayer) {
   /**  @ts-ignore */
   window.L.tileLayer.offline = tileLayerOffline;
 }

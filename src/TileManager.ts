@@ -6,7 +6,8 @@
  *
  */
 
-import { Bounds, Browser, CRS, Point, Util } from 'leaflet';
+import * as Leaflet from 'leaflet';
+import { Bounds, Point, Util } from 'leaflet';
 import { openDB, deleteDB, IDBPDatabase } from 'idb';
 import { FeatureCollection, Polygon } from 'geojson';
 
@@ -108,7 +109,7 @@ export async function saveTile(
 export function getTileUrl(urlTemplate: string, data: any): string {
   return Util.template(urlTemplate, {
     ...data,
-    r: Browser.retina ? '@2x' : '',
+    r: window.devicePixelRatio > 1 ? '@2x' : '',
   });
 }
 
@@ -146,6 +147,9 @@ export function getStoredTilesAsJson(
   tileSize: { x: number; y: number },
   tiles: TileInfo[],
 ): FeatureCollection<Polygon> {
+  // Leaflet 2 exports EPSG3857 directly, Leaflet 1 only as CRS.EPSG3857
+  const crs: typeof Leaflet.CRS.EPSG3857 =
+    (Leaflet as any).EPSG3857 ?? Leaflet.CRS.EPSG3857;
   const featureCollection: FeatureCollection<Polygon> = {
     type: 'FeatureCollection',
     features: [],
@@ -160,11 +164,8 @@ export function getStoredTilesAsJson(
       topLeftPoint.y + tileSize.y,
     );
 
-    const topLeftlatlng = CRS.EPSG3857.pointToLatLng(topLeftPoint, tiles[i].z);
-    const botRightlatlng = CRS.EPSG3857.pointToLatLng(
-      bottomRightPoint,
-      tiles[i].z,
-    );
+    const topLeftlatlng = crs.pointToLatLng(topLeftPoint, tiles[i].z);
+    const botRightlatlng = crs.pointToLatLng(bottomRightPoint, tiles[i].z);
     featureCollection.features.push({
       type: 'Feature',
       properties: tiles[i],

@@ -10,7 +10,7 @@ This library can be used to create maps, which are still available when you are 
 
 ## Dependencies
 
-- [Leafletjs](http://leafletjs.com/)
+- [Leafletjs](http://leafletjs.com/) 1.6 or newer, or Leaflet 2 (pre-release)
 - [idb](https://www.npmjs.com/package/idb) To store the tiles with promises
 
 ## Install
