@@ -36,8 +36,14 @@ export interface SaveStatus {
   _tilesforSave: TileInfo[];
   storagesize: number;
   lengthToBeSaved: number;
+  /** Tiles downloaded and stored. */
   lengthSaved: number;
+  /** Tiles whose download step has finished, whatever the outcome. */
   lengthLoaded: number;
+  /** Tiles skipped because they were already stored (`alwaysDownload: false`). */
+  lengthSkipped: number;
+  /** Tiles that could not be downloaded or stored. */
+  lengthFailed: number;
 }
 
 export class ControlSaveTiles extends Control {
@@ -54,6 +60,8 @@ export class ControlSaveTiles extends Control {
     lengthToBeSaved: 0,
     lengthSaved: 0,
     lengthLoaded: 0,
+    lengthSkipped: 0,
+    lengthFailed: 0,
     _tilesforSave: [],
   };
 
@@ -146,9 +154,14 @@ export class ControlSaveTiles extends Control {
         if (tile === undefined) {
           return Promise.resolve();
         }
-        const blob = await this._loadTile(tile);
-        if (blob) {
-          await this._saveTile(tile, blob);
+        try {
+          const blob = await this._loadTile(tile);
+          if (blob) {
+            await this._saveTile(tile, blob);
+          }
+        } catch (e) {
+          this.status.lengthFailed += 1;
+          this._checkSaveEnd();
         }
         return loader();
       };
@@ -204,6 +217,8 @@ export class ControlSaveTiles extends Control {
       lengthLoaded: 0,
       lengthToBeSaved: tiles.length,
       lengthSaved: 0,
+      lengthSkipped: 0,
+      lengthFailed: 0,
       _tilesforSave: tiles,
       storagesize: this.status.storagesize,
     };
@@ -211,18 +226,25 @@ export class ControlSaveTiles extends Control {
 
   async _loadTile(tile: TileInfo) {
     let blob;
-    if (
-      this.options.alwaysDownload === true ||
-      (await hasTile(tile.key)) === false
-    ) {
-      blob = await downloadTile(tile.url);
+    try {
+      if (
+        this.options.alwaysDownload === true ||
+        (await hasTile(tile.key)) === false
+      ) {
+        blob = await downloadTile(tile.url);
+      } else {
+        this.status.lengthSkipped += 1;
+      }
+    } finally {
+      this.status.lengthLoaded += 1;
+
+      this._baseLayer.fire('loadtileend', this.status);
+      if (this.status.lengthLoaded === this.status.lengthToBeSaved) {
+        this._baseLayer.fire('loadend', this.status);
+      }
     }
-
-    this.status.lengthLoaded += 1;
-
-    this._baseLayer.fire('loadtileend', this.status);
-    if (this.status.lengthLoaded === this.status.lengthToBeSaved) {
-      this._baseLayer.fire('loadend', this.status);
+    if (!blob) {
+      this._checkSaveEnd();
     }
     return blob;
   }
@@ -231,7 +253,16 @@ export class ControlSaveTiles extends Control {
     await saveTile(tile, blob);
     this.status.lengthSaved += 1;
     this._baseLayer.fire('savetileend', this.status);
-    if (this.status.lengthSaved === this.status.lengthToBeSaved) {
+    this._checkSaveEnd();
+  }
+
+  /**
+   * Fire `saveend` once every tile is saved, skipped or failed.
+   */
+  _checkSaveEnd() {
+    const { lengthSaved, lengthSkipped, lengthFailed, lengthToBeSaved } =
+      this.status;
+    if (lengthSaved + lengthSkipped + lengthFailed === lengthToBeSaved) {
       this._baseLayer.fire('saveend', this.status);
       this.setStorageSize();
     }
