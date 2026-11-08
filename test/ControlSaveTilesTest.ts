@@ -3,6 +3,8 @@ import { assert } from 'chai';
 import { ControlSaveTiles, savetiles } from '../src/ControlSaveTiles';
 import { TileLayerOffline } from '../src/TileLayerOffline';
 import * as sinon from 'sinon';
+import fetchMock from 'fetch-mock';
+import { hasTile, saveTile } from '../src/TileManager';
 
 describe('control with defaults', () => {
   let saveControl: ControlSaveTiles;
@@ -139,5 +141,94 @@ describe('control with different options', () => {
     c._rmTiles();
     c._saveTiles();
     assert(callback.calledOnce);
+  });
+});
+
+describe('saving tiles with failures', () => {
+  let leafletMap: Map;
+  let baseLayer: TileLayerOffline;
+  let saveControl: ControlSaveTiles;
+  const saveended = () =>
+    new Promise<void>((resolve) => {
+      baseLayer.once('saveend', () => resolve());
+    });
+  beforeEach(() => {
+    fetchMock.mockGlobal();
+    leafletMap = new Map(document.createElement('div'));
+    leafletMap.setView({ lat: 51.985, lng: 5 }, 16);
+    baseLayer = new TileLayerOffline(
+      'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      { subdomains: 'abc' },
+    ).addTo(leafletMap);
+    // 4 tiles: zoomlevels 16 to 19
+    saveControl = savetiles(baseLayer, {
+      saveWhatYouSee: true,
+      parallel: 1,
+    });
+    saveControl.addTo(leafletMap);
+    saveControl._rmTiles();
+  });
+  afterEach(() => {
+    fetchMock.removeRoutes();
+    fetchMock.unmockGlobal();
+  });
+
+  it('continues with the remaining tiles after a failed download', async () => {
+    let requests = 0;
+    fetchMock.route('begin:http://', () => {
+      requests += 1;
+      return requests === 1 ? 504 : new Blob();
+    });
+    const ended = saveended();
+    saveControl._saveTiles();
+    await ended;
+    assert.equal(requests, 4);
+    assert.equal(saveControl.status.lengthSaved, 3);
+  });
+  it('fires saveend with lengthFailed after a partial failure', async () => {
+    fetchMock.route('begin:http://', 504);
+    const ended = saveended();
+    saveControl._saveTiles();
+    await ended;
+    const { status } = saveControl;
+    assert.equal(status.lengthToBeSaved, 4);
+    assert.equal(status.lengthSaved, 0);
+    assert.equal(status.lengthFailed, 4);
+  });
+  it('fires saveend when some tiles are already stored', async () => {
+    saveControl.options.alwaysDownload = false;
+    const [stored] = saveControl._calculateTiles();
+    await saveTile(stored, new Blob());
+    assert.isTrue(await hasTile(stored.key));
+    fetchMock.route('begin:http://', new Blob());
+    const ended = saveended();
+    saveControl._saveTiles();
+    await ended;
+    const { status } = saveControl;
+    assert.equal(status.lengthSkipped, 1);
+    assert.equal(status.lengthSaved, 3);
+    assert.equal(status.lengthFailed, 0);
+  });
+  it('fires saveend once and has no unhandled rejection', async () => {
+    const rejections: PromiseRejectionEvent[] = [];
+    // only the failed downloads, not unrelated rejections from the map's tiles
+    const onRejection = (e: PromiseRejectionEvent) => {
+      if (/Request failed/.test(String(e.reason))) {
+        rejections.push(e);
+      }
+    };
+    window.addEventListener('unhandledrejection', onRejection);
+    fetchMock.route('begin:http://', 504);
+    const saveendSpy = sinon.spy();
+    baseLayer.on('saveend', saveendSpy);
+    const ended = saveended();
+    saveControl._saveTiles();
+    await ended;
+    await new Promise((resolve) => {
+      setTimeout(resolve, 50);
+    });
+    window.removeEventListener('unhandledrejection', onRejection);
+    assert.lengthOf(rejections, 0);
+    assert.isTrue(saveendSpy.calledOnce);
   });
 });
